@@ -7,7 +7,7 @@ Purpose: lets a fresh Claude session continue this project without prior chat hi
 - Loop per phase: ChatGPT delivers code, then Antigravity runs the RUN and GATE commands, then the user pastes REPORT BACK to Claude, then Claude reviews and replies with a verdict plus a CONTEXT UPDATE block, then Antigravity commits that update, then the user tells ChatGPT "Phase N passed".
 
 ## Project in brief
-Multi-company RAG chatbot dashboard for the DevSynt AI Internship (Task 5). Companies upload PDF, DOCX, TXT or Markdown files; the system extracts, cleans, chunks, embeds and stores them; users chat and get grounded answers with sources and a clear "not found" when information is missing. Sample data: a fictional real-estate company with 5 consistent documents. Users may ask in English or Roman Urdu. Full requirements: docs/SRD.md.
+Multi-company RAG chatbot dashboard for the DevSynt AI Internship (Task 5). Companies upload PDF, DOCX, TXT or Markdown files; the system extracts, cleans, chunks, embeds and stores them; users chat and get grounded answers with sources and a clear "not found" when information is missing. Sample data: a fictional real-estate company with 5 consistent documents. Users may ask in English or Roman Urdu. Full requirements: docs/SRD.md. The fictional company is Himalaya Crest Realty (Pvt.) Ltd.; the 5 source documents are Company_Overview.md, Property_Listings.md, Services_and_Fees.md, FAQs.md and Policies_and_Terms.md in data/sample_docs_src/.
 
 ## Locked decisions
 - Backend FastAPI (Python 3.11 or 3.12, .venv, no Docker); frontend React, TypeScript, Vite, Tailwind.
@@ -38,7 +38,7 @@ Phases 0 to 11 are in PROJECT_STATUS.md. Branch phase-N-name, conventional commi
 - Treat the repo files as the source of truth if they conflict with older chat memory.
 
 ## Current state snapshot (Claude updates every step)
-- Phase: 0 (skeleton done). Last gate: none yet. Next action: see PROJECT_STATUS.md.
+- Phase: 1 preparation (source files placed). Last gate: none yet. 9 data files in place; sanity checks: 2 PASS, 5 WARN, 0 FAIL. Next action: see PROJECT_STATUS.md.
 
 ## Open questions
 - Confirm the real submission deadline with the mentor (brief says 12 September 2026, which has passed).
