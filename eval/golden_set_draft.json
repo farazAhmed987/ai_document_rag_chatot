@@ -1,0 +1,960 @@
+[
+  {
+    "id": "Q001",
+    "type": "direct",
+    "language": "en",
+    "question": "When was Himalaya Crest Realty founded and who founded it?",
+    "history": [],
+    "expected_answer": "It was founded on 14 March 2012 in Islamabad by Farhan Mirza.",
+    "expected_sources": [
+      {
+        "document": "Company_Overview.md",
+        "section": "1. About Himalaya Crest Realty"
+      }
+    ],
+    "should_refuse": false,
+    "notes": ""
+  },
+  {
+    "id": "Q002",
+    "type": "direct",
+    "language": "en",
+    "question": "What is the real estate agent licence number of the Lahore branch?",
+    "history": [],
+    "expected_answer": "HCR-REA-LHR-2019-0207.",
+    "expected_sources": [
+      {
+        "document": "Company_Overview.md",
+        "section": "8. Licences and registrations"
+      }
+    ],
+    "should_refuse": false,
+    "notes": ""
+  },
+  {
+    "id": "Q003",
+    "type": "direct",
+    "language": "en",
+    "question": "What is the booking token for HCR-ISB-0102?",
+    "history": [],
+    "expected_answer": "PKR 384,000, which is 2% of the price of PKR 19,200,000.",
+    "expected_sources": [
+      {
+        "document": "Property_Listings.md",
+        "section": "HCR-ISB-0102 - Crest View Residency Block B, Two-Bed Apartment B"
+      }
+    ],
+    "should_refuse": false,
+    "notes": "Near-duplicate of HCR-ISB-0101 (token PKR 370,000). Must not mix the two."
+  },
+  {
+    "id": "Q004",
+    "type": "direct",
+    "language": "en",
+    "question": "Which email address should complaints be sent to?",
+    "history": [],
+    "expected_answer": "complaints@himalayacrest.example.",
+    "expected_sources": [
+      {
+        "document": "Company_Overview.md",
+        "section": "12.2 Department mailboxes"
+      }
+    ],
+    "should_refuse": false,
+    "notes": ""
+  },
+  {
+    "id": "Q005",
+    "type": "direct",
+    "language": "en",
+    "question": "How long is the grace period for a late instalment?",
+    "history": [],
+    "expected_answer": "10 days (calendar days) after the due date.",
+    "expected_sources": [
+      {
+        "document": "Policies_and_Terms.md",
+        "section": "5.1 Grace period"
+      }
+    ],
+    "should_refuse": false,
+    "notes": ""
+  },
+  {
+    "id": "Q006",
+    "type": "direct",
+    "language": "en",
+    "question": "What percentage of monthly rent does HCR charge for property management?",
+    "history": [],
+    "expected_answer": "8% of the monthly rent collected (minimum PKR 6,000 per month).",
+    "expected_sources": [
+      {
+        "document": "Services_and_Fees.md",
+        "section": "6.2 Management fee"
+      }
+    ],
+    "should_refuse": false,
+    "notes": ""
+  },
+  {
+    "id": "Q007",
+    "type": "direct",
+    "language": "en",
+    "question": "How long does a seller listing agreement last?",
+    "history": [],
+    "expected_answer": "90 days, and it can be renewed. Cancelling it needs 7 days written notice.",
+    "expected_sources": [
+      {
+        "document": "Services_and_Fees.md",
+        "section": "4.2 Listing agreement"
+      }
+    ],
+    "should_refuse": false,
+    "notes": ""
+  },
+  {
+    "id": "Q008",
+    "type": "direct",
+    "language": "en",
+    "question": "How many working days does a booking transfer take to process?",
+    "history": [],
+    "expected_answer": "10 working days.",
+    "expected_sources": [
+      {
+        "document": "Policies_and_Terms.md",
+        "section": "6.2 Conditions"
+      }
+    ],
+    "should_refuse": false,
+    "notes": ""
+  },
+  {
+    "id": "Q009",
+    "type": "direct",
+    "language": "en",
+    "question": "What is the handover date of the penthouse HCR-LHR-0403?",
+    "history": [],
+    "expected_answer": "30 September 2029.",
+    "expected_sources": [
+      {
+        "document": "Property_Listings.md",
+        "section": "3. Token amounts and handover dates"
+      }
+    ],
+    "should_refuse": false,
+    "notes": ""
+  },
+  {
+    "id": "Q010",
+    "type": "direct",
+    "language": "en",
+    "question": "How many months of rent is the security deposit for a rental?",
+    "history": [],
+    "expected_answer": "2 months of rent. The old value of 3 months is superseded.",
+    "expected_sources": [
+      {
+        "document": "Policies_and_Terms.md",
+        "section": "7.2 Security deposit"
+      }
+    ],
+    "should_refuse": false,
+    "notes": ""
+  },
+  {
+    "id": "Q011",
+    "type": "table",
+    "language": "en",
+    "question": "What is the valuation fee for a residential property worth PKR 18,000,000?",
+    "history": [],
+    "expected_answer": "PKR 25,000 (tier PKR 10,000,001 to PKR 25,000,000).",
+    "expected_sources": [
+      {
+        "document": "Services_and_Fees.md",
+        "section": "7.2 Valuation fee tiers"
+      }
+    ],
+    "should_refuse": false,
+    "notes": "Commercial valuations add PKR 10,000; this is residential."
+  },
+  {
+    "id": "Q012",
+    "type": "table",
+    "language": "en",
+    "question": "For payment plan PP-C, what are the down payment, number of instalments and surcharge?",
+    "history": [],
+    "expected_answer": "Down payment 20%, 24 monthly instalments over 24 months, surcharge 6%.",
+    "expected_sources": [
+      {
+        "document": "Services_and_Fees.md",
+        "section": "12.1 Plan terms"
+      }
+    ],
+    "should_refuse": false,
+    "notes": ""
+  },
+  {
+    "id": "Q013",
+    "type": "table",
+    "language": "en",
+    "question": "What are the Abbottabad Branch opening hours on Saturday?",
+    "history": [],
+    "expected_answer": "10:00 am to 2:00 pm.",
+    "expected_sources": [
+      {
+        "document": "Company_Overview.md",
+        "section": "6.2 Weekly opening hours"
+      }
+    ],
+    "should_refuse": false,
+    "notes": ""
+  },
+  {
+    "id": "Q014",
+    "type": "table",
+    "language": "en",
+    "question": "Which payment plan and token amount apply to Shop 4, HCR-RWP-0204?",
+    "history": [],
+    "expected_answer": "Plan PP-A and a token of PKR 510,000 (handover 30 November 2026).",
+    "expected_sources": [
+      {
+        "document": "Property_Listings.md",
+        "section": "3. Token amounts and handover dates"
+      }
+    ],
+    "should_refuse": false,
+    "notes": ""
+  },
+  {
+    "id": "Q015",
+    "type": "table",
+    "language": "en",
+    "question": "What selling commission rate applies to a property priced at PKR 30,000,000?",
+    "history": [],
+    "expected_answer": "2.0% (Slab 3, above PKR 25,000,000), i.e. PKR 600,000.",
+    "expected_sources": [
+      {
+        "document": "Services_and_Fees.md",
+        "section": "4.3 Selling commission"
+      }
+    ],
+    "should_refuse": false,
+    "notes": ""
+  },
+  {
+    "id": "Q016",
+    "type": "table",
+    "language": "en",
+    "question": "What share of the token is refunded if a booking is cancelled on day 20?",
+    "history": [],
+    "expected_answer": "50% of the token (window day 8 to day 30).",
+    "expected_sources": [
+      {
+        "document": "Policies_and_Terms.md",
+        "section": "4.2 Refund windows for the token"
+      }
+    ],
+    "should_refuse": false,
+    "notes": ""
+  },
+  {
+    "id": "Q017",
+    "type": "multi_part",
+    "language": "en",
+    "question": "Who is the Rawalpindi Branch Manager, what are their email and phone number, and where is the branch?",
+    "history": [],
+    "expected_answer": "Bilal Satti, bilal.satti@himalayacrest.example, +92 51 5550 2010. Branch: Office 7, Pine Plaza, Garden Road, Rawalpindi.",
+    "expected_sources": [
+      {
+        "document": "Company_Overview.md",
+        "section": "12.1 Staff"
+      },
+      {
+        "document": "Company_Overview.md",
+        "section": "6.1 Office directory"
+      }
+    ],
+    "should_refuse": false,
+    "notes": ""
+  },
+  {
+    "id": "Q018",
+    "type": "multi_part",
+    "language": "en",
+    "question": "What are the notice periods for a tenant, a landlord and a management agreement?",
+    "history": [],
+    "expected_answer": "Tenant 30 days; landlord 60 days; management agreement termination 45 days.",
+    "expected_sources": [
+      {
+        "document": "Policies_and_Terms.md",
+        "section": "7.3 Notice periods"
+      }
+    ],
+    "should_refuse": false,
+    "notes": ""
+  },
+  {
+    "id": "Q019",
+    "type": "multi_part",
+    "language": "en",
+    "question": "How fast are complaints acknowledged and resolved, and what is the escalation path?",
+    "history": [],
+    "expected_answer": "Acknowledged within 2 working days; resolved within 15 working days. Then escalation to the COO (decision within 5 working days) and final review by the CEO (decision within 30 days of the escalation).",
+    "expected_sources": [
+      {
+        "document": "Policies_and_Terms.md",
+        "section": "10.2 Response times"
+      },
+      {
+        "document": "Policies_and_Terms.md",
+        "section": "10.3 Escalation path"
+      }
+    ],
+    "should_refuse": false,
+    "notes": ""
+  },
+  {
+    "id": "Q020",
+    "type": "multi_part",
+    "language": "en",
+    "question": "What happens when an instalment is paid late: grace, penalty rate, cap, and when can the booking be cancelled?",
+    "history": [],
+    "expected_answer": "Grace 10 days; penalty 0.1% of the overdue instalment per day, capped at 5% of that instalment; cancellation for non-payment after 60 days overdue and 15 days written notice.",
+    "expected_sources": [
+      {
+        "document": "Policies_and_Terms.md",
+        "section": "5.1 Grace period"
+      },
+      {
+        "document": "Policies_and_Terms.md",
+        "section": "5.2 Late-payment penalty"
+      },
+      {
+        "document": "Policies_and_Terms.md",
+        "section": "5.3 Cancellation for non-payment"
+      }
+    ],
+    "should_refuse": false,
+    "notes": ""
+  },
+  {
+    "id": "Q021",
+    "type": "multi_part",
+    "language": "en",
+    "question": "What are the rules for transferring a booking: fee, minimum fee, when it is not allowed and how long it takes?",
+    "history": [],
+    "expected_answer": "Fee 1% of the property price, minimum PKR 50,000; not allowed within the first 30 days after booking; processing 10 working days.",
+    "expected_sources": [
+      {
+        "document": "Policies_and_Terms.md",
+        "section": "6.2 Conditions"
+      }
+    ],
+    "should_refuse": false,
+    "notes": ""
+  },
+  {
+    "id": "Q022",
+    "type": "multi_part",
+    "language": "en",
+    "question": "How do the referral and early-bird discounts work, and can they be combined?",
+    "history": [],
+    "expected_answer": "Referral: 10% off company commission for a client introduced by an existing client, up to PKR 75,000. Early-bird: 20% off buying commission if the token is paid within 7 days of the first viewing. They cannot be combined; the larger applies. Neither applies to valuation, documentation, advisory or admin fees.",
+    "expected_sources": [
+      {
+        "document": "Services_and_Fees.md",
+        "section": "11.1 Referral discount"
+      },
+      {
+        "document": "Services_and_Fees.md",
+        "section": "11.2 Early-bird discount"
+      },
+      {
+        "document": "Services_and_Fees.md",
+        "section": "11.3 Rules that apply to both"
+      }
+    ],
+    "should_refuse": false,
+    "notes": ""
+  },
+  {
+    "id": "Q023",
+    "type": "multi_doc",
+    "language": "en",
+    "question": "What would the buying commission and admin fee total for HCR-RWP-0201?",
+    "history": [],
+    "expected_answer": "Price PKR 8,400,000 (Slab 1 buying 2.0%): 8,400,000 x 2.0% = PKR 168,000, above the PKR 150,000 minimum. Plus admin fee PKR 7,500 = PKR 175,500.",
+    "expected_sources": [
+      {
+        "document": "Property_Listings.md",
+        "section": "HCR-RWP-0201 - Saffron Heights, One-Bed Apartment"
+      },
+      {
+        "document": "Services_and_Fees.md",
+        "section": "3.2 Buying commission"
+      },
+      {
+        "document": "Services_and_Fees.md",
+        "section": "3.3 Admin fee"
+      }
+    ],
+    "should_refuse": false,
+    "notes": "Arithmetic. Token also equals PKR 168,000 (2%) - do not confuse with commission."
+  },
+  {
+    "id": "Q024",
+    "type": "multi_doc",
+    "language": "en",
+    "question": "If I book HCR-LHR-0401 and cancel on day 25, how much token do I get back?",
+    "history": [],
+    "expected_answer": "Price PKR 21,800,000; token 2% = PKR 436,000. Day 25 falls in day 8 to 30 window: 50% refunded = PKR 218,000.",
+    "expected_sources": [
+      {
+        "document": "Property_Listings.md",
+        "section": "HCR-LHR-0401 - Lotus Gardens, Two-Bed Apartment"
+      },
+      {
+        "document": "Policies_and_Terms.md",
+        "section": "4.2 Refund windows for the token"
+      }
+    ],
+    "should_refuse": false,
+    "notes": "Arithmetic."
+  },
+  {
+    "id": "Q025",
+    "type": "multi_doc",
+    "language": "en",
+    "question": "What is the transfer fee for HCR-LHR-0405?",
+    "history": [],
+    "expected_answer": "Price PKR 19,800,000 x 1% = PKR 198,000 (above the PKR 50,000 minimum).",
+    "expected_sources": [
+      {
+        "document": "Property_Listings.md",
+        "section": "HCR-LHR-0405 - Canal View Centre, Shop 9"
+      },
+      {
+        "document": "Policies_and_Terms.md",
+        "section": "6.2 Conditions"
+      }
+    ],
+    "should_refuse": false,
+    "notes": "Arithmetic."
+  },
+  {
+    "id": "Q026",
+    "type": "multi_doc",
+    "language": "en",
+    "question": "What is the total payable and the down payment for HCR-ATD-0301 on its payment plan?",
+    "history": [],
+    "expected_answer": "Plan PP-B (30% down, 4% surcharge). Price PKR 38,000,000; surcharge 4% = PKR 1,520,000; total PKR 39,520,000; down payment 30% of price = PKR 11,400,000 (token PKR 760,000 counts toward it).",
+    "expected_sources": [
+      {
+        "document": "Property_Listings.md",
+        "section": "HCR-ATD-0301 - Pine Ridge Villas, Villa Type 1"
+      },
+      {
+        "document": "Services_and_Fees.md",
+        "section": "12.1 Plan terms"
+      }
+    ],
+    "should_refuse": false,
+    "notes": "Arithmetic."
+  },
+  {
+    "id": "Q027",
+    "type": "multi_doc",
+    "language": "en",
+    "question": "Which payment plan is the Ridge House (HCR-ISB-0107) on and what is that plan's surcharge?",
+    "history": [],
+    "expected_answer": "Plan PP-D; surcharge 9% of the price (down payment 25%, 36 monthly instalments).",
+    "expected_sources": [
+      {
+        "document": "Property_Listings.md",
+        "section": "HCR-ISB-0107 - Crest View Residency Villas, Ridge House"
+      },
+      {
+        "document": "Services_and_Fees.md",
+        "section": "12.1 Plan terms"
+      }
+    ],
+    "should_refuse": false,
+    "notes": ""
+  },
+  {
+    "id": "Q028",
+    "type": "multi_doc",
+    "language": "en",
+    "question": "I booked HCR-ISB-0101 and want to cancel 40 days after booking. Do I get my token back?",
+    "history": [],
+    "expected_answer": "No. The token (PKR 370,000) is not refundable after day 30.",
+    "expected_sources": [
+      {
+        "document": "Property_Listings.md",
+        "section": "HCR-ISB-0101 - Crest View Residency Block A, Two-Bed Apartment A"
+      },
+      {
+        "document": "Policies_and_Terms.md",
+        "section": "4.2 Refund windows for the token"
+      }
+    ],
+    "should_refuse": false,
+    "notes": ""
+  },
+  {
+    "id": "Q029",
+    "type": "multi_doc",
+    "language": "en",
+    "question": "Which branch looks after Pine Ridge Villas and what is its manager's phone number?",
+    "history": [],
+    "expected_answer": "Pine Ridge Villas is in Abbottabad; the manager is Tariq Abbasi, +92 992 5550 3010.",
+    "expected_sources": [
+      {
+        "document": "Property_Listings.md",
+        "section": "HCR-ATD-0301 - Pine Ridge Villas, Villa Type 1"
+      },
+      {
+        "document": "Company_Overview.md",
+        "section": "12.1 Staff"
+      }
+    ],
+    "should_refuse": false,
+    "notes": "Check that the Abbottabad manager is listed in Company_Overview staff table; key_facts lists only some staff."
+  },
+  {
+    "id": "Q030",
+    "type": "multi_doc",
+    "language": "en",
+    "question": "With the early-bird discount on HCR-RWP-0203, what is the buying commission payable?",
+    "history": [],
+    "expected_answer": "Price PKR 15,250,000 x 1.75% = PKR 266,875; 20% discount = PKR 53,375; commission after discount = PKR 213,500 (admin fee PKR 7,500 is extra and not discounted).",
+    "expected_sources": [
+      {
+        "document": "Property_Listings.md",
+        "section": "HCR-RWP-0203 - Saffron Heights, Two-Bed Corner Apartment"
+      },
+      {
+        "document": "Services_and_Fees.md",
+        "section": "11.2 Early-bird discount"
+      },
+      {
+        "document": "Services_and_Fees.md",
+        "section": "3.2 Buying commission"
+      }
+    ],
+    "should_refuse": false,
+    "notes": "Arithmetic."
+  },
+  {
+    "id": "Q031",
+    "type": "unanswerable",
+    "language": "en",
+    "question": "Does Himalaya Crest Realty have an office in Karachi or Dubai?",
+    "history": [],
+    "expected_answer": "Not covered by the knowledge base. Must not invent or confirm any such office; may only point to the offices the documents actually describe.",
+    "expected_sources": [],
+    "should_refuse": true,
+    "notes": "Omitted topic 1."
+  },
+  {
+    "id": "Q032",
+    "type": "unanswerable",
+    "language": "en",
+    "question": "Are pets allowed in the Crest View Residency apartments?",
+    "history": [],
+    "expected_answer": "Not covered; the chatbot should say it has no information on this.",
+    "expected_sources": [],
+    "should_refuse": true,
+    "notes": "Omitted topic 2."
+  },
+  {
+    "id": "Q033",
+    "type": "unanswerable",
+    "language": "en",
+    "question": "What mortgage interest rate will a bank give me for HCR-ISB-0101?",
+    "history": [],
+    "expected_answer": "Not covered; no bank loan or mortgage information exists in the documents.",
+    "expected_sources": [],
+    "should_refuse": true,
+    "notes": "Omitted topic 4."
+  },
+  {
+    "id": "Q034",
+    "type": "unanswerable",
+    "language": "en",
+    "question": "Can I pay the booking token in Bitcoin or through a mobile wallet?",
+    "history": [],
+    "expected_answer": "Not covered; payment methods of this kind are not described.",
+    "expected_sources": [],
+    "should_refuse": true,
+    "notes": "Omitted topic 5."
+  },
+  {
+    "id": "Q035",
+    "type": "unanswerable",
+    "language": "en",
+    "question": "How many parking spaces come with the Lotus Gardens penthouse?",
+    "history": [],
+    "expected_answer": "Not covered; parking is not described.",
+    "expected_sources": [],
+    "should_refuse": true,
+    "notes": "Omitted topic 3."
+  },
+  {
+    "id": "Q036",
+    "type": "unanswerable",
+    "language": "en",
+    "question": "How long is the construction defect warranty on Saffron Heights apartments?",
+    "history": [],
+    "expected_answer": "Not covered; no warranty information exists.",
+    "expected_sources": [],
+    "should_refuse": true,
+    "notes": "Omitted topic 11."
+  },
+  {
+    "id": "Q037",
+    "type": "trap",
+    "language": "en",
+    "question": "Since the booking token is 5% of the price, how much is the token for HCR-ISB-0101?",
+    "history": [],
+    "expected_answer": "False premise. The token is 2% of the price: PKR 370,000 on PKR 18,500,000.",
+    "expected_sources": [
+      {
+        "document": "Property_Listings.md",
+        "section": "HCR-ISB-0101 - Crest View Residency Block A, Two-Bed Apartment A"
+      },
+      {
+        "document": "Policies_and_Terms.md",
+        "section": "3.2 The booking token"
+      }
+    ],
+    "should_refuse": true,
+    "notes": "Wrong percentage. Correct the premise; do not compute with 5%."
+  },
+  {
+    "id": "Q038",
+    "type": "trap",
+    "language": "en",
+    "question": "What is the price of HCR-ISB-0110 in Hilltop Enclave?",
+    "history": [],
+    "expected_answer": "No such property ID exists in the inventory (Hilltop Enclave has HCR-ISB-0108 and HCR-ISB-0109).",
+    "expected_sources": [
+      {
+        "document": "Property_Listings.md",
+        "section": "2. Summary of all properties"
+      }
+    ],
+    "should_refuse": true,
+    "notes": "Nonexistent property."
+  },
+  {
+    "id": "Q039",
+    "type": "trap",
+    "language": "en",
+    "question": "What are the opening hours of the Multan branch?",
+    "history": [],
+    "expected_answer": "There is no Multan branch. HCR has offices in Islamabad, Rawalpindi, Abbottabad and Lahore.",
+    "expected_sources": [
+      {
+        "document": "Company_Overview.md",
+        "section": "6.2 Weekly opening hours"
+      }
+    ],
+    "should_refuse": true,
+    "notes": "Nonexistent office."
+  },
+  {
+    "id": "Q040",
+    "type": "trap",
+    "language": "en",
+    "question": "Because the refund window is 14 days, if I cancel on day 10 do I get 90% of my token back?",
+    "history": [],
+    "expected_answer": "False premise. The first window is 7 days (14 days is superseded). On day 10 the 50% window applies.",
+    "expected_sources": [
+      {
+        "document": "Policies_and_Terms.md",
+        "section": "4.2 Refund windows for the token"
+      },
+      {
+        "document": "Policies_and_Terms.md",
+        "section": "16. Revision history"
+      }
+    ],
+    "should_refuse": true,
+    "notes": "Superseded value trap."
+  },
+  {
+    "id": "Q041",
+    "type": "trap",
+    "language": "en",
+    "question": "The property management fee is 10% of monthly rent, right?",
+    "history": [],
+    "expected_answer": "No. The fee is 8% of monthly rent collected, minimum PKR 6,000 per month.",
+    "expected_sources": [
+      {
+        "document": "Services_and_Fees.md",
+        "section": "6.2 Management fee"
+      }
+    ],
+    "should_refuse": true,
+    "notes": "Wrong percentage."
+  },
+  {
+    "id": "Q042",
+    "type": "trap",
+    "language": "en",
+    "question": "How much is the 30% Platinum Client discount on buying commission?",
+    "history": [],
+    "expected_answer": "No such discount exists. Only the referral (10%, up to PKR 75,000) and early-bird (20%) discounts are offered.",
+    "expected_sources": [
+      {
+        "document": "Services_and_Fees.md",
+        "section": "11.3 Rules that apply to both"
+      }
+    ],
+    "should_refuse": true,
+    "notes": "Nonexistent discount."
+  },
+  {
+    "id": "Q043",
+    "type": "roman_urdu",
+    "language": "roman_urdu",
+    "question": "Crest View mein 4 marla apartment ki qeemat kya hai?",
+    "history": [],
+    "expected_answer": "Block A (HCR-ISB-0101): PKR 18,500,000; Block B (HCR-ISB-0102): PKR 19,200,000. Dono 4 marla (1,089 sq ft).",
+    "expected_sources": [
+      {
+        "document": "Property_Listings.md",
+        "section": "2. Summary of all properties"
+      }
+    ],
+    "should_refuse": false,
+    "notes": "Near-duplicate blocks. Variant of 'Crest View mein 5 marla ka price' - no 5 marla unit exists in Crest View."
+  },
+  {
+    "id": "Q044",
+    "type": "roman_urdu",
+    "language": "roman_urdu",
+    "question": "Bayana kitna hota hai aur kya wapis milta hai?",
+    "history": [],
+    "expected_answer": "Bayana (booking token) property ki qeemat ka 2% hota hai. 7 din ke andar cancel karein to 90% wapis; din 8 se 30 tak 50%; 30 din ke baad wapis nahi.",
+    "expected_sources": [
+      {
+        "document": "FAQs.md",
+        "section": "10. Local terms"
+      },
+      {
+        "document": "Policies_and_Terms.md",
+        "section": "4.2 Refund windows for the token"
+      }
+    ],
+    "should_refuse": false,
+    "notes": ""
+  },
+  {
+    "id": "Q045",
+    "type": "roman_urdu",
+    "language": "roman_urdu",
+    "question": "Meri kiraya 80,000 hai to commission kitna dena hoga?",
+    "history": [],
+    "expected_answer": "Landlord aur tenant dono ek mahine ke kiraye ka 50% dete hain: 80,000 x 50% = PKR 40,000 har taraf.",
+    "expected_sources": [
+      {
+        "document": "Services_and_Fees.md",
+        "section": "5.2 Rental commission"
+      }
+    ],
+    "should_refuse": false,
+    "notes": "Arithmetic; verify against 5.3 worked examples."
+  },
+  {
+    "id": "Q046",
+    "type": "roman_urdu",
+    "language": "roman_urdu",
+    "question": "Intikal kya hota hai?",
+    "history": [],
+    "expected_answer": "Intiqal (mutation) ka matlab hai sale ke baad ownership record ko update karna.",
+    "expected_sources": [
+      {
+        "document": "FAQs.md",
+        "section": "10. Local terms"
+      }
+    ],
+    "should_refuse": false,
+    "notes": "Spelling variant intikal."
+  },
+  {
+    "id": "Q047",
+    "type": "roman_urdu",
+    "language": "roman_urdu",
+    "question": "Kamran Yousaf ka email aur phone number kya hai?",
+    "history": [],
+    "expected_answer": "kamran.yousaf@himalayacrest.example, +92 51 5550 1014 (Head of Valuation).",
+    "expected_sources": [
+      {
+        "document": "Company_Overview.md",
+        "section": "12.1 Staff"
+      }
+    ],
+    "should_refuse": false,
+    "notes": ""
+  },
+  {
+    "id": "Q048",
+    "type": "roman_urdu",
+    "language": "roman_urdu",
+    "question": "Qist late ho jaye to penalty kitni lagti hai?",
+    "history": [],
+    "expected_answer": "10 din ki grace ke baad overdue qist ka 0.1% per day, zyada se zyada us qist ka 5%.",
+    "expected_sources": [
+      {
+        "document": "Policies_and_Terms.md",
+        "section": "5.2 Late-payment penalty"
+      }
+    ],
+    "should_refuse": false,
+    "notes": ""
+  },
+  {
+    "id": "Q049",
+    "type": "roman_urdu",
+    "language": "roman_urdu",
+    "question": "Lahore branch Sunday ko khula hota hai kya?",
+    "history": [],
+    "expected_answer": "Nahi, Sunday ko band hai. Lahore branch Monday se Saturday, 10:00 am se 7:00 pm khula hota hai.",
+    "expected_sources": [
+      {
+        "document": "Company_Overview.md",
+        "section": "6.2 Weekly opening hours"
+      }
+    ],
+    "should_refuse": false,
+    "notes": ""
+  },
+  {
+    "id": "Q050",
+    "type": "roman_urdu",
+    "language": "roman_urdu",
+    "question": "Registry aur fard mein kya farq hai?",
+    "history": [],
+    "expected_answer": "Registry registered sale deed hai jo property ka transfer record karti hai; fard land record ka extract hai jo malik dikhata hai.",
+    "expected_sources": [
+      {
+        "document": "FAQs.md",
+        "section": "10. Local terms"
+      }
+    ],
+    "should_refuse": false,
+    "notes": ""
+  },
+  {
+    "id": "Q051",
+    "type": "follow_up",
+    "language": "en",
+    "question": "And how much is its token?",
+    "history": [
+      {
+        "role": "user",
+        "content": "What is the price of HCR-ISB-0104?"
+      },
+      {
+        "role": "assistant",
+        "content": "HCR-ISB-0104, the Three-Bed Apartment B in Crest View Residency Block B, costs PKR 27,500,000."
+      }
+    ],
+    "expected_answer": "PKR 550,000 (2% of PKR 27,500,000) for HCR-ISB-0104.",
+    "expected_sources": [
+      {
+        "document": "Property_Listings.md",
+        "section": "HCR-ISB-0104 - Crest View Residency Block B, Three-Bed Apartment B"
+      }
+    ],
+    "should_refuse": false,
+    "notes": ""
+  },
+  {
+    "id": "Q052",
+    "type": "follow_up",
+    "language": "en",
+    "question": "If I cancel that booking on day 6, how much do I get back?",
+    "history": [
+      {
+        "role": "user",
+        "content": "I am interested in HCR-ISB-0101. What is the booking token?"
+      },
+      {
+        "role": "assistant",
+        "content": "The booking token for HCR-ISB-0101 is PKR 370,000, which is 2% of the price."
+      }
+    ],
+    "expected_answer": "Token PKR 370,000 for HCR-ISB-0101; day 6 is within 7 days, so 10% deduction (PKR 37,000); refund PKR 333,000.",
+    "expected_sources": [
+      {
+        "document": "Property_Listings.md",
+        "section": "HCR-ISB-0101 - Crest View Residency Block A, Two-Bed Apartment A"
+      },
+      {
+        "document": "Policies_and_Terms.md",
+        "section": "4.2 Refund windows for the token"
+      }
+    ],
+    "should_refuse": false,
+    "notes": "Arithmetic; resolves 'that booking' from history."
+  },
+  {
+    "id": "Q053",
+    "type": "follow_up",
+    "language": "en",
+    "question": "Which of those applies to Plot P-12 in Pine Ridge, and what would the commission be?",
+    "history": [
+      {
+        "role": "user",
+        "content": "What are the buying commission slabs?"
+      },
+      {
+        "role": "assistant",
+        "content": "Buying commission is 2.0% up to PKR 10,000,000, 1.75% from PKR 10,000,001 to PKR 25,000,000, and 1.5% above PKR 25,000,000."
+      }
+    ],
+    "expected_answer": "HCR-ATD-0303 costs PKR 9,500,000: Slab 1, buying 2.0% = PKR 190,000 (above the PKR 150,000 minimum).",
+    "expected_sources": [
+      {
+        "document": "Property_Listings.md",
+        "section": "HCR-ATD-0303 - Pine Ridge Plots, Plot P-12"
+      },
+      {
+        "document": "Services_and_Fees.md",
+        "section": "3.2 Buying commission"
+      }
+    ],
+    "should_refuse": false,
+    "notes": "Arithmetic."
+  },
+  {
+    "id": "Q054",
+    "type": "follow_up",
+    "language": "en",
+    "question": "Which of the two costs more, and by how much?",
+    "history": [
+      {
+        "role": "user",
+        "content": "Tell me about the two-bed apartments in Saffron Heights."
+      },
+      {
+        "role": "assistant",
+        "content": "Saffron Heights has two 4 marla two-bed apartments: HCR-RWP-0202 and the corner unit HCR-RWP-0203."
+      }
+    ],
+    "expected_answer": "HCR-RWP-0203 (PKR 15,250,000) costs PKR 500,000 more than HCR-RWP-0202 (PKR 14,750,000).",
+    "expected_sources": [
+      {
+        "document": "Property_Listings.md",
+        "section": "HCR-RWP-0202 - Saffron Heights, Two-Bed Apartment"
+      },
+      {
+        "document": "Property_Listings.md",
+        "section": "HCR-RWP-0203 - Saffron Heights, Two-Bed Corner Apartment"
+      }
+    ],
+    "should_refuse": false,
+    "notes": "Near-duplicate pair."
+  }
+]
