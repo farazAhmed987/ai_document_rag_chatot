@@ -1,2 +1,2 @@
-# ai_document_rag_chatot
-
+# RAG Chatbot Dashboard
+A multi-company document question-answering platform: each company uploads PDF, DOCX, TXT or Markdown files, which are extracted, cleaned, chunked, embedded and stored in Postgres with pgvector, and users then chat with their own documents to get grounded answers with source references. The backend is FastAPI and the frontend is React; the project is built for the DevSynt AI Internship (Task 5) and is in active development, with progress tracked in context/PROJECT_STATUS.md.
