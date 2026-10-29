@@ -1,0 +1,69 @@
+[build-system]
+requires = ["setuptools>=75,<82", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rag-company-chatbot-backend"
+version = "0.0.0"
+description = "Multi-tenant document RAG chatbot backend"
+requires-python = ">=3.11,<3.13"
+dynamic = ["dependencies"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["app", "app.*"]
+namespaces = false
+
+[tool.setuptools.dynamic]
+dependencies = { file = ["requirements.txt"] }
+
+[tool.ruff]
+target-version = "py311"
+line-length = 88
+extend-exclude = [
+    ".venv",
+    "data",
+    "eval",
+    "context",
+]
+
+[tool.ruff.lint]
+select = [
+    "E4",
+    "E7",
+    "E9",
+    "F",
+    "I",
+    "UP",
+    "B",
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+plugins = ["pydantic.mypy"]
+files = ["app"]
+show_error_codes = true
+warn_unused_configs = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers"
+markers = [
+    "db: tests requiring the configured operational or analytics database",
+    "sample: tests requiring generated sample documents",
+]
+
+[tool.coverage.run]
+source = ["app"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+skip_empty = true
+precision = 2

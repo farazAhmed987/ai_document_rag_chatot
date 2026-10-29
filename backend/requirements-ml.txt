@@ -1,0 +1,23 @@
+# RESERVED FOR A LATER PHASE.
+#
+# Do not install this file during Phases 0 to 3.
+#
+# SRD Sections 8.1, 8.2 and 12.
+#
+# Embedding and reranking dependencies:
+# torch
+# sentence-transformers
+# FlagEmbedding
+# transformers
+#
+# External LLM integration:
+# google-genai
+# httpx
+# tenacity
+#
+# Optional OCR integrations:
+# pytesseract
+# rapidocr-onnxruntime
+#
+# These dependencies must be separately evaluated, versioned,
+# and tested before inclusion in the main runtime requirements.

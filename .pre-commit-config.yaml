@@ -1,0 +1,32 @@
+# SRD Sections 3, 14 and 15.
+#
+# Protect all existing sample data, evaluation artifacts,
+# the SRD, the README, and project-manager context files.
+#
+# Python hooks are checks, not automatic fix operations.
+
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.17.3
+    hooks:
+      - id: ruff-check
+        types_or: [python, pyi]
+        exclude: '^(data/|eval/|context/)'
+
+      - id: ruff-format
+        types_or: [python, pyi]
+        exclude: '^(data/|eval/|context/)'
+
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.30.1
+    hooks:
+      - id: gitleaks
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: end-of-file-fixer
+        exclude: '^(data/|eval/|context/|docs/SRD\.md$|README\.md$)'
+
+      - id: trailing-whitespace
+        exclude: '^(data/|eval/|context/|docs/SRD\.md$|README\.md$)'
