@@ -1,0 +1,3327 @@
+{
+  "KF-001": {
+    "document": "Company_Overview.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      1
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          1
+        ],
+        "snippet": "founded on 14 March 2012 by Farhan Mirza"
+      }
+    ]
+  },
+  "KF-002": {
+    "document": "Company_Overview.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      1
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          1
+        ],
+        "snippet": "who began with a team of 6 people"
+      }
+    ]
+  },
+  "KF-003": {
+    "document": "Company_Overview.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      1
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          1
+        ],
+        "snippet": "sold 1,862 units and served 3,740 clients"
+      }
+    ]
+  },
+  "KF-004": {
+    "document": "Company_Overview.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      1
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          1
+        ],
+        "snippet": "It employs 86 staff members"
+      }
+    ]
+  },
+  "KF-005": {
+    "document": "Company_Overview.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      1
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          1
+        ],
+        "snippet": "looks after 214 properties for owners under its management service"
+      }
+    ]
+  },
+  "KF-006": {
+    "document": "Company_Overview.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      1
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          1
+        ],
+        "snippet": "The company website is www.himalayacrest.example"
+      }
+    ]
+  },
+  "KF-007": {
+    "document": "Company_Overview.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      1
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          1
+        ],
+        "snippet": "The main telephone number is +92 51 5550 1001."
+      }
+    ]
+  },
+  "KF-008": {
+    "document": "Company_Overview.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      1
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          1
+        ],
+        "snippet": "On 20 January 2013 the head office received its real estate agent licence"
+      },
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          1
+        ],
+        "snippet": "number HCR-REA-ISB-2013-0192"
+      }
+    ]
+  },
+  "KF-009": {
+    "document": "Company_Overview.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      1
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          1
+        ],
+        "snippet": "On 1 September 2014 the company opened its Rawalpindi branch"
+      }
+    ]
+  },
+  "KF-010": {
+    "document": "Company_Overview.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      1
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          1
+        ],
+        "snippet": "under membership number FARP-2015-3381"
+      }
+    ]
+  },
+  "KF-011": {
+    "document": "Company_Overview.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      1
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          1
+        ],
+        "snippet": "The Abbottabad branch opened on 12 May 2016."
+      }
+    ]
+  },
+  "KF-012": {
+    "document": "Company_Overview.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      1
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          1
+        ],
+        "snippet": "On 18 October 2017 the company launched its first project of its own"
+      }
+    ]
+  },
+  "KF-013": {
+    "document": "Company_Overview.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      1
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          1
+        ],
+        "snippet": "On 22 November 2018 the company reached 500 clients served."
+      }
+    ]
+  },
+  "KF-014": {
+    "document": "Company_Overview.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      1
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          1
+        ],
+        "snippet": "The Lahore branch opened on 3 February 2019"
+      },
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          1
+        ],
+        "snippet": "Its licence number is HCR-REA-LHR-2019-0207."
+      }
+    ]
+  },
+  "KF-015": {
+    "document": "Company_Overview.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      1
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          1
+        ],
+        "snippet": "On 15 August 2020 the company established a dedicated valuation department"
+      }
+    ]
+  },
+  "KF-016": {
+    "document": "Company_Overview.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      1,
+      5
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          1,
+          5
+        ],
+        "snippet": "valuation practice licence HCR-VAL-2020-0035"
+      },
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          1
+        ],
+        "snippet": "has completed 2,410 valuations to date"
+      }
+    ]
+  },
+  "KF-017": {
+    "document": "Company_Overview.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      2
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          2
+        ],
+        "snippet": "On 1 April 2021 HCR launched its property management service"
+      }
+    ]
+  },
+  "KF-018": {
+    "document": "Company_Overview.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      2
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          2
+        ],
+        "snippet": "On 11 July 2022 the company announced Crest View Residency in Islamabad"
+      }
+    ]
+  },
+  "KF-019": {
+    "document": "Company_Overview.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      2
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          2
+        ],
+        "snippet": "On 30 September 2023 HCR sold its 1,000th unit"
+      }
+    ]
+  },
+  "KF-020": {
+    "document": "Company_Overview.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      2
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          2
+        ],
+        "snippet": "On 5 March 2024 Saffron Heights was launched in Rawalpindi"
+      }
+    ]
+  },
+  "KF-021": {
+    "document": "Company_Overview.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      2
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          2
+        ],
+        "snippet": "The investment advisory department was established on 2 January 2025"
+      }
+    ]
+  },
+  "KF-022": {
+    "document": "Company_Overview.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      2
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          2
+        ],
+        "snippet": "On 20 August 2025 the company launched Lotus Gardens in Lahore"
+      }
+    ]
+  },
+  "KF-023": {
+    "document": "Company_Overview.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      2
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          2
+        ],
+        "snippet": "clear, documented and fair for every client"
+      }
+    ]
+  },
+  "KF-024": {
+    "document": "Company_Overview.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      2
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          2
+        ],
+        "snippet": "Clear deals, firm ground."
+      }
+    ]
+  },
+  "KF-025": {
+    "document": "Company_Overview.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      3
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          3
+        ],
+        "snippet": "his direct line is +92 51 5550 1010"
+      }
+    ]
+  },
+  "KF-026": {
+    "document": "Company_Overview.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      3
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          3
+        ],
+        "snippet": "sana.qadri@himalayacrest.example and her direct line is +92 51 5550 1011"
+      },
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          3
+        ],
+        "snippet": "She is the second step in the complaints escalation path."
+      }
+    ]
+  },
+  "KF-027": {
+    "document": "Company_Overview.pdf",
+    "match_mode": [
+      "table_cells"
+    ],
+    "matched": true,
+    "pages": [
+      3,
+      7
+    ],
+    "snippets": [
+      {
+        "match_mode": "table_cells",
+        "pages": [
+          3,
+          7
+        ],
+        "snippet": "kamran.yousaf@himalayacrest.example | +92 51 5550 1014"
+      }
+    ]
+  },
+  "KF-028": {
+    "document": "Company_Overview.pdf",
+    "match_mode": [
+      "table_cells"
+    ],
+    "matched": true,
+    "pages": [
+      3,
+      7
+    ],
+    "snippets": [
+      {
+        "match_mode": "table_cells",
+        "pages": [
+          3,
+          7
+        ],
+        "snippet": "saima.iqbal@himalayacrest.example | +92 51 5550 1018"
+      }
+    ]
+  },
+  "KF-029": {
+    "document": "Company_Overview.pdf",
+    "match_mode": [
+      "table_cells"
+    ],
+    "matched": true,
+    "pages": [
+      3,
+      7
+    ],
+    "snippets": [
+      {
+        "match_mode": "table_cells",
+        "pages": [
+          3,
+          7
+        ],
+        "snippet": "bilal.satti@himalayacrest.example | +92 51 5550 2010"
+      }
+    ]
+  },
+  "KF-030": {
+    "document": "Company_Overview.pdf",
+    "match_mode": [
+      "table_cells"
+    ],
+    "matched": true,
+    "pages": [
+      4
+    ],
+    "snippets": [
+      {
+        "match_mode": "table_cells",
+        "pages": [
+          4
+        ],
+        "snippet": "| Abbottabad Branch | Shop 3, Hill Arcade, Orchard Road, Abbottabad |"
+      }
+    ]
+  },
+  "KF-031": {
+    "document": "Company_Overview.pdf",
+    "match_mode": [
+      "table_cells"
+    ],
+    "matched": true,
+    "pages": [
+      4
+    ],
+    "snippets": [
+      {
+        "match_mode": "table_cells",
+        "pages": [
+          4
+        ],
+        "snippet": "| Lahore Branch | 10:00 am to 7:00 pm | 10:00 am to 7:00 pm | Closed |"
+      }
+    ]
+  },
+  "KF-032": {
+    "document": "Company_Overview.pdf",
+    "match_mode": [
+      "table_cells"
+    ],
+    "matched": true,
+    "pages": [
+      4
+    ],
+    "snippets": [
+      {
+        "match_mode": "table_cells",
+        "pages": [
+          4
+        ],
+        "snippet": "| Abbottabad Branch | 9:30 am to 5:30 pm | 10:00 am to 2:00 pm | Closed |"
+      }
+    ]
+  },
+  "KF-033": {
+    "document": "Company_Overview.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      4
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          4
+        ],
+        "snippet": "so it is the only office open until 7:00 pm on Saturdays"
+      }
+    ]
+  },
+  "KF-034": {
+    "document": "Company_Overview.pdf",
+    "match_mode": [
+      "table_cells"
+    ],
+    "matched": true,
+    "pages": [
+      5
+    ],
+    "snippets": [
+      {
+        "match_mode": "table_cells",
+        "pages": [
+          5
+        ],
+        "snippet": "| Corporate registration number | HCR-CR-2012-004417 | 14 March 2012 |"
+      }
+    ]
+  },
+  "KF-035": {
+    "document": "Company_Overview.pdf",
+    "match_mode": [
+      "table_cells"
+    ],
+    "matched": true,
+    "pages": [
+      5
+    ],
+    "snippets": [
+      {
+        "match_mode": "table_cells",
+        "pages": [
+          5
+        ],
+        "snippet": "| Real estate agent licence, Lahore | HCR-REA-LHR-2019-0207 |"
+      }
+    ]
+  },
+  "KF-036": {
+    "document": "Company_Overview.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      5
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          5
+        ],
+        "snippet": "The branch holds licence HCR-REA-RWP-2014-0121."
+      }
+    ]
+  },
+  "KF-037": {
+    "document": "Company_Overview.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      5
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          5
+        ],
+        "snippet": "The branch holds licence HCR-REA-ATD-2016-0088."
+      }
+    ]
+  },
+  "KF-038": {
+    "document": "Company_Overview.pdf",
+    "match_mode": [
+      "table_cells"
+    ],
+    "matched": true,
+    "pages": [
+      6
+    ],
+    "snippets": [
+      {
+        "match_mode": "table_cells",
+        "pages": [
+          6
+        ],
+        "snippet": "| Projects launched by HCR | 6 |"
+      }
+    ]
+  },
+  "KF-039": {
+    "document": "Company_Overview.pdf",
+    "match_mode": [
+      "table_cells"
+    ],
+    "matched": true,
+    "pages": [
+      6
+    ],
+    "snippets": [
+      {
+        "match_mode": "table_cells",
+        "pages": [
+          6
+        ],
+        "snippet": "| Clearpath Title Search | Checking of ownership records before a sale |"
+      }
+    ]
+  },
+  "KF-040": {
+    "document": "Company_Overview.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      6
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          6
+        ],
+        "snippet": "Since 2020 the company has held free workshops for first-time buyers and sellers."
+      }
+    ]
+  },
+  "KF-041": {
+    "document": "Company_Overview.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      6
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          6
+        ],
+        "snippet": "students to visit its project sites twice a year"
+      }
+    ]
+  },
+  "KF-042": {
+    "document": "Company_Overview.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      7
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          7
+        ],
+        "snippet": "retains client records for 7 years after the last transaction"
+      }
+    ]
+  },
+  "KF-043": {
+    "document": "Company_Overview.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      7
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          7
+        ],
+        "snippet": "The Client Services Centre in Islamabad can be reached on +92 51 5550 1002"
+      }
+    ]
+  },
+  "KF-044": {
+    "document": "Company_Overview.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      7
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          7
+        ],
+        "snippet": "Seller listing agreements run for 90 days and can be renewed."
+      },
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          7
+        ],
+        "snippet": "by giving 7 days written notice"
+      }
+    ]
+  },
+  "KF-045": {
+    "document": "Company_Overview.pdf",
+    "match_mode": [
+      "table_cells"
+    ],
+    "matched": true,
+    "pages": [
+      7
+    ],
+    "snippets": [
+      {
+        "match_mode": "table_cells",
+        "pages": [
+          7
+        ],
+        "snippet": "| Rentals and Management | +92 51 5550 1005 |"
+      }
+    ]
+  },
+  "KF-046": {
+    "document": "Company_Overview.pdf",
+    "match_mode": [
+      "table_cells"
+    ],
+    "matched": true,
+    "pages": [
+      7
+    ],
+    "snippets": [
+      {
+        "match_mode": "table_cells",
+        "pages": [
+          7
+        ],
+        "snippet": "| complaints@himalayacrest.example | Complaints |"
+      }
+    ]
+  },
+  "KF-047": {
+    "document": "Company_Overview.pdf",
+    "match_mode": [
+      "table_cells"
+    ],
+    "matched": true,
+    "pages": [
+      7
+    ],
+    "snippets": [
+      {
+        "match_mode": "table_cells",
+        "pages": [
+          7
+        ],
+        "snippet": "| privacy@himalayacrest.example | Data and privacy requests |"
+      }
+    ]
+  },
+  "KF-048": {
+    "document": "Property_Listings.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      3
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          3
+        ],
+        "snippet": "The price is PKR 18,500,000 (PKR 1.85 crore) and the booking token is PKR 370,000."
+      }
+    ]
+  },
+  "KF-049": {
+    "document": "Property_Listings.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      3
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          3
+        ],
+        "snippet": "Handover is planned for 30 June 2028 and the payment plan is PP-B."
+      }
+    ]
+  },
+  "KF-050": {
+    "document": "Property_Listings.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      3
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          3
+        ],
+        "snippet": "Its price is PKR 19,200,000 (PKR 1.92 crore)"
+      }
+    ]
+  },
+  "KF-051": {
+    "document": "Property_Listings.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      3
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          3
+        ],
+        "snippet": "the booking token is PKR 384,000"
+      },
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          3
+        ],
+        "snippet": "handover is scheduled for 31 December 2028"
+      }
+    ]
+  },
+  "KF-052": {
+    "document": "Property_Listings.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      3
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          3
+        ],
+        "snippet": "The difference lies in the handover date, which is 31 December 2028."
+      }
+    ]
+  },
+  "KF-053": {
+    "document": "Property_Listings.pdf",
+    "match_mode": [
+      "table_cells"
+    ],
+    "matched": true,
+    "pages": [
+      1,
+      3
+    ],
+    "snippets": [
+      {
+        "match_mode": "table_cells",
+        "pages": [
+          1,
+          3
+        ],
+        "snippet": "| PKR 27,500,000 | reserved | PP-B |"
+      }
+    ]
+  },
+  "KF-054": {
+    "document": "Property_Listings.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      3
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          3
+        ],
+        "snippet": "The price is PKR 27,500,000 (PKR 2.75 crore) and the token is PKR 550,000"
+      }
+    ]
+  },
+  "KF-055": {
+    "document": "Property_Listings.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      4
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          4
+        ],
+        "snippet": "The price is PKR 16,000,000 (PKR 1.6 crore), the token is PKR 320,000"
+      }
+    ]
+  },
+  "KF-056": {
+    "document": "Property_Listings.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      4
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          4
+        ],
+        "snippet": "The price was PKR 34,000,000 (PKR 3.4 crore)"
+      }
+    ]
+  },
+  "KF-057": {
+    "document": "Property_Listings.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      4
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          4
+        ],
+        "snippet": "The price is PKR 62,000,000 (PKR 6.2 crore), the token is PKR 1,240,000"
+      }
+    ]
+  },
+  "KF-058": {
+    "document": "Property_Listings.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      4
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          4
+        ],
+        "snippet": "The price is PKR 21,000,000 (PKR 2.1 crore), the token is PKR 420,000"
+      }
+    ]
+  },
+  "KF-059": {
+    "document": "Property_Listings.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      4
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          4
+        ],
+        "snippet": "The price is PKR 54,000,000 (PKR 5.4 crore), the token is PKR 1,080,000"
+      }
+    ]
+  },
+  "KF-060": {
+    "document": "Property_Listings.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      4
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          4
+        ],
+        "snippet": "The price is PKR 8,400,000 (PKR 0.84 crore), the token is PKR 168,000"
+      }
+    ]
+  },
+  "KF-061": {
+    "document": "Property_Listings.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      4
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          4
+        ],
+        "snippet": "The price is PKR 14,750,000 (PKR 1.475 crore), the token is PKR 295,000"
+      }
+    ]
+  },
+  "KF-062": {
+    "document": "Property_Listings.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      5
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          5
+        ],
+        "snippet": "Its price is PKR 15,250,000 (PKR 1.525 crore)"
+      }
+    ]
+  },
+  "KF-063": {
+    "document": "Property_Listings.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      5
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          5
+        ],
+        "snippet": "The price was PKR 25,500,000 (PKR 2.55 crore)"
+      }
+    ]
+  },
+  "KF-064": {
+    "document": "Property_Listings.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      5
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          5
+        ],
+        "snippet": "The price is PKR 24,500,000 (PKR 2.45 crore), the token is PKR 490,000"
+      }
+    ]
+  },
+  "KF-065": {
+    "document": "Property_Listings.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      5
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          5
+        ],
+        "snippet": "The price is PKR 38,000,000 (PKR 3.8 crore), the token is PKR 760,000"
+      }
+    ]
+  },
+  "KF-066": {
+    "document": "Property_Listings.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      5
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          5
+        ],
+        "snippet": "The price is PKR 72,000,000 (PKR 7.2 crore), the token is PKR 1,440,000"
+      }
+    ]
+  },
+  "KF-067": {
+    "document": "Property_Listings.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      5
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          5
+        ],
+        "snippet": "The price is PKR 9,500,000 (PKR 0.95 crore), the token is PKR 190,000"
+      }
+    ]
+  },
+  "KF-068": {
+    "document": "Property_Listings.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      5
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          5
+        ],
+        "snippet": "The price was PKR 17,800,000 (PKR 1.78 crore)"
+      }
+    ]
+  },
+  "KF-069": {
+    "document": "Property_Listings.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      6
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          6
+        ],
+        "snippet": "The price is PKR 11,500,000 (PKR 1.15 crore), the token is PKR 230,000"
+      }
+    ]
+  },
+  "KF-070": {
+    "document": "Property_Listings.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      6
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          6
+        ],
+        "snippet": "The price is PKR 21,800,000 (PKR 2.18 crore), the token is PKR 436,000"
+      }
+    ]
+  },
+  "KF-071": {
+    "document": "Property_Listings.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      6
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          6
+        ],
+        "snippet": "The price is PKR 33,500,000 (PKR 3.35 crore), the token is PKR 670,000"
+      }
+    ]
+  },
+  "KF-072": {
+    "document": "Property_Listings.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      6
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          6
+        ],
+        "snippet": "The price is PKR 58,000,000 (PKR 5.8 crore), the token is PKR 1,160,000"
+      }
+    ]
+  },
+  "KF-073": {
+    "document": "Property_Listings.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      6
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          6
+        ],
+        "snippet": "The price is PKR 47,500,000 (PKR 4.75 crore), the token is PKR 950,000"
+      }
+    ]
+  },
+  "KF-074": {
+    "document": "Property_Listings.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      6
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          6
+        ],
+        "snippet": "The price is PKR 19,800,000 (PKR 1.98 crore), the token is PKR 396,000"
+      }
+    ]
+  },
+  "KF-075": {
+    "document": "Property_Listings.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      7
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          7
+        ],
+        "snippet": "17 properties are available, 4 are reserved and 3 are sold."
+      }
+    ]
+  },
+  "KF-076": {
+    "document": "Property_Listings.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      6
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          6
+        ],
+        "snippet": "The earliest handover date among available properties is 31 December 2026"
+      }
+    ]
+  },
+  "KF-077": {
+    "document": "Property_Listings.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      6
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          6
+        ],
+        "snippet": "the latest handover date in the inventory is 30 September 2029"
+      }
+    ]
+  },
+  "KF-078": {
+    "document": "Property_Listings.pdf",
+    "match_mode": [
+      "table_cells"
+    ],
+    "matched": true,
+    "pages": [
+      2,
+      6
+    ],
+    "snippets": [
+      {
+        "match_mode": "table_cells",
+        "pages": [
+          2,
+          6
+        ],
+        "snippet": "| HCR-LHR-0403 | PKR 1,160,000 | 30 September 2029 | PP-D |"
+      }
+    ]
+  },
+  "KF-079": {
+    "document": "Property_Listings.pdf",
+    "match_mode": [
+      "table_cells"
+    ],
+    "matched": true,
+    "pages": [
+      2,
+      5
+    ],
+    "snippets": [
+      {
+        "match_mode": "table_cells",
+        "pages": [
+          2,
+          5
+        ],
+        "snippet": "| HCR-RWP-0204 | PKR 510,000 | 30 November 2026 | PP-A |"
+      }
+    ]
+  },
+  "KF-080": {
+    "document": "Property_Listings.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      5
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          5
+        ],
+        "snippet": "led by Tariq Abbasi, arranges viewings on +92 992 5550 3001"
+      }
+    ]
+  },
+  "KF-081": {
+    "document": "Property_Listings.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      4
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          4
+        ],
+        "snippet": "led by Bilal Satti, arranges viewings on +92 51 5550 2001"
+      }
+    ]
+  },
+  "KF-082": {
+    "document": "Property_Listings.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      5
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          5
+        ],
+        "snippet": "or Nadia Khalid on +92 51 5550 2011"
+      }
+    ]
+  },
+  "KF-083": {
+    "document": "Property_Listings.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      1
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          1
+        ],
+        "snippet": "one marla is 272.25 sq ft and one kanal is 20 marla, or 5,445 sq ft"
+      }
+    ]
+  },
+  "KF-084": {
+    "document": "Services_and_Fees.pdf",
+    "match_mode": [
+      "table_cells"
+    ],
+    "matched": true,
+    "pages": [
+      2
+    ],
+    "snippets": [
+      {
+        "match_mode": "table_cells",
+        "pages": [
+          2
+        ],
+        "snippet": "| Slab 2 | PKR 10,000,001 to PKR 25,000,000 | 1.75% |"
+      }
+    ]
+  },
+  "KF-085": {
+    "document": "Services_and_Fees.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      2
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          2
+        ],
+        "snippet": "The minimum buying commission is PKR 150,000."
+      }
+    ]
+  },
+  "KF-086": {
+    "document": "Services_and_Fees.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      2
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          2
+        ],
+        "snippet": "A single admin fee of PKR 7,500 is charged per transaction"
+      }
+    ]
+  },
+  "KF-087": {
+    "document": "Services_and_Fees.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      2
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          2
+        ],
+        "snippet": "Commission is PKR 18,500,000 x 1.75% = PKR 323,750."
+      },
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          2
+        ],
+        "snippet": "Adding the admin fee of PKR 7,500 gives PKR 331,250."
+      }
+    ]
+  },
+  "KF-088": {
+    "document": "Services_and_Fees.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      2
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          2
+        ],
+        "snippet": "Commission is PKR 33,500,000 x 1.5% = PKR 502,500."
+      }
+    ]
+  },
+  "KF-089": {
+    "document": "Services_and_Fees.pdf",
+    "match_mode": [
+      "table_cells"
+    ],
+    "matched": true,
+    "pages": [
+      2
+    ],
+    "snippets": [
+      {
+        "match_mode": "table_cells",
+        "pages": [
+          2
+        ],
+        "snippet": "| Slab 2 | PKR 10,000,001 to PKR 25,000,000 | 2.25% |"
+      }
+    ]
+  },
+  "KF-090": {
+    "document": "Services_and_Fees.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      2
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          2
+        ],
+        "snippet": "The minimum selling commission is PKR 200,000."
+      }
+    ]
+  },
+  "KF-091": {
+    "document": "Services_and_Fees.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      2
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          2
+        ],
+        "snippet": "Commission is PKR 12,000,000 x 2.25% = PKR 270,000."
+      }
+    ]
+  },
+  "KF-092": {
+    "document": "Services_and_Fees.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      2
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          2
+        ],
+        "snippet": "must give 7 days written notice"
+      }
+    ]
+  },
+  "KF-093": {
+    "document": "Services_and_Fees.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      3
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          3
+        ],
+        "snippet": "The landlord pays 50% of one month's rent."
+      }
+    ]
+  },
+  "KF-094": {
+    "document": "Services_and_Fees.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      3
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          3
+        ],
+        "snippet": "Half of the rent is PKR 7,500, which is below the minimum"
+      }
+    ]
+  },
+  "KF-095": {
+    "document": "Services_and_Fees.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      3
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          3
+        ],
+        "snippet": "The management fee is 8% of the monthly rent collected."
+      },
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          3
+        ],
+        "snippet": "The minimum fee is PKR 6,000 per month."
+      }
+    ]
+  },
+  "KF-096": {
+    "document": "Services_and_Fees.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      3
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          3
+        ],
+        "snippet": "meet at a monthly rent of PKR 75,000"
+      }
+    ]
+  },
+  "KF-097": {
+    "document": "Services_and_Fees.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      4
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          4
+        ],
+        "snippet": "Either side may end a management agreement by giving 45 days notice."
+      }
+    ]
+  },
+  "KF-098": {
+    "document": "Services_and_Fees.pdf",
+    "match_mode": [
+      "table_cells"
+    ],
+    "matched": true,
+    "pages": [
+      2,
+      4
+    ],
+    "snippets": [
+      {
+        "match_mode": "table_cells",
+        "pages": [
+          2,
+          4
+        ],
+        "snippet": "| PKR 10,000,001 to PKR 25,000,000 | PKR 25,000 |"
+      }
+    ]
+  },
+  "KF-099": {
+    "document": "Services_and_Fees.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      4
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          4
+        ],
+        "snippet": "add PKR 10,000 to the tier fee"
+      }
+    ]
+  },
+  "KF-100": {
+    "document": "Services_and_Fees.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      4
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          4
+        ],
+        "snippet": "The tier fee is PKR 40,000, plus PKR 10,000, so PKR 50,000."
+      }
+    ]
+  },
+  "KF-101": {
+    "document": "Services_and_Fees.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      4
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          4
+        ],
+        "snippet": "The documentation support fee is PKR 35,000 per transaction."
+      }
+    ]
+  },
+  "KF-102": {
+    "document": "Services_and_Fees.pdf",
+    "match_mode": [
+      "table_cells"
+    ],
+    "matched": true,
+    "pages": [
+      4,
+      5
+    ],
+    "snippets": [
+      {
+        "match_mode": "table_cells",
+        "pages": [
+          4,
+          5
+        ],
+        "snippet": "| Consultation | PKR 20,000 per 60-minute session |"
+      }
+    ]
+  },
+  "KF-103": {
+    "document": "Services_and_Fees.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      5
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          5
+        ],
+        "snippet": "so PKR 100,000 in total"
+      }
+    ]
+  },
+  "KF-104": {
+    "document": "Services_and_Fees.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      5
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          5
+        ],
+        "snippet": "receives 10% off the company commission, up to a maximum discount of PKR 75,000"
+      }
+    ]
+  },
+  "KF-105": {
+    "document": "Services_and_Fees.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      5
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          5
+        ],
+        "snippet": "receives 20% off the buying commission"
+      }
+    ]
+  },
+  "KF-106": {
+    "document": "Services_and_Fees.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      5
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          5
+        ],
+        "snippet": "The referral discount and the early-bird discount cannot be combined."
+      }
+    ]
+  },
+  "KF-107": {
+    "document": "Services_and_Fees.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      5
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          5
+        ],
+        "snippet": "so the commission after discount is PKR 206,500."
+      }
+    ]
+  },
+  "KF-108": {
+    "document": "Services_and_Fees.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      5
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          5
+        ],
+        "snippet": "the commission after discount is PKR 855,000."
+      }
+    ]
+  },
+  "KF-109": {
+    "document": "Services_and_Fees.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      5
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          5
+        ],
+        "snippet": "so the commission after discount is PKR 259,000."
+      }
+    ]
+  },
+  "KF-110": {
+    "document": "Services_and_Fees.pdf",
+    "match_mode": [
+      "table_cells"
+    ],
+    "matched": true,
+    "pages": [
+      6
+    ],
+    "snippets": [
+      {
+        "match_mode": "table_cells",
+        "pages": [
+          6
+        ],
+        "snippet": "| PP-D | PKR 900,000 | PKR 10,900,000 |"
+      }
+    ]
+  },
+  "KF-111": {
+    "document": "Services_and_Fees.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      6
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          6
+        ],
+        "snippet": "Divided equally, each is PKR 1,711,250."
+      }
+    ]
+  },
+  "KF-112": {
+    "document": "Services_and_Fees.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      6
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          6
+        ],
+        "snippet": "so the total payable is PKR 8,904,000."
+      }
+    ]
+  },
+  "KF-113": {
+    "document": "Services_and_Fees.pdf",
+    "match_mode": [
+      "table_cells"
+    ],
+    "matched": true,
+    "pages": [
+      7
+    ],
+    "snippets": [
+      {
+        "match_mode": "table_cells",
+        "pages": [
+          7
+        ],
+        "snippet": "| Total company fees | PKR 366,250 |"
+      }
+    ]
+  },
+  "KF-114": {
+    "document": "Services_and_Fees.pdf",
+    "match_mode": [
+      "table_cells"
+    ],
+    "matched": true,
+    "pages": [
+      7
+    ],
+    "snippets": [
+      {
+        "match_mode": "table_cells",
+        "pages": [
+          7
+        ],
+        "snippet": "| Total company fees | PKR 312,500 |"
+      }
+    ]
+  },
+  "KF-115": {
+    "document": "Services_and_Fees.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      7
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          7
+        ],
+        "snippet": "are payable by the client and are not included in company fees"
+      }
+    ]
+  },
+  "KF-116": {
+    "document": "Services_and_Fees.pdf",
+    "match_mode": [
+      "table_cells"
+    ],
+    "matched": true,
+    "pages": [
+      7
+    ],
+    "snippets": [
+      {
+        "match_mode": "table_cells",
+        "pages": [
+          7
+        ],
+        "snippet": "| Booking token | 3% of price | 1 March 2019 to 31 December 2023 |"
+      }
+    ]
+  },
+  "KF-117": {
+    "document": "Services_and_Fees.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      8
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          8
+        ],
+        "snippet": "For HCR-ATD-0303 the transfer fee is PKR 95,000."
+      }
+    ]
+  },
+  "KF-118": {
+    "document": "Services_and_Fees.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      8
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          8
+        ],
+        "snippet": "usman.gillani@himalayacrest.example, +92 51 5550 1017"
+      }
+    ]
+  },
+  "KF-119": {
+    "document": "FAQs.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      1
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          1
+        ],
+        "snippet": "17 are available, 4 are reserved and 3 are sold"
+      }
+    ]
+  },
+  "KF-120": {
+    "document": "FAQs.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      2
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          2
+        ],
+        "snippet": "Adding the admin fee of PKR 7,500 gives PKR 420,000."
+      }
+    ]
+  },
+  "KF-121": {
+    "document": "FAQs.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      2
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          2
+        ],
+        "snippet": "Plot H-21 in Hilltop Enclave (HCR-ISB-0108)"
+      }
+    ]
+  },
+  "KF-122": {
+    "document": "FAQs.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      2
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          2
+        ],
+        "snippet": "The commission is PKR 20,000,000 x 2.25% = PKR 450,000."
+      }
+    ]
+  },
+  "KF-123": {
+    "document": "FAQs.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      2
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          2
+        ],
+        "snippet": "On a rent of PKR 90,000, each side therefore pays PKR 45,000."
+      }
+    ]
+  },
+  "KF-124": {
+    "document": "FAQs.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      3
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          3
+        ],
+        "snippet": "The deposit is 2 months of rent."
+      },
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          3
+        ],
+        "snippet": "It is returned within 14 days after the tenant has handed the unit back."
+      }
+    ]
+  },
+  "KF-125": {
+    "document": "FAQs.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      3
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          3
+        ],
+        "snippet": "A tenant must give 30 days notice."
+      },
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          3
+        ],
+        "snippet": "must give 60 days notice."
+      }
+    ]
+  },
+  "KF-126": {
+    "document": "FAQs.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      3
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          3
+        ],
+        "snippet": "For HCR-RWP-0205 (price PKR 24,500,000) it is PKR 490,000."
+      }
+    ]
+  },
+  "KF-127": {
+    "document": "FAQs.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      3
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          3
+        ],
+        "snippet": "the penalty is PKR 500 per day and stops at PKR 25,000"
+      }
+    ]
+  },
+  "KF-128": {
+    "document": "FAQs.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      3
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          3
+        ],
+        "snippet": "overdue for 60 days and the company has given 15 days written notice"
+      }
+    ]
+  },
+  "KF-129": {
+    "document": "FAQs.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      3
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          3
+        ],
+        "snippet": "The refund is PKR 147,500."
+      }
+    ]
+  },
+  "KF-130": {
+    "document": "FAQs.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      3
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          3
+        ],
+        "snippet": "The refund is paid within 21 working days of approval."
+      }
+    ]
+  },
+  "KF-131": {
+    "document": "FAQs.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      4
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          4
+        ],
+        "snippet": "which is PKR 245,000"
+      }
+    ]
+  },
+  "KF-132": {
+    "document": "FAQs.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      4
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          4
+        ],
+        "snippet": "A valuation of a PKR 30,000,000 home costs PKR 40,000"
+      }
+    ]
+  },
+  "KF-133": {
+    "document": "FAQs.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      4
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          4
+        ],
+        "snippet": "You will receive an acknowledgement within 2 working days."
+      }
+    ]
+  },
+  "KF-134": {
+    "document": "FAQs.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      5
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          5
+        ],
+        "snippet": "It is the same thing as the booking token, which is 2% of the price."
+      }
+    ]
+  },
+  "KF-135": {
+    "document": "FAQs.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      5
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          5
+        ],
+        "snippet": "a 7 marla plot measures 1,906 sq ft"
+      }
+    ]
+  },
+  "KF-136": {
+    "document": "FAQs.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      5
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          5
+        ],
+        "snippet": "The rental deposit used to be 3 months of rent until 31 May 2022"
+      }
+    ]
+  },
+  "KF-137": {
+    "document": "Policies_and_Terms.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      1
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          1
+        ],
+        "snippet": "The booking token is 2% of the property price."
+      }
+    ]
+  },
+  "KF-138": {
+    "document": "Policies_and_Terms.pdf",
+    "match_mode": [
+      "table_cells"
+    ],
+    "matched": true,
+    "pages": [
+      2
+    ],
+    "snippets": [
+      {
+        "match_mode": "table_cells",
+        "pages": [
+          2
+        ],
+        "snippet": "| Window 1 | Within 7 days of the booking date | 10% | 90% |"
+      }
+    ]
+  },
+  "KF-139": {
+    "document": "Policies_and_Terms.pdf",
+    "match_mode": [
+      "table_cells"
+    ],
+    "matched": true,
+    "pages": [
+      2
+    ],
+    "snippets": [
+      {
+        "match_mode": "table_cells",
+        "pages": [
+          2
+        ],
+        "snippet": "| Window 2 | From day 8 to day 30 | 50% | 50% |"
+      }
+    ]
+  },
+  "KF-140": {
+    "document": "Policies_and_Terms.pdf",
+    "match_mode": [
+      "table_cells"
+    ],
+    "matched": true,
+    "pages": [
+      2
+    ],
+    "snippets": [
+      {
+        "match_mode": "table_cells",
+        "pages": [
+          2
+        ],
+        "snippet": "| Window 3 | After day 30 | Token not refundable | 0% |"
+      }
+    ]
+  },
+  "KF-141": {
+    "document": "Policies_and_Terms.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      2
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          2
+        ],
+        "snippet": "so the refund is PKR 333,000."
+      }
+    ]
+  },
+  "KF-142": {
+    "document": "Policies_and_Terms.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      2
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          2
+        ],
+        "snippet": "so the refund is PKR 1,116,000."
+      }
+    ]
+  },
+  "KF-143": {
+    "document": "Policies_and_Terms.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      3
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          3
+        ],
+        "snippet": "the deduction is PKR 300,000 and the refund is PKR 1,700,000"
+      }
+    ]
+  },
+  "KF-144": {
+    "document": "Policies_and_Terms.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      3
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          3
+        ],
+        "snippet": "A refund is paid within 21 working days of approval."
+      }
+    ]
+  },
+  "KF-145": {
+    "document": "Policies_and_Terms.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      3
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          3
+        ],
+        "snippet": "A viewing may be cancelled by giving at least 24 hours notice"
+      }
+    ]
+  },
+  "KF-146": {
+    "document": "Policies_and_Terms.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      3
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          3
+        ],
+        "snippet": "The client has a grace period of 10 days after the due date."
+      }
+    ]
+  },
+  "KF-147": {
+    "document": "Policies_and_Terms.pdf",
+    "match_mode": [
+      "table_cells"
+    ],
+    "matched": true,
+    "pages": [
+      3
+    ],
+    "snippets": [
+      {
+        "match_mode": "table_cells",
+        "pages": [
+          3
+        ],
+        "snippet": "| PKR 1,000,000 | PKR 1,000 | PKR 50,000 | Day 50 of the penalty |"
+      }
+    ]
+  },
+  "KF-148": {
+    "document": "Policies_and_Terms.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      3
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          3
+        ],
+        "snippet": "the cap is reached after 50 days of penalty"
+      }
+    ]
+  },
+  "KF-149": {
+    "document": "Policies_and_Terms.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      3
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          3
+        ],
+        "snippet": "the instalment has been overdue for 60 days"
+      }
+    ]
+  },
+  "KF-150": {
+    "document": "Policies_and_Terms.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      3
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          3
+        ],
+        "snippet": "The transfer fee is 1% of the property price, with a minimum of PKR 50,000."
+      }
+    ]
+  },
+  "KF-151": {
+    "document": "Policies_and_Terms.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      3
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          3
+        ],
+        "snippet": "A transfer is not allowed within the first 30 days after booking."
+      },
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          3
+        ],
+        "snippet": "Processing takes 10 working days from the date the complete request is received."
+      }
+    ]
+  },
+  "KF-152": {
+    "document": "Policies_and_Terms.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      4
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          4
+        ],
+        "snippet": "HCR-LHR-0402, price PKR 33,500,000: 1% is PKR 335,000."
+      }
+    ]
+  },
+  "KF-153": {
+    "document": "Policies_and_Terms.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      4
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          4
+        ],
+        "snippet": "HCR-ISB-0105, price PKR 16,000,000: 1% is PKR 160,000."
+      }
+    ]
+  },
+  "KF-154": {
+    "document": "Policies_and_Terms.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      4
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          4
+        ],
+        "snippet": "so PKR 50,000 applies"
+      }
+    ]
+  },
+  "KF-155": {
+    "document": "Policies_and_Terms.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      4
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          4
+        ],
+        "snippet": "For a monthly rent of PKR 80,000 the deposit is PKR 160,000."
+      }
+    ]
+  },
+  "KF-156": {
+    "document": "Policies_and_Terms.pdf",
+    "match_mode": [
+      "table_cells"
+    ],
+    "matched": true,
+    "pages": [
+      4
+    ],
+    "snippets": [
+      {
+        "match_mode": "table_cells",
+        "pages": [
+          4
+        ],
+        "snippet": "| Landlord ending the tenancy | 60 days |"
+      }
+    ]
+  },
+  "KF-157": {
+    "document": "Policies_and_Terms.pdf",
+    "match_mode": [
+      "table_cells"
+    ],
+    "matched": true,
+    "pages": [
+      4
+    ],
+    "snippets": [
+      {
+        "match_mode": "table_cells",
+        "pages": [
+          4
+        ],
+        "snippet": "| Tenant leaving the unit | 30 days |"
+      }
+    ]
+  },
+  "KF-158": {
+    "document": "Policies_and_Terms.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      4
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          4
+        ],
+        "snippet": "The tenant is responsible for minor repairs of up to PKR 10,000 per item."
+      }
+    ]
+  },
+  "KF-159": {
+    "document": "Policies_and_Terms.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      5
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          5
+        ],
+        "snippet": "Client records are kept for 7 years after the last transaction."
+      }
+    ]
+  },
+  "KF-160": {
+    "document": "Policies_and_Terms.pdf",
+    "match_mode": [
+      "table_cells"
+    ],
+    "matched": true,
+    "pages": [
+      5
+    ],
+    "snippets": [
+      {
+        "match_mode": "table_cells",
+        "pages": [
+          5
+        ],
+        "snippet": "| Acknowledgement of the complaint | Within 2 working days |"
+      }
+    ]
+  },
+  "KF-161": {
+    "document": "Policies_and_Terms.pdf",
+    "match_mode": [
+      "table_cells"
+    ],
+    "matched": true,
+    "pages": [
+      5
+    ],
+    "snippets": [
+      {
+        "match_mode": "table_cells",
+        "pages": [
+          5
+        ],
+        "snippet": "| Resolution of the complaint | Within 15 working days |"
+      }
+    ]
+  },
+  "KF-162": {
+    "document": "Policies_and_Terms.pdf",
+    "match_mode": [
+      "table_cells"
+    ],
+    "matched": true,
+    "pages": [
+      5
+    ],
+    "snippets": [
+      {
+        "match_mode": "table_cells",
+        "pages": [
+          5
+        ],
+        "snippet": "| Chief Operating Officer decision, if escalated | Within 5 working days |"
+      }
+    ]
+  },
+  "KF-163": {
+    "document": "Policies_and_Terms.pdf",
+    "match_mode": [
+      "table_cells"
+    ],
+    "matched": true,
+    "pages": [
+      5
+    ],
+    "snippets": [
+      {
+        "match_mode": "table_cells",
+        "pages": [
+          5
+        ],
+        "snippet": "| Chief Executive Officer final review | Decision within 30 days"
+      }
+    ]
+  },
+  "KF-164": {
+    "document": "Policies_and_Terms.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      7
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          7
+        ],
+        "snippet": "the token refund is PKR 495,000"
+      }
+    ]
+  },
+  "KF-165": {
+    "document": "Policies_and_Terms.pdf",
+    "match_mode": [
+      "table_cells"
+    ],
+    "matched": true,
+    "pages": [
+      7
+    ],
+    "snippets": [
+      {
+        "match_mode": "table_cells",
+        "pages": [
+          7
+        ],
+        "snippet": "| Late-payment penalty | 0.15% per day | 1 July 2021 to 30 June 2023 |"
+      }
+    ]
+  },
+  "KF-166": {
+    "document": "Policies_and_Terms.pdf",
+    "match_mode": [
+      "table_cells"
+    ],
+    "matched": true,
+    "pages": [
+      7
+    ],
+    "snippets": [
+      {
+        "match_mode": "table_cells",
+        "pages": [
+          7
+        ],
+        "snippet": "| Refund window 1 length | 14 days | 1 March 2019 to 31 December 2023 |"
+      }
+    ]
+  },
+  "KF-167": {
+    "document": "Policies_and_Terms.pdf",
+    "match_mode": [
+      "table_cells"
+    ],
+    "matched": true,
+    "pages": [
+      7
+    ],
+    "snippets": [
+      {
+        "match_mode": "table_cells",
+        "pages": [
+          7
+        ],
+        "snippet": "| Buying commission, Slab 1 | 2.5% | 1 January 2023 to 28 February 2025 |"
+      }
+    ]
+  },
+  "KF-168": {
+    "document": "Policies_and_Terms.pdf",
+    "match_mode": [
+      "table_cells"
+    ],
+    "matched": true,
+    "pages": [
+      7
+    ],
+    "snippets": [
+      {
+        "match_mode": "table_cells",
+        "pages": [
+          7
+        ],
+        "snippet": "| Rental deposit | 3 months of rent | 1 June 2018 to 31 May 2022 |"
+      }
+    ]
+  },
+  "KF-169": {
+    "document": "Policies_and_Terms.pdf",
+    "match_mode": [
+      "table_cells"
+    ],
+    "matched": true,
+    "pages": [
+      7
+    ],
+    "snippets": [
+      {
+        "match_mode": "table_cells",
+        "pages": [
+          7
+        ],
+        "snippet": "| Valuation fee, up to PKR 10,000,000 | PKR 12,000 |"
+      }
+    ]
+  },
+  "KF-170": {
+    "document": "Policies_and_Terms.pdf",
+    "match_mode": [
+      "exact_page"
+    ],
+    "matched": true,
+    "pages": [
+      5
+    ],
+    "snippets": [
+      {
+        "match_mode": "exact_page",
+        "pages": [
+          5
+        ],
+        "snippet": "Sana Qadri (sana.qadri@himalayacrest.example, +92 51 5550 1011)"
+      }
+    ]
+  }
+}
