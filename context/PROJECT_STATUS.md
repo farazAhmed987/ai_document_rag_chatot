@@ -1,5 +1,5 @@
 # Project Status
-Last updated: 2026-10-28 | Updated by: Antigravity | Current phase: Phase 0 (skeleton done, tooling pending)
+Last updated: 2026-10-29 | Updated by: Antigravity | Current phase: Phase 1 (build sample PDFs and verify facts)
 
 Rules for this file: no secrets or connection strings; keep it under about 150 lines; when the logs grow, move old entries to context/archive/status-YYYY-MM.md.
 
@@ -13,7 +13,7 @@ Rules for this file: no secrets or connection strings; keep it under about 150 l
 ## Phase tracker
 | Phase | Name | Status | Tag | Gate passed on | Notes |
 |---|---|---|---|---|---|
-| 0 | Setup: skeleton, tooling (ruff, mypy, pytest, pre-commit, CI) | In progress (skeleton done) | v0.0-skeleton | | |
+| 0 | Setup: skeleton, tooling (ruff, mypy, pytest, pre-commit, CI) | Passed | v0.0-skeleton | 2026-10-29 | |
 | 1 | Sample data: facts sheet, 5 PDFs, golden set draft | In progress (source files placed, PDFs not built yet) | | | 5 docs, 170 key facts, 54 golden questions; sanity checks resolved |
 | 2 | Database schema and migrations (ops and analytics) | Not started | | | |
 | 3 | Extraction and cleaning | Not started | | | |
@@ -27,8 +27,8 @@ Rules for this file: no secrets or connection strings; keep it under about 150 l
 | 11 | Hardening, README, diagram, demo video, LinkedIn post | Not started | | | |
 
 ## Current step
-- Working on: Phase 1 preparation
-- Last result: 9 sample-data files placed, sanity-checked and pushed (6d59196)
+- Working on: Phase 1: build sample PDFs and verify facts
+- Last result: Phase 0 tooling passed
 - Blocked by: nothing
 
 ## Next actions
@@ -40,6 +40,7 @@ Rules for this file: no secrets or connection strings; keep it under about 150 l
 ## Gate log (newest first, append only)
 | Date | Phase | Commands run | Result | Commit or tag |
 |---|---|---|---|---|
+| 2026-10-29 | 0 | ruff, mypy, pytest, pre-commit | PASS | v0.0-skeleton |
 
 ## Decisions log (newest first)
 | Date | Decision | Reason |
@@ -71,6 +72,7 @@ Company name: Himalaya Crest Realty (Pvt.) Ltd.
 - The brief's deadline (12 September 2026) is earlier than the date of the SRD; confirm the real deadline with the mentor.
 
 ## Session log (one line per session, newest first)
+- 2026-10-29 | Phase 0 tooling passed | Antigravity
 - 2026-10-28 | sample data warnings resolved | Antigravity
 - 2026-10-28 | 9 sample-data files placed, sanity-checked and pushed | Antigravity
 - 2026-10-28 | Planning done; SRD v1 written; prompts for sample data and Phases 0 to 3 prepared | Claude

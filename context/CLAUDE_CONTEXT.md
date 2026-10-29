@@ -38,7 +38,7 @@ Phases 0 to 11 are in PROJECT_STATUS.md. Branch phase-N-name, conventional commi
 - Treat the repo files as the source of truth if they conflict with older chat memory.
 
 ## Current state snapshot (Claude updates every step)
-- Phase: 1 preparation (source files placed). Last gate: none yet. 9 data files in place; sanity checks: 2 PASS, 5 WARN, 0 FAIL. Next action: see PROJECT_STATUS.md.
+- Phase: 1 (build sample PDFs and verify facts). Last gate: Phase 0 passed (tag v0.0-skeleton, 2026-10-29). Next action: see PROJECT_STATUS.md.
 
 ## Open questions
 - Confirm the real submission deadline with the mentor (brief says 12 September 2026, which has passed).
