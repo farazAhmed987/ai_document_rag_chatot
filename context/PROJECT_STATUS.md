@@ -1,17 +1,19 @@
 # Project Status
 Last updated: 2026-10-31 | Updated by: Antigravity | Current phase: Phase 4 Stage 1 preflight (chunking tests authorized)
 
-Rules for this file: no secrets or connection strings; keep it under about 150 lines; when the logs grow, move old entries to context/archive/status-YYYY-MM.md.
+Rules for this file: no secrets or connection strings; keep it under about 150 lines; when the logs grow, move old entries to context/archive/status-YYYY-MM.md. Historical snapshots: context/archive/preflight-8735072/.
 
 ## Environment
 - OS: Fedora Linux 44 | Python: 3.12.16 | venv: .venv at repo root | IDE: Antigravity
 - Repo: https://github.com/farazAhmed987/ai_document_rag_chatot
-- Main HEAD: 8735072 (in sync with origin/main; contains docs commits)
-- Latest Release Tag: v0.3.1-extraction-hardening at 92f4ad5 (code release target)
-- Git Distinction: main (8735072) is ahead of release tag (92f4ad5) by documentation commits; they are not identical
+- Inspected Remote Baseline: origin/main at 8735072 (8735072a4c48c0c0ae5ad2f2659cc1f05b8addd7)
+- Preflight Docs Checkpoint: 26e89a0 (preflight decisions docs commit; not a code release)
+- Local Main State: local main has documentation-only commits ahead of origin/main
+- Release Tag Target: v0.3.1-extraction-hardening at 92f4ad5 (92f4ad56f9fa1068396c5cdfe6b6387396c519fa)
+- Git Distinction: main is ahead of origin/main by documentation commits; release tag sits at 92f4ad5
 - Operational database: PostgreSQL 17.11 on Supabase (pgvector 0.8.2, session pooler, RLS forced, rag_app role restricted)
 - Analytics database: PostgreSQL 17.11 on Supabase (session pooler, independent migrations)
-- RLS Live Verification: VERIFIED (pg_policies uses app.company_id on all 5 tables; rag_app has rolbypassrls=False, rolinherit=True)
+- RLS Live Verification: VERIFIED (pg_policies uses app.company_id on all 5 tables; rag_app has rolbypassrls=False, rolinherit=True; role-membership inheritance not audited in this preflight)
 - LLM provider: not configured yet (Gemini planned)
 
 ## Phase tracker
@@ -34,7 +36,7 @@ Rules for this file: no secrets or connection strings; keep it under about 150 l
 
 ## Current step
 - Working on: Phase 4 Stage 1 (tests only authorized by Claude; awaiting revised test instructions)
-- Last result: Preflight complete; live RLS verified with app.company_id; context updated
+- Last result: Preflight complete; live RLS verified with app.company_id; historical context archived
 - Status: Phase 4 NOT passed. Phase 5 NOT authorized. No implementation or RED/GREEN evidence exists.
 - Blocked by: Awaiting revised Stage 1 tests from ChatGPT
 
@@ -64,6 +66,7 @@ Rules for this file: no secrets or connection strings; keep it under about 150 l
 |---|---|---|
 | 2026-10-31 | Phase 4 Stage 1 (tests only) authorized; Phase 5 not authorized | Strict phase gating; chunking contract formalised before code |
 | 2026-10-31 | RLS session setting is `app.company_id`; live policies verified | Matches SRD 9 and code; earlier context mentioning `app.current_company_id` was erroneous |
+| 2026-10-31 | Role flags: rag_app has rolbypassrls=False, rolinherit=True | Observed via pg_roles; role-membership inheritance audit limitation noted |
 | 2026-10-31 | SRD v1.0 authoritative; byte-for-byte replace in Stage 2 | Authoritative requirements document; amendments tracked in docs/SRD_AMENDMENTS.md |
 | 2026-10-31 | Chunking budget: ceiling 1.15x, min 80 body tokens, overlap 60, tables 1500 | Prevents context fragmentation and budget blowup; ChunkingBudgetError on overflow |
 | 2026-10-31 | Stage 1 RED tests never committed/pushed; user must confirm "Phase 4 passed" before merge/tag | Strict quality control and audit trail |
@@ -96,6 +99,7 @@ Company name: Himalaya Crest Realty (Pvt.) Ltd.
 - Mentor deadline (12 September 2026 in brief) has passed; real deadline remains unconfirmed with mentor.
 
 ## Session log (one line per session, newest first)
+- 2026-10-31 | Preflight context corrections and historical archive created | Antigravity
 - 2026-10-31 | Phase 4 preflight executed; live RLS verified; decisions recorded | Antigravity
 - 2026-10-31 | GitHub sync verified; Part B hardening complete; documentation updated | Antigravity
 - 2026-10-31 | Hardening Part B passed (extraction/cleaning/verifier; 90.75% cov; 170/170 facts) | Antigravity
