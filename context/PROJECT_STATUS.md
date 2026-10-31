@@ -1,16 +1,17 @@
 # Project Status
-Last updated: 2026-10-31 | Updated by: Antigravity | Current phase: Phase 3 complete / Phase 4 pending Claude review
+Last updated: 2026-10-31 | Updated by: Antigravity | Current phase: Phase 4 Stage 1 preflight (chunking tests authorized)
 
 Rules for this file: no secrets or connection strings; keep it under about 150 lines; when the logs grow, move old entries to context/archive/status-YYYY-MM.md.
 
 ## Environment
 - OS: Fedora Linux 44 | Python: 3.12.16 | venv: .venv at repo root | IDE: Antigravity
 - Repo: https://github.com/farazAhmed987/ai_document_rag_chatot
-- Latest Commit: 92f4ad5 (full SHA: 92f4ad56f9fa1068396c5cdfe6b6387396c519fa)
-- Latest Tag: v0.3.1-extraction-hardening
-- Git Sync: local main, origin/main, and v0.3.1-extraction-hardening are aligned at 92f4ad5
+- Main HEAD: 8735072 (in sync with origin/main; contains docs commits)
+- Latest Release Tag: v0.3.1-extraction-hardening at 92f4ad5 (code release target)
+- Git Distinction: main (8735072) is ahead of release tag (92f4ad5) by documentation commits; they are not identical
 - Operational database: PostgreSQL 17.11 on Supabase (pgvector 0.8.2, session pooler, RLS forced, rag_app role restricted)
 - Analytics database: PostgreSQL 17.11 on Supabase (session pooler, independent migrations)
+- RLS Live Verification: VERIFIED (pg_policies uses app.company_id on all 5 tables; rag_app has rolbypassrls=False, rolinherit=True)
 - LLM provider: not configured yet (Gemini planned)
 
 ## Phase tracker
@@ -22,9 +23,9 @@ Rules for this file: no secrets or connection strings; keep it under about 150 l
 | — | Hardening Part A: Database & tenant role isolation | Passed | v0.2.1-db-hardening | 2026-10-31 | Commit 8c186d0; rag_app role, forced RLS, 17 DB tests pass |
 | 3 | Extraction and cleaning | Passed | v0.3-extraction | 2026-10-31 | Commit 65c4d8c; PDF, DOCX, TXT, MD extractors |
 | — | Hardening Part B: Extraction, structure & CI hardening | Passed | v0.3.1-extraction-hardening | 2026-10-31 | Commit 92f4ad5; 100 items (99 pass, 1 opt skip), 90.75% cov, 170/170 facts |
-| 4 | Chunking | Not started | | | Pending independent Claude validation |
-| 5 | Embedding module (BGE-M3) | Not started | | | |
-| 6 | Ingestion service end to end (CLI) | Not started | | | |
+| 4 | Chunking | Not started (Stage 1 tests authorized) | | | Preflight complete; no code or RED/GREEN evidence exists yet |
+| 5 | Embedding module (BGE-M3) | Not started | | | NOT authorized |
+| 6 | Ingestion service end to end (CLI) | Not started | | | NOT authorized |
 | 7 | Retrieval (dense, keyword, RRF, rerank) and golden-set evaluation | Not started | | | |
 | 8 | LLM answer, threshold gate, citations, Q&A logging | Not started | | | |
 | 9 | FastAPI endpoints | Not started | | | |
@@ -32,24 +33,25 @@ Rules for this file: no secrets or connection strings; keep it under about 150 l
 | 11 | Hardening, README, diagram, demo video, LinkedIn post | Not started | | | |
 
 ## Current step
-- Working on: Pre-flight interface capture and planning for Phases 4-6 (authorized by Claude)
-- Last result: Claude provisionally accepted Phase 3 & Hardening Part B; pre-flight checks executed
-- Blocked by: nothing (Phases 4-6 planning authorized by Claude)
+- Working on: Phase 4 Stage 1 (tests only authorized by Claude; awaiting revised test instructions)
+- Last result: Preflight complete; live RLS verified with app.company_id; context updated
+- Status: Phase 4 NOT passed. Phase 5 NOT authorized. No implementation or RED/GREEN evidence exists.
+- Blocked by: Awaiting revised Stage 1 tests from ChatGPT
 
-## Validation Summary (Part B Test & Gate Results)
-- Test Suite: 100 collected items (99 passed, 1 skipped: optional external samples, 0 failed; 17 db + 82 non-db).
-- Code Coverage: TOTAL 90.75% (minimum 88.0%); pdf.py 91.10% (minimum 85.0%); ocr.py 88.89% (minimum 80.0%).
-- Fact Verification: 170/170 key facts matched in both raw (exact_page: 142, table_cells: 39) and pipeline (exact_page: 142, table_row: 39) modes.
-- Page Map Differences (8): KF-016 (running footer removed), KF-027, KF-028, KF-029 (personnel table isolated to p7), KF-053, KF-078, KF-079, KF-098 (strict table_row matching resolves to specific schedule/fee tables).
-- Build Determinism: 2 independent sample PDF builds byte-identical across all 8 artifacts (5 PDFs + 3 variants).
-- Database Gate: Ops at 0002_ops_hardening, Analytics at 0001_analytics_initial, RLS forced on 5 tables, rag_app role restricted.
-- Remote Fresh-Clone Gate: Successfully cloned from remote into isolated tempdir; clean pip install, ruff check, ruff format, mypy, and pytest (-m "not db") passed (82 passed, 1 skipped).
-- Latest Git Verification (Read-Only): git ls-remote confirmed HEAD, main, and v0.3.1-extraction-hardening all point to 92f4ad5 on GitHub.
+## Phase 4 Chunking Contract & Governance
+- Segmentation: Contiguous non-table segments sharing page & section; chunks never cross page or section boundaries.
+- Token Limits: MIN_CHUNK_TOKENS=80 (body); overlap=60 (body); non-table ceiling CHUNK_TOKENS * 1.15 (incl header).
+- Subminimum Reasons: sole_chunk_of_segment and unit_indivisible only; small tails merge or rebalance.
+- Tables: MAX_TABLE_TOKENS=1500 (incl header, lead-in, repeated headers).
+- Errors & Limits: Oversized row or header raises ChunkingBudgetError (code CHUNK_BUDGET_EXCEEDED); header cap 25% of CHUNK_TOKENS.
+- Privacy & Splitting: Atomic chunking; diagnostics omit content, headings, filename. Overlong text uses deterministic hard splitting.
+- Workflow Rules: Stage 1 changes backend/tests/ only (no commit/push of RED). Phase branch pushed only after GREEN. Merge & tag require user's explicit "Phase 4 passed". Later context updates cite exact code SHA with "checks passed; awaiting Claude validation".
+- Authoritative SRD: Attached SRD v1.0 authoritative; replace docs/SRD.md byte-for-byte in Stage 2 with SHA-256 evidence; amendments in docs/SRD_AMENDMENTS.md.
 
 ## Gate log (newest first, append only)
 | Date | Phase | Commands run | Result | Commit or tag |
 |---|---|---|---|---|
-| 2026-10-31 | Git Verification | git status, git fetch, git ls-remote, git diff | PASS | 92f4ad5 (aligned with origin/main) |
+| 2026-10-31 | 4 Preflight | git status/rev-parse, pg_policies/pg_roles queries | PASS | Preflight complete; RLS verified |
 | 2026-10-31 | Hardening Part B | Stage 1 RED (24 fail), Stage 2 GREEN pytest --cov, verify_facts, Gate B, fresh-clone | PASS | 92f4ad5 / v0.3.1-extraction-hardening |
 | 2026-10-31 | 3 | ruff, mypy, pytest, verify_facts pipeline, Gate 3 | PASS | 65c4d8c / v0.3-extraction |
 | 2026-10-31 | Hardening Part A | Stage 1 RED (13 fail), Stage 2 GREEN, alembic downgrade/upgrade, db_check | PASS | 8c186d0 / v0.2.1-db-hardening |
@@ -60,16 +62,17 @@ Rules for this file: no secrets or connection strings; keep it under about 150 l
 ## Decisions log (newest first)
 | Date | Decision | Reason |
 |---|---|---|
-| 2026-10-31 | Claude provisionally accepts Phase 3 & Hardening B; authorizes Phases 4-6 planning | Reported validation metrics consistent across HEAD, origin/main, and tag 92f4ad5 |
+| 2026-10-31 | Phase 4 Stage 1 (tests only) authorized; Phase 5 not authorized | Strict phase gating; chunking contract formalised before code |
+| 2026-10-31 | RLS session setting is `app.company_id`; live policies verified | Matches SRD 9 and code; earlier context mentioning `app.current_company_id` was erroneous |
+| 2026-10-31 | SRD v1.0 authoritative; byte-for-byte replace in Stage 2 | Authoritative requirements document; amendments tracked in docs/SRD_AMENDMENTS.md |
+| 2026-10-31 | Chunking budget: ceiling 1.15x, min 80 body tokens, overlap 60, tables 1500 | Prevents context fragmentation and budget blowup; ChunkingBudgetError on overflow |
+| 2026-10-31 | Stage 1 RED tests never committed/pushed; user must confirm "Phase 4 passed" before merge/tag | Strict quality control and audit trail |
 | 2026-10-31 | Torch in optional `ml` extra; CI uses fake embedder | Keeps CI fast and avoids multi-GB download per test run |
 | 2026-10-31 | Reply language: RG-8 (user's language) adopted for Phase 8 | Replaces SRD 8.3 "always in English" for conversational Roman Urdu / English support |
-| 2026-10-31 | Authoritative RLS session setting name is `app.current_company_id` | Code is authoritative over SRD 9 `app.company_id` |
-| 2026-10-31 | Table `<br>` regex unwraps mid-token digits and short word fragments | Fixes wrapped ReportLab table cells (e.g. HCR-ISB-0101, Abbottabad) without breaking separate words |
 | 2026-10-31 | Restrict `rag_app` role; enforce `FORCE ROW LEVEL SECURITY` | Prevent company data leaks and enforce session-scoped tenant isolation (MT-1, MT-3, MT-5) |
 | 2026-10-31 | Strict `table_row` matching in pipeline fact verifier | Guarantees table cells are preserved on a single Markdown row (IN-1, IN-2) |
 | 2026-10-28 | Use .venv, no Docker | Developer preference |
 | 2026-10-28 | Support Markdown (.md) in addition to PDF, DOCX, TXT | Developer addition to SRD |
-| 2026-10-28 | Keep the external LLM for query rewriting; tiered local rewrite deferred | Revisit only if latency or rate limits hurt |
 | 2026-10-28 | Separate analytics database for Q&A events | Future ML work (SRD 9.1) |
 
 ## Sample data inventory
@@ -87,14 +90,13 @@ Company name: Himalaya Crest Realty (Pvt.) Ltd.
 | golden_set_draft.json | eval | — | 54 questions (10 direct, 6 table, 6 multi_part, 8 multi_doc, 6 unanswerable, 6 trap, 8 roman_urdu, 4 follow_up); 46 en, 8 roman_urdu |
 | omitted_topics.md | eval | — | 16 items |
 
-- Accepted: FAQs 3106 words; regex false positives; KF-040 and KF-048 are 81 and 82 characters (snippet limit relaxed to 100 in verify_facts); G hits are only the omitted-topics list in facts.md
-- Extra property ID in facts.md: regex matched HCR-VAL-2020 on line 111, which is the prefix of valuation licence HCR-VAL-2020-0035 (not a property ID); all 24 actual property IDs match Property_Listings.md
+- Accepted: FAQs 3106 words; regex false positives; KF-040 and KF-048 are 81 and 82 characters; G hits are only omitted-topics in facts.md; all 24 property IDs match.
 
 ## Known issues and open questions
-- The brief's deadline (12 September 2026) is earlier than the date of the SRD; confirm the real deadline with the mentor.
+- Mentor deadline (12 September 2026 in brief) has passed; real deadline remains unconfirmed with mentor.
 
 ## Session log (one line per session, newest first)
-- 2026-10-31 | Claude authorized Phases 4-6; pre-flight checks executed | Antigravity
+- 2026-10-31 | Phase 4 preflight executed; live RLS verified; decisions recorded | Antigravity
 - 2026-10-31 | GitHub sync verified; Part B hardening complete; documentation updated | Antigravity
 - 2026-10-31 | Hardening Part B passed (extraction/cleaning/verifier; 90.75% cov; 170/170 facts) | Antigravity
 - 2026-10-31 | Hardening Part A passed (db security, restricted role, RLS; commit 8c186d0) | Antigravity
