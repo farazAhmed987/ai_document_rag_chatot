@@ -36,14 +36,35 @@ class CleaningConfig:
             raise ValueError("repetition_ratio must be between 0 and 1")
 
 
+_ARABIC_RANGES = (
+    (0x0600, 0x06FF),
+    (0x0750, 0x077F),
+    (0x08A0, 0x08FF),
+    (0xFB50, 0xFDFF),
+    (0xFE70, 0xFEFF),
+)
+
+
+def _arabic(character: str) -> bool:
+    """Recognize Arabic-script neighbors used by joining format characters."""
+    return any(lower <= ord(character) <= upper for lower, upper in _ARABIC_RANGES)
+
+
 def normalize_unicode(text: str) -> str:
-    """Apply NFKC and remove invisible/control codepoints but retain newlines."""
-    text = text.replace("\r\n", "\n").replace("\r", "\n")
+    """Normalize Unicode while retaining Arabic ZWNJ/ZWJ when script-adjacent."""
+    source = unicodedata.normalize(
+        "NFKC", text.replace("\r\n", "\n").replace("\r", "\n")
+    )
     result: list[str] = []
-    for character in unicodedata.normalize("NFKC", text):
-        if character == "\u00ad":
+    for index, character in enumerate(source):
+        if character in ("\u200c", "\u200d"):
+            previous = source[index - 1] if index else ""
+            following = source[index + 1] if index + 1 < len(source) else ""
+            if _arabic(previous) or _arabic(following):
+                result.append(character)
+        elif character == "\u00ad":
             continue
-        if character in ("\n", "\t"):
+        elif character in ("\n", "\t"):
             result.append(character)
         elif unicodedata.category(character) in {"Cc", "Cf", "Cs"}:
             continue
@@ -126,8 +147,8 @@ def remove_running_matter(
     """
     page_units = [unit for unit in units if unit.kind == "page"]
     if len(page_units) < config.minimum_pages:
-        # Still remove isolated page-number lines from pages.
-        return _remove_page_numbers(units)
+        # Even short PDFs only lose a page number at the page boundary.
+        return _remove_page_numbers(units, config)
 
     required = max(
         config.minimum_pages,
@@ -151,16 +172,22 @@ def remove_running_matter(
             lines, from_bottom=True, count=config.boundary_lines
         )
         selections.append((top, bottom, lines))
-        header_counter.update({_signature(lines[i]) for i in top})
-        footer_counter.update({_signature(lines[i]) for i in bottom})
+        header_counter.update(
+            {_signature(lines[i]) for i in top if not _is_page_number(lines[i])}
+        )
+        footer_counter.update(
+            {_signature(lines[i]) for i in bottom if not _is_page_number(lines[i])}
+        )
         for i in top:
-            header_originals.setdefault(_signature(lines[i]), set()).add(
-                lines[i].strip()
-            )
+            if not _is_page_number(lines[i]):
+                header_originals.setdefault(_signature(lines[i]), set()).add(
+                    lines[i].strip()
+                )
         for i in bottom:
-            footer_originals.setdefault(_signature(lines[i]), set()).add(
-                lines[i].strip()
-            )
+            if not _is_page_number(lines[i]):
+                footer_originals.setdefault(_signature(lines[i]), set()).add(
+                    lines[i].strip()
+                )
 
     # Numerically changing body prose (such as "Unique paragraph 1") must
     # not be mistaken for running matter merely because digits normalize.
@@ -185,7 +212,9 @@ def remove_running_matter(
         kept: list[str] = []
         for index, line in enumerate(lines):
             signature = _signature(line)
-            if _is_page_number(line):
+            if (index in top or index in bottom) and _page_marker(
+                line, units[len(result)].page_number
+            ):
                 footers_removed += 1
             elif index in top and signature in recurring_headers:
                 headers_removed += 1
@@ -197,46 +226,88 @@ def remove_running_matter(
     return result, headers_removed, footers_removed
 
 
+def _page_marker(line: str, page_number: int | None) -> bool:
+    """Identify an explicit page label or its own page's bare index."""
+    if not _is_page_number(line):
+        return False
+    if re.search(r"\bPage\s+\d+", line, flags=re.IGNORECASE):
+        return True
+    digits = re.search(r"\d+", line)
+    return (
+        digits is not None
+        and page_number is not None
+        and int(digits.group()) == page_number
+    )
+
+
 def _remove_page_numbers(
-    units: list[ExtractedUnit],
+    units: list[ExtractedUnit], config: CleaningConfig
 ) -> tuple[list[str], int, int]:
-    """Strip page-number lines from PDFs only, never from DOCX/TXT/MD."""
+    """Strip explicit page markers only near PDF page boundaries."""
     result: list[str] = []
     removed = 0
     for unit in units:
-        lines = []
-        for line in unit.markdown.splitlines():
-            if unit.kind == "page" and _is_page_number(line):
+        lines = unit.markdown.splitlines()
+        if unit.kind != "page":
+            result.append(unit.markdown)
+            continue
+        top = _boundary_candidates(
+            lines, from_bottom=False, count=config.boundary_lines
+        )
+        bottom = _boundary_candidates(
+            lines, from_bottom=True, count=config.boundary_lines
+        )
+        kept: list[str] = []
+        for i, line in enumerate(lines):
+            if i in (top | bottom) and _page_marker(line, unit.page_number):
                 removed += 1
             else:
-                lines.append(line)
-        result.append("\n".join(lines))
+                kept.append(line)
+        result.append("\n".join(kept))
     return result, 0, removed
 
 
+def _barrier(line: str) -> bool:
+    """Prevent wrapping across Markdown structural and metadata boundaries."""
+    stripped = line.strip()
+    if not stripped:
+        return True
+    if _is_heading(line) or _is_list(line) or _is_table(line):
+        return True
+    if re.fullmatch(r"(?:-{3,}|\*{3,}|_{3,})", stripped):
+        return True
+    if stripped.startswith((">", "```", "~~~", "<")):
+        return True
+    if line.startswith(("    ", "\t")):
+        return True
+    return bool(re.fullmatch(r"[\w . /-]{1,35}:\s+\S.*", stripped))
+
+
 def rejoin_hard_wrapped(text: str) -> str:
-    """Rejoin prose lines, keeping paragraphs, tables, lists and headings."""
+    """Join only PDF/TXT prose; honor Markdown and metadata barriers."""
     result: list[str] = []
+    inside_code = False
     for line in text.splitlines():
         stripped = line.strip()
+        fence = stripped.startswith(("```", "~~~"))
         if not result:
             result.append(line)
+            if fence:
+                inside_code = not inside_code
             continue
         previous = result[-1].rstrip()
         if (
-            not stripped
-            or not previous.strip()
-            or _is_heading(stripped)
-            or _is_list(stripped)
-            or _is_table(stripped)
-            or _is_heading(previous)
-            or _is_list(previous)
-            or _is_table(previous)
+            inside_code
+            or fence
+            or _barrier(line)
+            or _barrier(previous)
             or previous.endswith((".", "!", "?", ":", ";", "…"))
         ):
             result.append(line)
         else:
             result[-1] = previous + " " + stripped
+        if fence:
+            inside_code = not inside_code
     return "\n".join(result)
 
 
@@ -307,7 +378,6 @@ def clean_document(
     interim: list[ExtractedUnit] = []
     for unit in extracted.units:
         text = normalize_unicode(unit.markdown)
-        text = re.sub(r"<br\s*/?>", " ", text, flags=re.IGNORECASE)
         text, count = dehyphenate(text)
         report.dehyphenations += count
         interim.append(
@@ -326,7 +396,18 @@ def clean_document(
     )
     cleaned_units: list[ExtractedUnit] = []
     for unit, text in zip(interim, texts, strict=True):
-        text = normalize_whitespace(rejoin_hard_wrapped(text))
+        # Tables may contain HTML soft breaks inserted by pymupdf4llm.
+        text = re.sub(r"(\d)<br\s*/?>(\d)", r"\1\2", text, flags=re.IGNORECASE)
+        text = re.sub(
+            r"([a-zA-Z]{3,})<br\s*/?>([a-z]{1,2}(?=\b|[|\s]))",
+            r"\1\2",
+            text,
+            flags=re.IGNORECASE,
+        )
+        text = re.sub(r"<br\s*/?>", " ", text, flags=re.IGNORECASE)
+        if extracted.file_type in {"pdf", "txt"}:
+            text = rejoin_hard_wrapped(text)
+        text = normalize_whitespace(text)
         for message in table_warnings(text):
             report.warnings.append(f"unit {unit.index}: {message}")
         if not text:

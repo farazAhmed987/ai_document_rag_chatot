@@ -27,9 +27,11 @@ from app.schemas.extraction import ExtractedDocument
 SUPPORTED = frozenset({".pdf", ".docx", ".txt", ".md"})
 
 
-def _validate_content(path: Path, suffix: str, data: bytes) -> None:
+def _validate_content(
+    path: Path, suffix: str, data: bytes, *, max_zip_uncompressed_mb: int
+) -> None:
     """Reject signatures inconsistent with the claimed extension."""
-    is_pdf = data.startswith(b"%PDF-")
+    is_pdf = b"%PDF-" in data[:1024]
     is_zip = zipfile.is_zipfile(path)
     guessed = filetype.guess(data[:261])
 
@@ -45,6 +47,22 @@ def _validate_content(path: Path, suffix: str, data: bytes) -> None:
             )
         try:
             with zipfile.ZipFile(path) as archive:
+                entries = archive.infolist()
+                total = sum(info.file_size for info in entries)
+                if total > max_zip_uncompressed_mb * 1024 * 1024:
+                    raise FileTooLargeError(
+                        "DOCX uncompressed content exceeds configured limit",
+                        code="zip_uncompressed_too_large",
+                    )
+                for info in entries:
+                    if info.file_size and (
+                        not info.compress_size
+                        or info.file_size / info.compress_size > 100
+                    ):
+                        raise FileTooLargeError(
+                            "DOCX entry exceeds safe compression ratio",
+                            code="zip_compression_ratio_exceeded",
+                        )
                 if "word/document.xml" not in archive.namelist():
                     raise CorruptFileError("DOCX archive has no word/document.xml")
         except zipfile.BadZipFile as exc:
@@ -63,6 +81,9 @@ def extract_document(
     max_mb: int | None = None,
     ocr_provider: OcrProvider | None = None,
     numbered_headings: bool = False,
+    max_pages: int | None = None,
+    max_extracted_chars: int | None = None,
+    max_zip_uncompressed_mb: int | None = None,
 ) -> ExtractedDocument:
     """Validate type and size, then extract one document.
 
@@ -93,15 +114,41 @@ def extract_document(
     if size > limit * 1024 * 1024:
         raise FileTooLargeError(f"Upload exceeds {limit} MB limit")
     data = path.read_bytes()
-    _validate_content(path, suffix, data)
+    settings = get_settings()
+    page_limit = max_pages if max_pages is not None else settings.MAX_PAGES
+    char_limit = (
+        max_extracted_chars
+        if max_extracted_chars is not None
+        else settings.MAX_EXTRACTED_CHARS
+    )
+    zip_limit = (
+        max_zip_uncompressed_mb
+        if max_zip_uncompressed_mb is not None
+        else settings.MAX_ZIP_UNCOMPRESSED_MB
+    )
+    if page_limit <= 0 or char_limit <= 0 or zip_limit < 0:
+        raise ValueError("Extraction limits must be positive")
+    _validate_content(path, suffix, data, max_zip_uncompressed_mb=zip_limit)
 
     extractor: DocumentExtractor
     if suffix == ".pdf":
-        extractor = PdfExtractor(ocr_provider=ocr_provider)
+        extractor = PdfExtractor(
+            ocr_provider=ocr_provider,
+            max_pages=page_limit,
+            max_extracted_chars=char_limit,
+        )
     elif suffix == ".docx":
         extractor = DocxExtractor()
     else:
         extractor = TextExtractor(
             markdown=(suffix == ".md"), numbered_headings=numbered_headings
         )
-    return extractor.extract(path, original_filename=original_filename)
+    document = extractor.extract(path, original_filename=original_filename)
+    if sum(len(unit.markdown) for unit in document.units) > char_limit:
+        raise FileTooLargeError(
+            "Extracted text exceeds configured character limit",
+            code="extracted_text_too_large",
+        )
+    from app.services.structure import annotate_heading_paths
+
+    return annotate_heading_paths(document)

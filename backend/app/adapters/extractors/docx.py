@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import re
 from pathlib import Path
+from typing import Any
 
 from docx import Document
 from docx.document import Document as WordDocument
@@ -23,12 +24,76 @@ def _cell_text(value: str) -> str:
     return " ".join(value.split()).replace("|", r"\|")
 
 
+def _paragraph_text(paragraph: Paragraph) -> str:
+    """Include inserted Word runs and exclude deleted revision text."""
+    chunks: list[str] = []
+
+    def walk(element: Any, deleted: bool = False) -> None:
+        tag = getattr(element, "tag", "")
+        if tag in {qn("w:del"), qn("w:delText")}:
+            return
+        if tag == qn("w:t") and not deleted:
+            chunks.append(getattr(element, "text", "") or "")
+            return
+        if tag == qn("w:tab"):
+            chunks.append("\t")
+        elif tag in {qn("w:br"), qn("w:cr")}:
+            chunks.append("\n")
+        for child in element:
+            walk(child, deleted)
+
+    walk(paragraph._p)
+    return "".join(chunks)
+
+
+def _body_children(element: Any) -> list[Any]:
+    """Expand content controls without changing paragraph/table order."""
+    result: list[Any] = []
+    for child in element:
+        if child.tag == qn("w:sdt"):
+            for content in child:
+                if content.tag == qn("w:sdtContent"):
+                    result.extend(_body_children(content))
+        else:
+            result.append(child)
+    return result
+
+
+def _cell_markdown(cell: Any) -> str:
+    """Flatten cell paragraphs and nested tables without adding pipe rows."""
+    parts: list[str] = []
+    for child in cell._tc.iterchildren():
+        if child.tag == qn("w:p"):
+            value = _paragraph_text(Paragraph(child, cell))
+            if value.strip():
+                parts.append(value.strip())
+        elif child.tag == qn("w:tbl"):
+            nested = Table(child, cell)
+            for row in nested.rows:
+                texts = [
+                    " ".join(_paragraph_text(p) for p in c.paragraphs)
+                    for c in row.cells
+                ]
+                parts.append(" / ".join(texts))
+    return _cell_text(" ".join(parts))
+
+
 def _table_markdown(table: Table) -> str:
-    """Convert an editable Word table to consistent Markdown pipe rows."""
-    rows = [[_cell_text(cell.text) for cell in row.cells] for row in table.rows]
+    """Render tables with deduplicated horizontally merged cells."""
+    rows: list[list[str]] = []
+    for row in table.rows:
+        cells: list[str] = []
+        last: object | None = None
+        for cell in row.cells:
+            if last is cell._tc:
+                cells.append("")
+            else:
+                cells.append(_cell_markdown(cell))
+            last = cell._tc
+        rows.append(cells)
     if not rows:
         return ""
-    width = max(len(row) for row in rows)
+    width = max(map(len, rows))
     rows = [row + [""] * (width - len(row)) for row in rows]
     lines = ["| " + " | ".join(rows[0]) + " |"]
     lines.append("| " + " | ".join(["---"] * width) + " |")
@@ -40,17 +105,21 @@ def _paragraph_markdown(
     paragraph: Paragraph, *, number_index: int = 1
 ) -> tuple[str, int | None]:
     """Render headings and lists from actual Word paragraph styles."""
-    text = paragraph.text.strip()
+    text = _paragraph_text(paragraph).strip()
     if not text:
         return "", None
     style = paragraph.style.name if paragraph.style is not None else ""
     heading = re.match(r"^Heading\s+([1-9])\b", style, re.IGNORECASE)
+    if style.casefold() == "title":
+        return f"# {text}", 1
     if heading:
         level = int(heading.group(1))
         return f"{'#' * level} {text}", level
     if "List Bullet" in style or "List Paragraph" in style:
         return f"- {text}", None
-    if "List Number" in style:
+    if "List Number" in style or (
+        paragraph._p.pPr is not None and paragraph._p.pPr.numPr is not None
+    ):
         return f"{number_index}. {text}", None
     return text, None
 
@@ -96,12 +165,15 @@ class DocxExtractor:
             lines.clear()
 
         try:
-            for element in document.element.body.iterchildren():
+            for element in _body_children(document.element.body):
                 if element.tag == qn("w:p"):
                     paragraph = Paragraph(element, document)
                     is_numbered = (
                         paragraph.style is not None
                         and "List Number" in paragraph.style.name
+                    ) or (
+                        paragraph._p.pPr is not None
+                        and paragraph._p.pPr.numPr is not None
                     )
                     numbered_index = numbered_index + 1 if is_numbered else 0
                     text, level = _paragraph_markdown(
@@ -109,10 +181,14 @@ class DocxExtractor:
                     )
                     if not text:
                         continue
-                    if level == 1 and lines:
+                    is_title = (
+                        paragraph.style is not None
+                        and paragraph.style.name.casefold() == "title"
+                    )
+                    if level == 1 and lines and not is_title:
                         emit()
                     if level is not None:
-                        heading_text = paragraph.text.strip()
+                        heading_text = _paragraph_text(paragraph).strip()
                         heading_path[:] = heading_path[: level - 1]
                         heading_path.append(heading_text)
                     lines.append(text)

@@ -11,37 +11,57 @@ from app.core.errors import CorruptFileError, EmptyDocumentError
 from app.schemas.extraction import ExtractedDocument, ExtractedUnit
 
 
+def _utf16_without_bom(data: bytes) -> str | None:
+    """Detect alternating NUL bytes, rejecting malformed UTF-16."""
+    if len(data) < 4:
+        return None
+    even = data[0::2].count(0)
+    odd = data[1::2].count(0)
+    pairs = len(data) // 2
+    if even >= pairs * 0.6 and odd == 0:
+        return data.decode("utf-16-be", errors="strict")
+    if odd >= pairs * 0.6 and even == 0:
+        return data.decode("utf-16-le", errors="strict")
+    return None
+
+
 def decode_text(data: bytes) -> tuple[str, list[str]]:
-    """Decode text using BOM, UTF-8, then charset-normalizer.
+    """Decode BOM, UTF-16 without BOM and legacy encodings safely.
 
-    Args:
-        data: File contents.
-
-    Returns:
-        Decoded text and any warnings about loss of fidelity.
+    Raises:
+        CorruptFileError: For malformed encodings or unexpected binary NULs.
     """
     warnings: list[str] = []
-    if data.startswith((b"\xff\xfe", b"\xfe\xff")):
-        text = data.decode("utf-16", errors="strict")
-    elif data.startswith(b"\xef\xbb\xbf"):
-        text = data.decode("utf-8-sig", errors="strict")
-    else:
-        try:
-            text = data.decode("utf-8", errors="strict")
-        except UnicodeDecodeError:
-            result = from_bytes(data).best()
-            if result is not None:
-                text = str(result)
-                warnings.append(
-                    f"Detected non-UTF-8 encoding: {result.encoding or 'unknown'}"
-                )
+    try:
+        if data.startswith((b"\xff\xfe", b"\xfe\xff")):
+            text = data.decode("utf-16", errors="strict")
+        elif data.startswith(b"\xef\xbb\xbf"):
+            text = data.decode("utf-8-sig", errors="strict")
+        else:
+            guessed_utf16 = _utf16_without_bom(data)
+            if guessed_utf16 is not None:
+                text = guessed_utf16
+                warnings.append("Detected UTF-16 without BOM")
             else:
-                text = data.decode("utf-8", errors="replace")
-                warnings.append("Encoding detection failed; UTF-8 replacement used")
-    text = text.replace("\r\n", "\n").replace("\r", "\n")
+                try:
+                    text = data.decode("utf-8", errors="strict")
+                except UnicodeDecodeError:
+                    best = from_bytes(data).best()
+                    if best is None:
+                        text = data.decode("utf-8", errors="replace")
+                        warnings.append(
+                            "Encoding detection failed; UTF-8 replacement used"
+                        )
+                    else:
+                        text = str(best)
+                        warnings.append(
+                            f"Detected non-UTF-8 encoding: {best.encoding or 'unknown'}"
+                        )
+    except (UnicodeError, LookupError, ValueError) as exc:
+        raise CorruptFileError("Invalid text encoding") from exc
     if "\x00" in text:
         raise CorruptFileError("Text document contains NUL bytes")
-    return text, warnings
+    return text.replace("\r\n", "\n").replace("\r", "\n"), warnings
 
 
 class TextExtractor:

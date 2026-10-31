@@ -12,7 +12,8 @@ Usage:
         --extractor raw \
         --report-pages data/facts/page_map.json
 
-The pipeline extractor is activated in Phase 3.
+Raw verification updates data/facts/page_map.json by default. Pipeline mode
+only writes a report when --report-pages is explicitly supplied (B7).
 """
 
 from __future__ import annotations
@@ -225,50 +226,63 @@ def full_text_match_pages(
     return sorted(matches)
 
 
-def match_snippet(pages: list[str], snippet: str) -> tuple[list[int], str]:
-    """Match a source snippet using the specified precedence.
+def ordered_table_row_match(page: str, snippet: str) -> bool:
+    """Require ALL normalized source cells in ONE Markdown table line.
 
-    Args:
-        pages: Extracted page text.
-        snippet: One verbatim source Markdown snippet.
-
-    Returns:
-        Matching one-based page numbers and the match method.
-
-    Match precedence:
-        1. Normalized exact page substring.
-        2. Normalized exact full-document substring.
-        3. All non-empty table cells in order on one page.
+    Unlike raw PDF matching, this does not allow cells to be assembled
+    from unrelated lines or different rows.
     """
-    target = normalize(snippet)
+    cells = [normalize(cell) for cell in snippet.split("|")]
+    cells = [cell for cell in cells if cell and cell != "---"]
+    if not cells:
+        return False
+    for line in page.splitlines():
+        if not line.strip().startswith("|"):
+            continue
+        normalized = normalize(re.sub(r"<br\s*/?>", " ", line, flags=re.IGNORECASE))
+        position = 0
+        for cell in cells:
+            next_position = normalized.find(cell, position)
+            if next_position < 0:
+                break
+            position = next_position + len(cell)
+        else:
+            return True
+    return False
 
+
+def match_snippet(
+    pages: list[str], snippet: str, *, mode: str = "raw"
+) -> tuple[list[int], str]:
+    """Match strict single Markdown table rows in pipeline mode."""
+    if mode == "pipeline" and "|" in snippet:
+        hits = [
+            index
+            for index, page in enumerate(pages, start=1)
+            if ordered_table_row_match(page, snippet)
+        ]
+        return hits, "table_row" if hits else "not_found"
+
+    target = normalize(snippet)
     if not target:
         return [], "empty_snippet"
-
     normalized_pages = [normalize(page) for page in pages]
-
-    exact_pages = [
+    hits = [
         index for index, page in enumerate(normalized_pages, start=1) if target in page
     ]
-
-    if exact_pages:
-        return exact_pages, "exact_page"
-
+    if hits:
+        return hits, "exact_page"
     full_pages = full_text_match_pages(normalized_pages, target)
-
     if full_pages:
         return full_pages, "exact_full_text"
-
-    if "|" in snippet:
+    if mode == "raw" and "|" in snippet:
         table_pages = [
             index
             for index, page in enumerate(normalized_pages, start=1)
             if ordered_table_match(page, snippet)
         ]
-
         if table_pages:
             return table_pages, "table_cells"
-
     return [], "not_found"
 
 
@@ -340,7 +354,7 @@ def verify(
     docs_dir: Path,
     facts_path: Path,
     extractor: str,
-    report_path: Path,
+    report_path: Path | None = None,
 ) -> bool:
     """Verify all facts and write the source-to-page map.
 
@@ -423,7 +437,7 @@ def verify(
 
         for snippet in snippets:
             found_pages, mode = (
-                match_snippet(pages, snippet)
+                match_snippet(pages, snippet, mode=extractor)
                 if pages is not None
                 else ([], "missing_pdf")
             )
@@ -460,22 +474,20 @@ def verify(
         if fully_matched:
             matching_facts += 1
 
-    report_path.parent.mkdir(parents=True, exist_ok=True)
-    report_path.write_text(
-        json.dumps(
-            page_map,
-            indent=2,
-            ensure_ascii=False,
-            sort_keys=True,
+    destination = report_path
+    if destination is None and extractor == "raw":
+        destination = DEFAULT_PAGE_MAP
+    if destination is not None:
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        destination.write_text(
+            json.dumps(page_map, indent=2, ensure_ascii=False, sort_keys=True) + "\n",
+            encoding="utf-8",
         )
-        + "\n",
-        encoding="utf-8",
-    )
 
     print(f"Key facts matched: {matching_facts}/{len(facts)}")
     coverage = 100 * matching_facts / len(facts)
     print(f"Fact coverage: {coverage:.2f}%")
-    print(f"Page map: {report_path}")
+    print(f"Page map: {destination if destination else 'not written'}")
 
     print()
     print("Snippet match modes:")
@@ -528,7 +540,7 @@ def main() -> None:
     parser.add_argument(
         "--report-pages",
         type=Path,
-        default=DEFAULT_PAGE_MAP,
+        default=None,
     )
 
     args = parser.parse_args()

@@ -137,3 +137,92 @@ def test_docx_variant_preserves_all_services_facts() -> None:
                 if found:
                     continue
             pytest.fail(f"Missing DOCX fact {fact['id']}: {snippet!r}")
+
+
+@pytest.mark.sample
+def test_every_source_table_row_is_one_cleaned_pdf_line() -> None:
+    """Verify every real Markdown row remains a single ordered PDF row (B7)."""
+    total = 0
+    for stem in ("Property_Listings", "Services_and_Fees"):
+        source_path = REPO_ROOT / "data" / "sample_docs_src" / f"{stem}.md"
+        source = source_path.read_text(encoding="utf-8")
+        cleaned = clean_document(extract_document(SAMPLES / f"{stem}.pdf"))
+        lines = [
+            line
+            for unit in cleaned.units
+            for line in unit.markdown.splitlines()
+            if line.lstrip().startswith("|")
+        ]
+        rows = [
+            line.strip()
+            for line in source.splitlines()
+            if line.strip().startswith("|")
+            and not re.match(r"^[|:\-\s]+$", line.strip())
+        ]
+        assert rows, f"No source table rows in {stem}"
+        for row in rows:
+            cells = [_normalize(cell) for cell in row.split("|") if _normalize(cell)]
+            found = False
+            for line in lines:
+                position = 0
+                text = _normalize(line)
+                for cell in cells:
+                    match = text.find(cell, position)
+                    if match < 0:
+                        break
+                    position = match + len(cell)
+                else:
+                    found = True
+                    break
+            assert found, f"{stem}: source row lost or split: {row!r}"
+            total += 1
+    assert total > 0
+    print(f"Verified source table rows: {total}")
+
+
+@pytest.mark.sample
+def test_faq_text_variants_contain_all_canonical_facts() -> None:
+    """The Markdown and TXT FAQ copies retain all canonical FAQ snippets."""
+    facts = json.loads(FACTS.read_text(encoding="utf-8"))
+    faq_facts = [fact for fact in facts if fact["document"] == "FAQs.md"]
+    assert faq_facts
+    for suffix in ("md", "txt"):
+        path = SAMPLES / "variants" / f"FAQs.{suffix}"
+        cleaned = clean_document(extract_document(path))
+        combined = _normalize("\n".join(unit.markdown for unit in cleaned.units))
+        for fact in faq_facts:
+            for snippet in fact["snippets"]:
+                normalized = _normalize(snippet)
+                assert normalized in combined or (
+                    "|" in snippet
+                    and all(
+                        _normalize(cell) in combined
+                        for cell in snippet.split("|")
+                        if _normalize(cell)
+                    )
+                ), f"{suffix}: missing FAQ fact {fact['id']}: {snippet!r}"
+
+
+@pytest.mark.sample
+def test_optional_external_sample_corpus() -> None:
+    """Optional external documents are readable without OCR or empty pages."""
+    external = SAMPLES / "external"
+    paths = (
+        sorted(
+            path
+            for path in external.glob("**/*")
+            if path.is_file()
+            and path.suffix.lower() in {".pdf", ".docx", ".txt", ".md"}
+        )
+        if external.is_dir()
+        else []
+    )
+    if not paths:
+        pytest.skip("No optional external samples")
+    for path in paths:
+        extracted = extract_document(path)
+        assert extracted.units, str(path)
+        assert all(
+            not unit.needs_ocr and bool(unit.markdown.strip())
+            for unit in extracted.units
+        ), str(path)
