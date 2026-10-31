@@ -7,38 +7,32 @@ Purpose: lets a fresh Claude session continue this project without prior chat hi
 - Loop per phase: ChatGPT delivers code, then Antigravity runs the RUN and GATE commands, then the user pastes REPORT BACK to Claude, then Claude reviews and replies with a verdict plus a CONTEXT UPDATE block, then Antigravity commits that update, then the user tells ChatGPT "Phase N passed".
 
 ## Project in brief
-Multi-company RAG chatbot dashboard for the DevSynt AI Internship (Task 5). Companies upload PDF, DOCX, TXT or Markdown files; the system extracts, cleans, chunks, embeds and stores them; users chat and get grounded answers with sources and a clear "not found" when information is missing. Sample data: a fictional real-estate company with 5 consistent documents. Users may ask in English or Roman Urdu. Full requirements: docs/SRD.md. The fictional company is Himalaya Crest Realty (Pvt.) Ltd.; the 5 source documents are Company_Overview.md, Property_Listings.md, Services_and_Fees.md, FAQs.md and Policies_and_Terms.md in data/sample_docs_src/.
+Multi-company RAG chatbot dashboard for the DevSynt AI Internship (Task 5). Companies upload PDF, DOCX, TXT or Markdown files; the system extracts, cleans, chunks, embeds and stores them; users chat and get grounded answers with sources and a clear "not found" when information is missing. Sample data: a fictional real-estate company with 5 consistent documents (Himalaya Crest Realty (Pvt.) Ltd. in data/sample_docs_src/). Requirements: docs/SRD.md.
 
-## Locked decisions
-- Backend FastAPI (Python 3.11 or 3.12, .venv, no Docker); frontend React, TypeScript, Vite, Tailwind.
-- Database: hosted Postgres with pgvector (Supabase). Shared tables with company_id plus row-level security; a separate analytics database stores all Q&A events for future ML (SRD 9.1).
-- Embeddings: BAAI/bge-m3, 1024 dimensions, local. Chunks about 500 tokens, about 12 percent overlap, structure-aware, tables kept whole, context header prepended.
-- Retrieval: dense plus Postgres full-text (simple config), merged with RRF, reranked with bge-reranker-v2-m3, relevance threshold gate before the LLM.
-- LLM: external provider (Gemini planned) for query rewrite and answer; strict grounded prompt; citations validated. Tiered local rewrite is a deferred option.
-- Quality: golden set (50 or more questions), pytest, ruff, mypy, pre-commit with gitleaks, GitHub Actions CI.
-- ML improvement is future work: supervised methods and evaluation first, RL last (SRD section 20).
+## Implemented Architecture & Security (Phases 0–3 + Hardening A & B)
+- Database & Security (Phase 2 + Hardening Part A): Hosted dual PostgreSQL 17.11 on Supabase (operational and analytics). Relational models (`companies`, `documents`, `chunks`, `chat_sessions`, `messages`) with foreign keys (`ON DELETE CASCADE`), `company_id` multi-tenancy, and `FORCE ROW LEVEL SECURITY` on all tables. Dedicated unprivileged `rag_app` role (`BYPASSRLS` false, `NOINHERIT`) with session configuration `app.current_company_id`. Alembic dual migrations: ops at `0002_ops_hardening`, analytics at `0001_analytics_initial`.
+- Extraction & Cleaning (Phase 3 + Hardening Part B): Format-aware factory:
+  - PDF: `pymupdf4llm` page-by-page extraction with reading-order block fallback, scanned-page image coverage heuristics, and null/offline OCR handling.
+  - DOCX: `python-docx` XML traversal handling paragraphs, tables, nested tables, horizontally merged cells, SDT content controls, and tracked deletions.
+  - Text & Markdown: BOM and alternating-NUL UTF-16 detection, strict decoding, and `charset-normalizer` fallback.
+  - Limits: Pre-extraction file-size, decompression ratio bomb checks, page-count limits, and extracted character caps.
+  - Cleaning: NFKC unicode normalization with Arabic/Urdu ZWNJ/ZWJ preservation, dehyphenation, boundary-only running headers/footers stripping, format-barrier-preserving hard-wrap rejoining (PDF/TXT only), and table cell `<br>` token/word unwrapping.
+  - Verification: Strict pipeline fact verifier requiring single-line `table_row` matches; 170/170 canonical facts verified.
 
-## Architecture summary
-Ingestion: upload, validate, store, extract, clean, chunk, embed, store in pgvector, status indexed or failed.
-Query: question and history, rewrite, embed, dense and keyword search for one company, RRF, rerank, threshold gate, prompt and LLM, answer with sources, log Q&A event.
+## Git Baseline & Release Tags
+- Latest Commit: `92f4ad5` (full SHA: `92f4ad56f9fa1068396c5cdfe6b6387396c519fa`).
+- Latest Release Tag: `v0.3.1-extraction-hardening`.
+- Status: Local `main`, `origin/main`, and `v0.3.1-extraction-hardening` point to `92f4ad5`.
+- Release Sequence: `v0.0-skeleton`, `v0.0-tooling`, `v0.1-sample-data`, `v0.2-database`, `v0.2.1-db-hardening` (commit `8c186d0`), `v0.3-extraction` (commit `65c4d8c`), `v0.3.1-extraction-hardening` (commit `92f4ad5`).
 
-## Repo map
-    backend/app/{api,services,repositories,adapters,models,schemas,core}   application code
-    backend/migrations/{ops,analytics}                                       Alembic environments
-    backend/tests/{unit,integration,fixtures}
-    frontend/   scripts/   eval/   data/{sample_docs_src,sample_docs,facts}
-    docs/SRD.md   docs/architecture/   context/   context/archive/
+## Hardening Verification & Review Considerations
+- Both hardening stages passed test-first RED/GREEN gates: Part A passed 13 RED failures; Part B passed 24 RED failures.
+- Previous Part B Validation: 99 passed, 1 skipped (`No optional external samples`), 0 failed. Overall coverage 90.75% (req >= 88.0%); PDF 91.10% (req >= 85.0%); OCR 88.89% (req >= 80.0%). Fresh clone gate passed cleanly.
+- Page Map Differences (8): KF-016 (running footer removed), KF-027, KF-028, KF-029 (personnel directory isolated to p7), KF-053, KF-078, KF-079, KF-098 (strict `table_row` matching isolates exact schedule/fee rows).
+- Module Coverage Note: `app/core/logging.py` currently shows 0% coverage (stand-alone structlog configuration utility not yet exercised by API tests).
+- Read-Only Git Check: Antigravity ran remote verification confirming GitHub alignment with zero code modifications.
 
-## Conventions
-Phases 0 to 11 are in PROJECT_STATUS.md. Branch phase-N-name, conventional commits, merge to main after the gate passes, tag v0.N-name. Every phase has a GATE; do not start the next phase until it passes.
-
-## How Claude must respond
-- Concise and step by step; give exact commands for Antigravity; validate each stage before the next; never invent library APIs; say when unsure.
-- After any step that changes project state, end the reply with a CONTEXT UPDATE block: the new session-log line, rows to add to the tracker, gate and decision logs, and any changed sections of this file, as ready-to-paste text. Claude cannot write to GitHub; Antigravity commits the update.
-- Treat the repo files as the source of truth if they conflict with older chat memory.
-
-## Current state snapshot (Claude updates every step)
-- Phase: 1 (build sample PDFs and verify facts). Last gate: Phase 0 passed (tag v0.0-skeleton, 2026-10-29). Next action: see PROJECT_STATUS.md.
-
-## Open questions
-- Confirm the real submission deadline with the mentor (brief says 12 September 2026, which has passed).
+## Current State & Next Steps
+- Current Status: Phases 0–3 and Hardening Parts A and B are COMPLETE. Claude provisionally accepted Phase 3 & Hardening Part B and authorized planning for Phases 4-6.
+- Phase 4 Status: Planning underway; pre-flight interface capture and checks executed for ChatGPT prompt. Implementation pending interface approval.
+- Next Planned Work: Phase 4 chunking (structure-aware, ~500 tokens, ~12% overlap, tables preserved whole, context header prepended), followed by Phase 5 (BGE-M3 embeddings, torch in optional ml extra) and Phase 6 (ingestion CLI).
