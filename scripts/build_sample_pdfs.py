@@ -22,6 +22,7 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from io import BytesIO
 from pathlib import Path
+from zipfile import ZIP_DEFLATED, ZipFile, ZipInfo
 
 from docx import Document
 from docx.shared import Pt
@@ -830,7 +831,24 @@ def build_docx(markdown: str, target: Path) -> None:
             document.add_paragraph(block.text)
 
     target.parent.mkdir(parents=True, exist_ok=True)
+    document.core_properties.revision = 1
     document.save(target)
+
+    # Rebuild OOXML ZIP metadata deterministically, preserving member bytes.
+    with ZipFile(target, "r") as original_zip:
+        members = {
+            item.filename: original_zip.read(item.filename)
+            for item in original_zip.infolist()
+        }
+    stable_archive = BytesIO()
+    with ZipFile(stable_archive, "w") as output_zip:
+        for member_name in sorted(members):
+            info = ZipInfo(member_name, date_time=(1980, 1, 1, 0, 0, 0))
+            info.compress_type = ZIP_DEFLATED
+            info.create_system = 3
+            info.external_attr = 0o600 << 16
+            output_zip.writestr(info, members[member_name])
+    target.write_bytes(stable_archive.getvalue())
 
 
 def build_documents(

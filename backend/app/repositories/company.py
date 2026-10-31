@@ -1,6 +1,6 @@
-"""Company repository constrained to the requested tenant.
+"""Tenant-scoped company reads and privileged company creation.
 
-SRD Sections 7 and 9; requirements MT-1 and MT-4.
+SRD Sections 7 and 9; MT-1, MT-3 and MT-4.
 """
 
 from __future__ import annotations
@@ -11,51 +11,44 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.models.company import Company
+from app.repositories.base import is_admin_session
 
 
 class CompanyRepository:
-    """Tenant-scoped company record access."""
+    """Repository bound to exactly one company for reads."""
 
     def __init__(self, session: Session, company_id: UUID) -> None:
-        """Bind this repository to one tenant.
-
-        Args:
-            session: Session already created using tenant_session.
-            company_id: Authorized company ID.
-        """
+        """Bind repository to the requested company UUID."""
         if not isinstance(company_id, UUID):
             raise TypeError("company_id must be a uuid.UUID")
         self.session = session
         self.company_id = company_id
 
     def create(self, *, name: str) -> Company:
-        """Create the already-authorized tenant company.
+        """Create a company exclusively through an admin session.
 
         Args:
-            name: Unique display name.
+            name: Unique company display name.
 
         Returns:
-            Newly inserted company record.
+            Inserted company.
+
+        Raises:
+            PermissionError: If session is not administrative.
         """
+        if not is_admin_session(self.session):
+            raise PermissionError("Company creation requires admin_session")
         company = Company(id=self.company_id, name=name)
         self.session.add(company)
         self.session.flush()
         return company
 
     def get(self) -> Company | None:
-        """Fetch only the bound company, if present.
-
-        Returns:
-            Company or None.
-        """
-        return self.session.get(Company, self.company_id)
+        """Return only the company matching this repository's UUID."""
+        return self.session.scalar(select(Company).where(Company.id == self.company_id))
 
     def list(self) -> list[Company]:
-        """List only the authorized company.
-
-        Returns:
-            Zero or one company record.
-        """
+        """List at most the company matching this repository's UUID."""
         return list(
             self.session.scalars(select(Company).where(Company.id == self.company_id))
         )

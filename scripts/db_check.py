@@ -20,7 +20,7 @@ from sqlalchemy import create_engine, inspect, text
 
 OPS_TABLES = {"companies", "documents", "chunks", "chat_sessions", "messages"}
 ANALYTICS_TABLES = {"qa_events", "qa_feedback", "qa_evaluations"}
-RLS_TABLES = {"documents", "chunks", "chat_sessions", "messages"}
+RLS_TABLES = {"companies", "documents", "chunks", "chat_sessions", "messages"}
 
 
 def check_database(*, analytics: bool) -> bool:
@@ -81,7 +81,7 @@ def check_database(*, analytics: bool) -> bool:
                         "SELECT c.relname, c.relrowsecurity, c.relforcerowsecurity "
                         "FROM pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace "
                         "WHERE n.nspname = 'public' AND c.relname IN "
-                        "('documents', 'chunks', 'chat_sessions', 'messages')"
+                        "('companies', 'documents', 'chunks', 'chat_sessions', 'messages')"
                     )
                 ).all()
                 policies = {
@@ -108,9 +108,24 @@ def check_database(*, analytics: bool) -> bool:
                     )
                 )
                 print(f"[{label}] rag_app role exists: {bool(role_exists)}")
-                if not role_exists:
+                passed = passed and bool(role_exists)
+                if role_exists:
+                    privileges = connection.execute(
+                        text(
+                            "SELECT "
+                            "has_table_privilege('rag_app', 'public.companies', 'SELECT'), "
+                            "has_table_privilege('rag_app', 'public.companies', 'INSERT'), "
+                            "has_table_privilege('rag_app', 'public.companies', 'UPDATE'), "
+                            "has_table_privilege('rag_app', 'public.companies', 'DELETE')"
+                        )
+                    ).one()
                     print(
-                        f"[{label}] WARNING: no rag_app role; RLS impersonation test skips"
+                        f"[{label}] rag_app company privileges (SELECT, I, U, D): {tuple(privileges)}"
+                    )
+                    passed = passed and tuple(privileges) == (True, False, False, False)
+                else:
+                    print(
+                        f"[{label}] FAIL: required non-bypass runtime role is missing"
                     )
 
             print(f"[{label}] {'PASS' if passed else 'FAIL'}")

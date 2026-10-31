@@ -1,6 +1,6 @@
-"""Tenant-owned chat sessions and persisted messages.
+"""Tenant-owned chat sessions and messages with message ordering index.
 
-SRD Section 9; requirements CH-1, CH-3 and MT-3.
+SRD Section 9; CH-1, CH-3, MT-3.
 """
 
 from __future__ import annotations
@@ -13,6 +13,7 @@ from sqlalchemy import (
     CheckConstraint,
     DateTime,
     ForeignKey,
+    Index,
     Integer,
     Text,
     func,
@@ -26,7 +27,7 @@ from app.models.base import Base
 
 
 class ChatSession(Base):
-    """Chat history belonging to exactly one company."""
+    """Chat history belonging to exactly one tenant."""
 
     __tablename__ = "chat_sessions"
 
@@ -48,11 +49,12 @@ class ChatSession(Base):
 
 
 class Message(Base):
-    """One persisted chat turn, isolated through the parent session."""
+    """Persisted chat turn isolated through its parent session."""
 
     __tablename__ = "messages"
     __table_args__ = (
         CheckConstraint("role IN ('user', 'assistant')", name="role_valid"),
+        Index("ix_messages_session_created", "session_id", "created_at"),
     )
 
     id: Mapped[UUID] = mapped_column(

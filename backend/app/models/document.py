@@ -1,6 +1,6 @@
-"""Uploaded document model and status constraints.
+"""Operational document model and tenant-safe relational constraints.
 
-SRD Sections 8.1 and 9; requirements DM-3, DM-5 and DM-7.
+SRD Sections 8.1 and 9; DM-3, DM-5, DM-7, MT-1.
 """
 
 from __future__ import annotations
@@ -13,12 +13,14 @@ from sqlalchemy import (
     CheckConstraint,
     DateTime,
     ForeignKey,
+    Index,
     Integer,
     Text,
     UniqueConstraint,
     func,
     text,
 )
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -28,15 +30,17 @@ DOCUMENT_STATUSES = ("uploaded", "processing", "indexed", "failed")
 
 
 class Document(Base):
-    """Tenant-owned original document and its indexing status."""
+    """Tenant-owned original document and processing status."""
 
     __tablename__ = "documents"
     __table_args__ = (
         UniqueConstraint("company_id", "sha256", name="uq_documents_company_sha256"),
+        UniqueConstraint("id", "company_id", name="uq_documents_id_company"),
         CheckConstraint(
             "status IN ('uploaded', 'processing', 'indexed', 'failed')",
             name="status_valid",
         ),
+        Index("ix_documents_company_status", "company_id", "status"),
     )
 
     id: Mapped[UUID] = mapped_column(
@@ -58,6 +62,9 @@ class Document(Base):
         Text, nullable=False, server_default=text("'uploaded'")
     )
     error_message: Mapped[str | None] = mapped_column(Text)
+    warnings: Mapped[list[str]] = mapped_column(
+        JSONB, nullable=False, server_default=text("'[]'::jsonb")
+    )
     page_count: Mapped[int | None] = mapped_column(Integer)
     chunk_count: Mapped[int] = mapped_column(
         Integer, nullable=False, server_default=text("0")

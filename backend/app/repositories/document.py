@@ -1,11 +1,12 @@
-"""Company-scoped document persistence and status updates.
+"""Tenant-scoped document persistence and explicit status field updates.
 
-SRD Sections 7, 8.1 and 9; requirements DM-3, DM-5, DM-7 and MT-1.
+SRD Sections 7, 8.1 and 9; DM-3, DM-5, DM-7 and MT-1.
 """
 
 from __future__ import annotations
 
 from datetime import datetime
+from typing import Final
 from uuid import UUID
 
 from sqlalchemy import select
@@ -14,16 +15,18 @@ from sqlalchemy.orm import Session
 from app.models.document import DOCUMENT_STATUSES, Document
 
 
+class _UnsetType:
+    """Distinguish omitted keyword arguments from explicit None."""
+
+
+UNSET: Final = _UnsetType()
+
+
 class DocumentRepository:
-    """Document operations always constrained to one tenant ID."""
+    """Document operations constrained to one company UUID."""
 
     def __init__(self, session: Session, company_id: UUID) -> None:
-        """Bind document operations to the required company.
-
-        Args:
-            session: Tenant-scoped transaction session.
-            company_id: Authorized company UUID.
-        """
+        """Bind document operations to the authorized company."""
         if not isinstance(company_id, UUID):
             raise TypeError("company_id must be a uuid.UUID")
         self.session = session
@@ -38,18 +41,7 @@ class DocumentRepository:
         sha256: str,
         size_bytes: int | None = None,
     ) -> Document:
-        """Persist a newly uploaded document.
-
-        Args:
-            filename: Original sanitized filename.
-            file_type: Validated file type.
-            file_path: Storage reference.
-            sha256: Full SHA-256 hex digest.
-            size_bytes: Optional file size.
-
-        Returns:
-            New persisted document with status uploaded.
-        """
+        """Insert a validated document with initial uploaded status."""
         document = Document(
             company_id=self.company_id,
             filename=filename,
@@ -64,14 +56,7 @@ class DocumentRepository:
         return document
 
     def get(self, document_id: UUID) -> Document | None:
-        """Return a document only when it belongs to this company.
-
-        Args:
-            document_id: Requested document UUID.
-
-        Returns:
-            Document or None; cross-tenant lookups never return rows.
-        """
+        """Return the requested document only for the authorized tenant."""
         return self.session.scalar(
             select(Document).where(
                 Document.id == document_id,
@@ -79,28 +64,8 @@ class DocumentRepository:
             )
         )
 
-    def list(self) -> list[Document]:
-        """List documents ordered by upload date.
-
-        Returns:
-            All documents belonging to the authorized company.
-        """
-        statement = (
-            select(Document)
-            .where(Document.company_id == self.company_id)
-            .order_by(Document.created_at.desc(), Document.id)
-        )
-        return list(self.session.scalars(statement))
-
     def find_by_sha256(self, sha256: str) -> Document | None:
-        """Look for a duplicate within this company only.
-
-        Args:
-            sha256: Document SHA-256.
-
-        Returns:
-            Matching document or None.
-        """
+        """Check for an existing matching document in this company."""
         return self.session.scalar(
             select(Document).where(
                 Document.company_id == self.company_id,
@@ -113,26 +78,25 @@ class DocumentRepository:
         document_id: UUID,
         status: str,
         *,
-        error_message: str | None = None,
+        error_message: str | None | _UnsetType = UNSET,
+        warnings: list[str] | _UnsetType = UNSET,
         page_count: int | None = None,
         chunk_count: int | None = None,
         processed_at: datetime | None = None,
     ) -> Document | None:
-        """Update processing fields on a tenant-owned document.
+        """Update status without silently clearing previous error details.
 
         Args:
-            document_id: Target document UUID.
-            status: One of the four legal document statuses.
-            error_message: Optional processing error or None to clear.
-            page_count: Optional page count update.
-            chunk_count: Optional chunk count update.
-            processed_at: Optional completion time.
+            document_id: Owned document UUID.
+            status: One of uploaded, processing, indexed or failed.
+            error_message: Omitted means preserve; explicit None clears.
+            warnings: Omitted means preserve; provided list replaces.
+            page_count: Optional replacement page count.
+            chunk_count: Optional replacement chunk count.
+            processed_at: Optional processing completion timestamp.
 
         Returns:
-            Updated document or None when inaccessible.
-
-        Raises:
-            ValueError: For an invalid status.
+            Updated document, or None if not visible to tenant.
         """
         if status not in DOCUMENT_STATUSES:
             raise ValueError(f"Invalid document status: {status}")
@@ -140,7 +104,10 @@ class DocumentRepository:
         if document is None:
             return None
         document.status = status
-        document.error_message = error_message
+        if not isinstance(error_message, _UnsetType):
+            document.error_message = error_message
+        if not isinstance(warnings, _UnsetType):
+            document.warnings = list(warnings)
         if page_count is not None:
             document.page_count = page_count
         if chunk_count is not None:
@@ -151,17 +118,19 @@ class DocumentRepository:
         return document
 
     def delete(self, document_id: UUID) -> bool:
-        """Delete a tenant-owned document and DB-cascaded chunks.
-
-        Args:
-            document_id: Document UUID.
-
-        Returns:
-            True only when the document was found and deleted.
-        """
+        """Delete one owned document and DB-cascaded chunks."""
         document = self.get(document_id)
         if document is None:
             return False
         self.session.delete(document)
         self.session.flush()
         return True
+
+    def list(self) -> list[Document]:
+        """Return owned documents sorted newest first."""
+        query = (
+            select(Document)
+            .where(Document.company_id == self.company_id)
+            .order_by(Document.created_at.desc(), Document.id)
+        )
+        return list(self.session.scalars(query))

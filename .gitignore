@@ -24,7 +24,7 @@ logs/
 
 # === Model caches ===
 .cache/
-models/
+/models/
 huggingface/
 
 # === Frontend ===
@@ -40,3 +40,4 @@ Thumbs.db
 
 # === IDE / agent local state ===
 .gemini/
+data/qa_spill/

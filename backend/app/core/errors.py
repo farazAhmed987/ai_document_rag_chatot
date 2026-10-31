@@ -1,10 +1,6 @@
-"""Application exception hierarchy.
+"""Machine-readable errors for HTTP and offline workflows.
 
-SRD Sections 8.4 and 14.
-Requirements: DM-2, IN-1, IN-2 and IN-3.
-
-Errors expose machine-readable codes suitable for the
-error envelope defined in SRD Section 10.
+SRD Sections 8.4 and 10; DM-2, IN-1, MT-3.
 """
 
 from __future__ import annotations
@@ -14,13 +10,7 @@ from typing import ClassVar
 
 
 class AppError(Exception):
-    """Base class for application-level errors.
-
-    Attributes:
-        code: Machine-readable error code.
-        message: Safe error description.
-        details: Additional structured error information.
-    """
+    """Base typed application error with the standard SRD error envelope."""
 
     default_code: ClassVar[str] = "app_error"
     status_code: ClassVar[int] = 400
@@ -32,25 +22,14 @@ class AppError(Exception):
         code: str | None = None,
         details: Mapping[str, object] | None = None,
     ) -> None:
-        """Initialize a structured application error.
-
-        Args:
-            message: Human-readable message.
-            code: Optional code override for specialized cases.
-            details: Optional structured context.
-        """
+        """Initialize error metadata without leaking secrets."""
         super().__init__(message)
-
         self.message = message
         self.code = code or self.default_code
         self.details = dict(details or {})
 
     def as_dict(self) -> dict[str, object]:
-        """Build the standard API error envelope.
-
-        Returns:
-            A dictionary containing code, message and details.
-        """
+        """Return the standard machine-readable error envelope."""
         return {
             "error": {
                 "code": self.code,
@@ -61,42 +40,45 @@ class AppError(Exception):
 
 
 class UnsupportedFileTypeError(AppError):
-    """Raised for unsupported or mismatched document types."""
+    """Unsupported extension or content type."""
 
     default_code = "unsupported_file_type"
-    status_code = 400
 
 
 class CorruptFileError(AppError):
-    """Raised when a document cannot be parsed safely."""
+    """Unreadable or malformed document."""
 
     default_code = "corrupt_file"
-    status_code = 400
 
 
 class EmptyDocumentError(AppError):
-    """Raised for empty documents or missing extractable content."""
+    """No usable document text."""
 
     default_code = "empty_document"
-    status_code = 400
 
 
 class PasswordProtectedError(AppError):
-    """Raised when an encrypted document requires a password."""
+    """Document cannot be opened without a password."""
 
     default_code = "password_protected"
-    status_code = 400
 
 
 class ExtractionError(AppError):
-    """Raised when document extraction fails."""
+    """Document conversion failed."""
 
     default_code = "extraction_failed"
     status_code = 422
 
 
 class FileTooLargeError(AppError):
-    """Raised when a file exceeds the configured upload limit."""
+    """Document is larger than configured limits."""
 
     default_code = "file_too_large"
     status_code = 413
+
+
+class TenantRoleError(AppError):
+    """Runtime role cannot be assumed; tenant access is denied."""
+
+    default_code = "tenant_runtime_role_unavailable"
+    status_code = 503

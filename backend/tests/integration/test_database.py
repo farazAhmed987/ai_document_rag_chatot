@@ -18,7 +18,7 @@ from sqlalchemy.orm import Session, sessionmaker
 
 from app.core.config import get_settings
 from app.models import ChatSession, Chunk, Document, Message
-from app.repositories.base import tenant_session
+from app.repositories.base import admin_session, tenant_session
 from app.repositories.company import CompanyRepository
 from app.repositories.document import DocumentRepository
 
@@ -53,8 +53,8 @@ def factory_for(connection: Connection) -> sessionmaker[Session]:
 
 
 def create_company(factory: sessionmaker[Session], company_id: UUID) -> None:
-    """Insert a unique tenant under a scoped savepoint."""
-    with tenant_session(factory, company_id) as session:
+    """Insert a unique tenant through the privileged administrative session."""
+    with admin_session(factory) as session:
         CompanyRepository(session, company_id).create(name=f"Test company {company_id}")
 
 
