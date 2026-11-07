@@ -1,5 +1,5 @@
 # Project Status
-Last updated: 2026-10-31 | Updated by: Antigravity | Current phase: Phase 4 Stage 1 preflight (chunking tests authorized)
+Last updated: 2026-11-03 | Updated by: Antigravity | Current phase: Phase 4 (chunking) in review, branch phase-4-chunking, not merged.
 
 Rules for this file: no secrets or connection strings; keep it under about 150 lines; when the logs grow, move old entries to context/archive/status-YYYY-MM.md. Historical snapshots: context/archive/preflight-8735072/.
 
@@ -25,7 +25,7 @@ Rules for this file: no secrets or connection strings; keep it under about 150 l
 | — | Hardening Part A: Database & tenant role isolation | Passed | v0.2.1-db-hardening | 2026-10-31 | Commit 8c186d0; rag_app role, forced RLS, 17 DB tests pass |
 | 3 | Extraction and cleaning | Passed | v0.3-extraction | 2026-10-31 | Commit 65c4d8c; PDF, DOCX, TXT, MD extractors |
 | — | Hardening Part B: Extraction, structure & CI hardening | Passed | v0.3.1-extraction-hardening | 2026-10-31 | Commit 92f4ad5; 100 items (99 pass, 1 opt skip), 90.75% cov, 170/170 facts |
-| 4 | Chunking | Not started (Stage 1 tests authorized) | | | Preflight complete; no code or RED/GREEN evidence exists yet |
+| 4 | Chunking | In review: evidence map v1.0.1 done, security fix pending, Claude code review pending | | | Evidence map v1.0.1, 176/176 related pairs, primary 170/170, key_facts related_documents amended for 7 pairs (see data/facts/key_facts.amendments.md) |
 | 5 | Embedding module (BGE-M3) | Not started | | | NOT authorized |
 | 6 | Ingestion service end to end (CLI) | Not started | | | NOT authorized |
 | 7 | Retrieval (dense, keyword, RRF, rerank) and golden-set evaluation | Not started | | | |
@@ -35,10 +35,10 @@ Rules for this file: no secrets or connection strings; keep it under about 150 l
 | 11 | Hardening, README, diagram, demo video, LinkedIn post | Not started | | | |
 
 ## Current step
-- Working on: Phase 4 Stage 1 (tests only authorized by Claude; awaiting revised test instructions)
-- Last result: Preflight complete; live RLS verified with app.company_id; historical context archived
-- Status: Phase 4 NOT passed. Phase 5 NOT authorized. No implementation or RED/GREEN evidence exists.
-- Blocked by: Awaiting revised Stage 1 tests from ChatGPT
+- Working on: Phase 4 in review (A-6 decisions applied, evidence map v1.0.1, 176/176 related pairs)
+- Last result: Full quality gates passed (189 passed, 1 skipped, 88.30% cov); real tokenizer: primary 170/170, related 176/176; map v1.0.1 valid
+- Status: Phase 4 is NOT passed. Phases 5 and 6 are NOT authorized. Implementation committed on phase-4-chunking (not merged, not tagged).
+- Blocked by: Awaiting Claude's review of the chunking code and final verdict
 
 ## Phase 4 Chunking Contract & Governance
 - Segmentation: Contiguous non-table segments sharing page & section; chunks never cross page or section boundaries.
@@ -47,12 +47,14 @@ Rules for this file: no secrets or connection strings; keep it under about 150 l
 - Tables: MAX_TABLE_TOKENS=1500 (incl header, lead-in, repeated headers).
 - Errors & Limits: Oversized row or header raises ChunkingBudgetError (code CHUNK_BUDGET_EXCEEDED); header cap 25% of CHUNK_TOKENS.
 - Privacy & Splitting: Atomic chunking; diagnostics omit content, headings, filename. Overlong text uses deterministic hard splitting.
-- Workflow Rules: Stage 1 changes backend/tests/ only (no commit/push of RED). Phase branch pushed only after GREEN. Merge & tag require user's explicit "Phase 4 passed". Later context updates cite exact code SHA with "checks passed; awaiting Claude validation".
+- Cross-Document Verification: A-6 contract verifies primary snippets in primary doc (170/170) and related pairs via data/facts/cross_doc_evidence.json (176/176).
+- Workflow Rules: Stage 1 changes backend/tests/ only. Phase branch pushed only after GREEN. Merge & tag require user's explicit "Phase 4 passed". Later context updates cite exact code SHA with "checks passed; awaiting Claude validation".
 - Authoritative SRD: Attached SRD v1.0 authoritative; replace docs/SRD.md byte-for-byte in Stage 2 with SHA-256 evidence; amendments in docs/SRD_AMENDMENTS.md.
 
 ## Gate log (newest first, append only)
 | Date | Phase | Commands run | Result | Commit or tag |
 |---|---|---|---|---|
+| 2026-11-03 | 4 Stage 2 A-6 | ruff, format, mypy, pytest --cov, verify_chunks | PASS | Commit 3a17a20 (189 pass, 88.30% cov, primary 170/170, related 176/176, map v1.0.1) |
 | 2026-10-31 | 4 Preflight | git status/rev-parse, pg_policies/pg_roles queries | PASS | Preflight complete; RLS verified |
 | 2026-10-31 | Hardening Part B | Stage 1 RED (24 fail), Stage 2 GREEN pytest --cov, verify_facts, Gate B, fresh-clone | PASS | 92f4ad5 / v0.3.1-extraction-hardening |
 | 2026-10-31 | 3 | ruff, mypy, pytest, verify_facts pipeline, Gate 3 | PASS | 65c4d8c / v0.3-extraction |
@@ -64,6 +66,10 @@ Rules for this file: no secrets or connection strings; keep it under about 150 l
 ## Decisions log (newest first)
 | Date | Decision | Reason |
 |---|---|---|
+| 2026-11-03 | No --no-verify; Gitleaks checksum false positive handled by narrow .gitleaks.toml allowlist | CI secret scan must scan the repo, not staged files |
+| 2026-11-03 | Remove 7 related_documents entries lacking source evidence (KF-018, 020, 022, 027, 029, 165, 170) | A related document must contain a component the answer needs; shared entity names or generic or conflicting values are distractors. Source data and golden set unchanged. |
+| 2026-11-03 | Evidence anchors must match with number boundaries | Substring anchors such as 10,000 inside 10,000,000 passed trivially. |
+| 2026-11-03 | Cross-document verification contract (Phase 4, amendment A-6) | Primary key-fact snippets are verified in the primary document (170/170). Each (fact_id, related document) pair named in key_facts.json is verified against a versioned, source-specific evidence map (data/facts/cross_doc_evidence.json): exact snippets taken from the source text, all inside ONE actual chunk, table evidence on one row. key_facts.json, sample documents and golden set are unchanged. The map is frozen once approved; chunker defects are fixed in code, never by editing the map. Pairs with no genuine support are reported as unsupported_pairs and need Claude's decision. Author-environment results (151 passed, 1 skipped, 88.19%) are not Antigravity evidence. Previous "118/170" metric is retired. |
 | 2026-10-31 | Phase 4 Stage 1 (tests only) authorized; Phase 5 not authorized | Strict phase gating; chunking contract formalised before code |
 | 2026-10-31 | RLS session setting is `app.company_id`; live policies verified | Matches SRD 9 and code; earlier context mentioning `app.current_company_id` was erroneous |
 | 2026-10-31 | Role flags: rag_app has rolbypassrls=False, rolinherit=True | Observed via pg_roles; role-membership inheritance audit limitation noted |
@@ -96,9 +102,13 @@ Company name: Himalaya Crest Realty (Pvt.) Ltd.
 - Accepted: FAQs 3106 words; regex false positives; KF-040 and KF-048 are 81 and 82 characters; G hits are only omitted-topics in facts.md; all 24 property IDs match.
 
 ## Known issues and open questions
+- CI gitleaks step may have scanned nothing; fixed in the security commit
+- Phase 4 chunking code not yet reviewed by Claude.
 - Mentor deadline (12 September 2026 in brief) has passed; real deadline remains unconfirmed with mentor.
 
 ## Session log (one line per session, newest first)
+- 2026-11-03 | Phase 4 interim review; security fix requested | Claude
+- 2026-11-03 | Phase 4 A-6 decisions applied, evidence map v1.0.1 | Antigravity
 - 2026-10-31 | Preflight context corrections and historical archive created | Antigravity
 - 2026-10-31 | Phase 4 preflight executed; live RLS verified; decisions recorded | Antigravity
 - 2026-10-31 | GitHub sync verified; Part B hardening complete; documentation updated | Antigravity

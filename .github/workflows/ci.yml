@@ -23,6 +23,11 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version: "1.24.x"
+          cache: false
+      - name: Install Gitleaks
+        run: go install github.com/zricethezav/gitleaks/v8@v8.30.1
+      - name: Gitleaks repository secret scan
+        run: gitleaks git --redact -v
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
@@ -37,7 +42,10 @@ jobs:
         run: mypy app
       - name: Tests including committed sample PDFs
         working-directory: backend
-        run: pytest -m "not db"
+        run: pytest -m "not db and not model" --cov=app --cov-report=term-missing --cov-report=json:coverage.json --cov-fail-under=88
+      - name: Phase 4 module coverage
+        working-directory: backend
+        run: python ../scripts/check_phase_coverage.py coverage.json --module app/services/chunking.py --module app/schemas/chunking.py --module app/adapters/tokenizers/bge_m3.py
       - name: Pre-commit
         run: pre-commit run --all-files
       - name: Protected file integrity

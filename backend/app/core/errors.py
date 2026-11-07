@@ -82,3 +82,10 @@ class TenantRoleError(AppError):
 
     default_code = "tenant_runtime_role_unavailable"
     status_code = 503
+
+
+class ChunkingBudgetError(AppError):
+    """A required context header or complete table row exceeds its budget."""
+
+    default_code = "CHUNK_BUDGET_EXCEEDED"
+    status_code = 422
