@@ -44,6 +44,7 @@ addopts = "-ra --strict-markers"
 markers = [
     "db: tests requiring the configured operational or analytics database",
     "sample: tests requiring generated sample documents",
+    "model: local-only tests requiring real model weights; excluded from CI",
 ]
 
 [tool.coverage.run]
@@ -54,4 +55,4 @@ branch = true
 show_missing = true
 skip_empty = true
 precision = 2
-fail_under = 85
+fail_under = 88

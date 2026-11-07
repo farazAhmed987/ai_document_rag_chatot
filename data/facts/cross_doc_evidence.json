@@ -1,0 +1,1774 @@
+{
+  "schema_version": 1,
+  "map_version": "1.0.1",
+  "key_facts_sha256": "5304223e3021dbe34ca92166651ca390193373eecdcdaa3b1f751b318891d4e3",
+  "source_sha256": {
+    "Company_Overview": "29f5f9c1356d0b169719c84b15922ef856463b02c2761699871447ef473a3f29",
+    "FAQs": "5e152f6557bfed616dc6163c6cf400489ad6a5b7dc3a43dc9d54cfe862a913c8",
+    "Policies_and_Terms": "60d3c054dcbf223b50829cbeffee9a6c658e8eca04dd7aab8d484d580e828b55",
+    "Property_Listings": "257b07954faee921deb167f288247eeea91fe37abb494e7dfcc4f03f65b4f8f6",
+    "Services_and_Fees": "49aa74b22b21f1fb13abcfb095d71e5b96b29e8b21eec2e762b04a81cf803cdf"
+  },
+  "entries": [
+    {
+      "fact_id": "KF-005",
+      "document": "Services_and_Fees",
+      "evidence_type": "prose",
+      "snippets": [
+        "Property management is for owners who prefer not to deal with tenants day to day. The team collects the rent, coordinates upkeep and repairs with approved contractors, and sends the owner regular reports. The service was launched on 1 April 2021 and currently looks after 214 properties. The Property Management Lead is Mehwish Tanveer (mehwish.tanveer@himalayacrest.example, +92 51 5550 1016)."
+      ],
+      "anchor": "214",
+      "note": "Confirms the current managed-property count."
+    },
+    {
+      "fact_id": "KF-008",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "Yes. The corporate registration number is HCR-CR-2012-004417. Each office holds its own real estate agent licence: HCR-REA-ISB-2013-0192 for the Head Office, HCR-REA-RWP-2014-0121 for Rawalpindi, HCR-REA-ATD-2016-0088 for Abbottabad and HCR-REA-LHR-2019-0207 for Lahore. The valuation practice licence is HCR-VAL-2020-0035, and the company's FARP membership number is FARP-2015-3381."
+      ],
+      "anchor": "HCR-REA-ISB-2013-0192",
+      "note": "Confirms the head-office licence number; its issue date remains primary-source evidence."
+    },
+    {
+      "fact_id": "KF-010",
+      "document": "Policies_and_Terms",
+      "evidence_type": "prose",
+      "snippets": [
+        "HCR is a member of the Fictional Association of Realty Professionals (FARP), membership number FARP-2015-3381, and its staff follow the association's published standards of conduct. The company's own code rests on its five core values: transparency, accountability, patience, local knowledge and respect for the client."
+      ],
+      "anchor": "membership number FARP-2015-3381, and",
+      "note": "Confirms FARP membership and its number; the joining date remains primary-source evidence."
+    },
+    {
+      "fact_id": "KF-012",
+      "document": "Property_Listings",
+      "evidence_type": "prose",
+      "snippets": [
+        "Key features: a valley view, a fireplace and a lawn. Pine Ridge Villas is the company's first own project, launched in 2017, and stands near Orchard Road and the Orchard Road Primary School."
+      ],
+      "anchor": "launched in 2017, and stands",
+      "note": "Confirms Pine Ridge Villas was the first own project and launched in 2017, not the exact day/month."
+    },
+    {
+      "fact_id": "KF-014",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "Yes. The corporate registration number is HCR-CR-2012-004417. Each office holds its own real estate agent licence: HCR-REA-ISB-2013-0192 for the Head Office, HCR-REA-RWP-2014-0121 for Rawalpindi, HCR-REA-ATD-2016-0088 for Abbottabad and HCR-REA-LHR-2019-0207 for Lahore. The valuation practice licence is HCR-VAL-2020-0035, and the company's FARP membership number is FARP-2015-3381."
+      ],
+      "anchor": "HCR-REA-LHR-2019-0207",
+      "note": "Confirms the Lahore licence number; its branch-opening date remains primary-source evidence."
+    },
+    {
+      "fact_id": "KF-015",
+      "document": "Services_and_Fees",
+      "evidence_type": "prose",
+      "snippets": [
+        "The valuation department produces written market valuation reports. It was established on 15 August 2020 and operates under valuation practice licence HCR-VAL-2020-0035. To date it has completed 2,410 valuations. Every report is signed by the Head of Valuation, Kamran Yousaf, and the department works separately from the sales teams so that a value is never influenced by a commission. Requests go to valuation@himalayacrest.example or to the Valuation line in Islamabad on +92 51 5550 1004."
+      ],
+      "anchor": "15 August 2020",
+      "note": "Directly confirms the valuation department establishment date."
+    },
+    {
+      "fact_id": "KF-016",
+      "document": "Services_and_Fees",
+      "evidence_type": "prose",
+      "snippets": [
+        "The valuation department produces written market valuation reports. It was established on 15 August 2020 and operates under valuation practice licence HCR-VAL-2020-0035. To date it has completed 2,410 valuations. Every report is signed by the Head of Valuation, Kamran Yousaf, and the department works separately from the sales teams so that a value is never influenced by a commission. Requests go to valuation@himalayacrest.example or to the Valuation line in Islamabad on +92 51 5550 1004."
+      ],
+      "anchor": "HCR-VAL-2020-0035",
+      "note": "Confirms the valuation licence and completed-valuation count."
+    },
+    {
+      "fact_id": "KF-017",
+      "document": "Services_and_Fees",
+      "evidence_type": "prose",
+      "snippets": [
+        "Property management is for owners who prefer not to deal with tenants day to day. The team collects the rent, coordinates upkeep and repairs with approved contractors, and sends the owner regular reports. The service was launched on 1 April 2021 and currently looks after 214 properties. The Property Management Lead is Mehwish Tanveer (mehwish.tanveer@himalayacrest.example, +92 51 5550 1016)."
+      ],
+      "anchor": "1 April 2021",
+      "note": "Directly confirms the property-management launch date."
+    },
+    {
+      "fact_id": "KF-021",
+      "document": "Services_and_Fees",
+      "evidence_type": "prose",
+      "snippets": [
+        "The investment advisory department was established on 2 January 2025 and is led from Lahore by Investment Advisor Rabia Chaudhry (rabia.chaudhry@himalayacrest.example, +92 42 5550 4011). Advisors meet clients to discuss goals, timelines and the mix of property types that might suit them. The service is offered as one-to-one consultations and as a written portfolio review."
+      ],
+      "anchor": "2 January 2025",
+      "note": "Directly confirms the advisory establishment date."
+    },
+    {
+      "fact_id": "KF-024",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "HCR is a real estate firm based in Islamabad. It helps people buy, sell and rent property, looks after let properties for owners, writes valuation reports, supports the paperwork of a deal and advises investors. Its mission is to keep every transaction clear, documented and fair. Its slogan is \"Clear deals, firm ground.\""
+      ],
+      "anchor": "Clear deals, firm ground.",
+      "note": "Directly confirms the company slogan."
+    },
+    {
+      "fact_id": "KF-025",
+      "document": "Policies_and_Terms",
+      "evidence_type": "prose",
+      "snippets": [
+        "If the client remains unsatisfied, the complaint goes to a final review by the Chief Executive Officer, Farhan Mirza (farhan.mirza@himalayacrest.example, +92 51 5550 1010). He decides within 30 days of the escalation."
+      ],
+      "anchor": "+92 51 5550 1010",
+      "note": "Supplies the named CEO contact and direct telephone number."
+    },
+    {
+      "fact_id": "KF-026",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "If the complaint is still unresolved after 15 working days, you may escalate it to the Chief Operating Officer, Sana Qadri, who gives a decision within 5 working days. A final review by the Chief Executive Officer follows if needed, with a decision within 30 days of the escalation."
+      ],
+      "anchor": "Sana Qadri",
+      "note": "Supports the COO identity and escalation step; the direct telephone number is supplied by the primary source."
+    },
+    {
+      "fact_id": "KF-026",
+      "document": "Policies_and_Terms",
+      "evidence_type": "prose",
+      "snippets": [
+        "If it is not resolved within 15 working days, the client may escalate it to the Chief Operating Officer, Sana Qadri (sana.qadri@himalayacrest.example, +92 51 5550 1011). She gives a decision within 5 working days."
+      ],
+      "anchor": "Sana Qadri",
+      "note": "Supports Sana Qadri as the COO escalation step and gives her direct contact details."
+    },
+    {
+      "fact_id": "KF-028",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "Write to complaints@himalayacrest.example or call +92 51 5550 1003. The Compliance and Complaints Officer, Saima Iqbal (saima.iqbal@himalayacrest.example), records and tracks every complaint."
+      ],
+      "anchor": "saima.iqbal@himalayacrest.example",
+      "note": "Confirms the named complaints officer email; this FAQ does not supply her direct telephone number."
+    },
+    {
+      "fact_id": "KF-028",
+      "document": "Policies_and_Terms",
+      "evidence_type": "prose",
+      "snippets": [
+        "A client may complain about any service, fee, staff member or document. Complaints can be sent to complaints@himalayacrest.example, made by telephone on +92 51 5550 1003 or handed in at any office. The Compliance and Complaints Officer, Saima Iqbal (saima.iqbal@himalayacrest.example, +92 51 5550 1018), receives and tracks every formal complaint and makes sure the response times below are met."
+      ],
+      "anchor": "saima.iqbal@himalayacrest.example",
+      "note": "Supplies the complaints officer email and direct telephone number."
+    },
+    {
+      "fact_id": "KF-030",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "Abbottabad Branch: Shop 3, Hill Arcade, Orchard Road, Abbottabad."
+      ],
+      "anchor": "Shop 3, Hill Arcade",
+      "note": "Directly confirms the Abbottabad branch address."
+    },
+    {
+      "fact_id": "KF-030",
+      "document": "Property_Listings",
+      "evidence_type": "prose",
+      "snippets": [
+        "Key features: a ground-floor position, a busy lane and a display window. Hill Arcade is also the address of the Abbottabad Branch on Orchard Road."
+      ],
+      "anchor": "Hill Arcade",
+      "note": "Confirms the branch building and street; the Shop 3 unit number remains in the primary source."
+    },
+    {
+      "fact_id": "KF-031",
+      "document": "FAQs",
+      "evidence_type": "table_row",
+      "snippets": [
+        "| Lahore Branch | 10:00 am to 7:00 pm | 10:00 am to 7:00 pm | Closed |"
+      ],
+      "anchor": "Lahore Branch",
+      "note": "Confirms weekday and Saturday hours and Sunday closure in the opening-hours table."
+    },
+    {
+      "fact_id": "KF-031",
+      "document": "Property_Listings",
+      "evidence_type": "prose",
+      "snippets": [
+        "Viewing notes: the Lahore Branch, led by Zeeshan Malik, arranges viewings on +92 42 5550 4001. The branch is open Monday to Saturday from 10:00 am to 7:00 pm."
+      ],
+      "anchor": "10:00 am to 7:00 pm",
+      "note": "Confirms Monday-to-Saturday opening hours, not the Sunday closure."
+    },
+    {
+      "fact_id": "KF-032",
+      "document": "FAQs",
+      "evidence_type": "table_row",
+      "snippets": [
+        "| Abbottabad Branch | 9:30 am to 5:30 pm | 10:00 am to 2:00 pm | Closed |"
+      ],
+      "anchor": "Abbottabad Branch",
+      "note": "Confirms the weekday and Saturday times in the opening-hours table."
+    },
+    {
+      "fact_id": "KF-032",
+      "document": "Property_Listings",
+      "evidence_type": "prose",
+      "snippets": [
+        "Viewing notes: the Abbottabad Branch, led by Tariq Abbasi, arranges viewings on +92 992 5550 3001. The branch is open Monday to Friday from 9:30 am to 5:30 pm and on Saturday from 10:00 am to 2:00 pm."
+      ],
+      "anchor": "9:30 am to 5:30 pm",
+      "note": "Confirms the weekday and Saturday opening times."
+    },
+    {
+      "fact_id": "KF-033",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "Lahore is the only office that stays open until 7:00 pm on a Saturday."
+      ],
+      "anchor": "7:00 pm",
+      "note": "Confirms the unique late Saturday opening."
+    },
+    {
+      "fact_id": "KF-034",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "Yes. The corporate registration number is HCR-CR-2012-004417. Each office holds its own real estate agent licence: HCR-REA-ISB-2013-0192 for the Head Office, HCR-REA-RWP-2014-0121 for Rawalpindi, HCR-REA-ATD-2016-0088 for Abbottabad and HCR-REA-LHR-2019-0207 for Lahore. The valuation practice licence is HCR-VAL-2020-0035, and the company's FARP membership number is FARP-2015-3381."
+      ],
+      "anchor": "HCR-CR-2012-004417",
+      "note": "Confirms the registration number; its issue date remains primary-source evidence."
+    },
+    {
+      "fact_id": "KF-035",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "Yes. The corporate registration number is HCR-CR-2012-004417. Each office holds its own real estate agent licence: HCR-REA-ISB-2013-0192 for the Head Office, HCR-REA-RWP-2014-0121 for Rawalpindi, HCR-REA-ATD-2016-0088 for Abbottabad and HCR-REA-LHR-2019-0207 for Lahore. The valuation practice licence is HCR-VAL-2020-0035, and the company's FARP membership number is FARP-2015-3381."
+      ],
+      "anchor": "HCR-REA-LHR-2019-0207",
+      "note": "Confirms the corresponding branch licence number."
+    },
+    {
+      "fact_id": "KF-036",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "Yes. The corporate registration number is HCR-CR-2012-004417. Each office holds its own real estate agent licence: HCR-REA-ISB-2013-0192 for the Head Office, HCR-REA-RWP-2014-0121 for Rawalpindi, HCR-REA-ATD-2016-0088 for Abbottabad and HCR-REA-LHR-2019-0207 for Lahore. The valuation practice licence is HCR-VAL-2020-0035, and the company's FARP membership number is FARP-2015-3381."
+      ],
+      "anchor": "HCR-REA-RWP-2014-0121",
+      "note": "Confirms the corresponding branch licence number."
+    },
+    {
+      "fact_id": "KF-037",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "Yes. The corporate registration number is HCR-CR-2012-004417. Each office holds its own real estate agent licence: HCR-REA-ISB-2013-0192 for the Head Office, HCR-REA-RWP-2014-0121 for Rawalpindi, HCR-REA-ATD-2016-0088 for Abbottabad and HCR-REA-LHR-2019-0207 for Lahore. The valuation practice licence is HCR-VAL-2020-0035, and the company's FARP membership number is FARP-2015-3381."
+      ],
+      "anchor": "HCR-REA-ATD-2016-0088",
+      "note": "Confirms the corresponding branch licence number."
+    },
+    {
+      "fact_id": "KF-042",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "Records are retained for 7 years after your last transaction. Requests about your data go to privacy@himalayacrest.example."
+      ],
+      "anchor": "7 years",
+      "note": "Confirms retention after the last transaction."
+    },
+    {
+      "fact_id": "KF-042",
+      "document": "Policies_and_Terms",
+      "evidence_type": "prose",
+      "snippets": [
+        "Client records are kept for 7 years after the last transaction. After that period they are reviewed for secure disposal."
+      ],
+      "anchor": "7 years",
+      "note": "Confirms the retention period after the last transaction."
+    },
+    {
+      "fact_id": "KF-043",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "This document collects the questions that clients of Himalaya Crest Realty (HCR) ask most often. The answers are written in plain language and are grouped by topic: the company, buying, selling, renting, payments, documents, viewings, complaints and local terms. Where a full explanation exists elsewhere, the answer points to the Property Listings, Services and Fees, or Policies and Terms document. If a question is not answered here, the Client Services Centre in Islamabad will be glad to help on +92 51 5550 1002 or at info@himalayacrest.example."
+      ],
+      "anchor": "+92 51 5550 1002",
+      "note": "Supplies the Client Services Centre telephone number."
+    },
+    {
+      "fact_id": "KF-044",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "The agreement lasts 90 days and can be renewed. If you wish to cancel it, send 7 days written notice."
+      ],
+      "anchor": "90 days",
+      "note": "Confirms renewal and seven-day written cancellation notice."
+    },
+    {
+      "fact_id": "KF-044",
+      "document": "Policies_and_Terms",
+      "evidence_type": "prose",
+      "snippets": [
+        "A listing agreement with a seller runs for 90 days and can be renewed. The seller may cancel it by giving 7 days written notice."
+      ],
+      "anchor": "90 days",
+      "note": "Confirms renewal and seven-day written cancellation notice."
+    },
+    {
+      "fact_id": "KF-044",
+      "document": "Services_and_Fees",
+      "evidence_type": "prose",
+      "snippets": [
+        "Every sale is handled under a written listing agreement. The agreement runs for 90 days and can be renewed. An owner who wishes to cancel the agreement must give 7 days written notice."
+      ],
+      "anchor": "90 days",
+      "note": "Confirms the agreement duration, renewal and written cancellation notice."
+    },
+    {
+      "fact_id": "KF-045",
+      "document": "Services_and_Fees",
+      "evidence_type": "prose",
+      "snippets": [
+        "The rental service matches landlords with tenants for homes and commercial space. The consultant advertises the let, shows the unit, checks that both sides understand the terms and prepares the tenancy paperwork. Rental enquiries go to rentals@himalayacrest.example or to the Rentals and Management line in Islamabad on +92 51 5550 1005."
+      ],
+      "anchor": "+92 51 5550 1005",
+      "note": "Confirms the Rentals and Management telephone line."
+    },
+    {
+      "fact_id": "KF-046",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "Write to complaints@himalayacrest.example or call +92 51 5550 1003. The Compliance and Complaints Officer, Saima Iqbal (saima.iqbal@himalayacrest.example), records and tracks every complaint."
+      ],
+      "anchor": "complaints@himalayacrest.example",
+      "note": "Confirms the complaints mailbox."
+    },
+    {
+      "fact_id": "KF-046",
+      "document": "Policies_and_Terms",
+      "evidence_type": "prose",
+      "snippets": [
+        "A client may complain about any service, fee, staff member or document. Complaints can be sent to complaints@himalayacrest.example, made by telephone on +92 51 5550 1003 or handed in at any office. The Compliance and Complaints Officer, Saima Iqbal (saima.iqbal@himalayacrest.example, +92 51 5550 1018), receives and tracks every formal complaint and makes sure the response times below are met."
+      ],
+      "anchor": "complaints@himalayacrest.example",
+      "note": "Confirms the formal complaints mailbox."
+    },
+    {
+      "fact_id": "KF-047",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "Records are retained for 7 years after your last transaction. Requests about your data go to privacy@himalayacrest.example."
+      ],
+      "anchor": "privacy@himalayacrest.example",
+      "note": "Confirms the data/privacy contact mailbox."
+    },
+    {
+      "fact_id": "KF-047",
+      "document": "Policies_and_Terms",
+      "evidence_type": "prose",
+      "snippets": [
+        "A client who wishes to see, correct or ask about the data the company holds should write to privacy@himalayacrest.example. The company will acknowledge the request and reply in writing."
+      ],
+      "anchor": "privacy@himalayacrest.example",
+      "note": "Confirms the mailbox for data requests."
+    },
+    {
+      "fact_id": "KF-048",
+      "document": "Policies_and_Terms",
+      "evidence_type": "prose",
+      "snippets": [
+        "HCR-ISB-0101, price PKR 18,500,000: token PKR 370,000."
+      ],
+      "anchor": "HCR-ISB-0101, price PKR 18,500,000:",
+      "note": "Confirms the named property price and booking token."
+    },
+    {
+      "fact_id": "KF-048",
+      "document": "Services_and_Fees",
+      "evidence_type": "prose",
+      "snippets": [
+        "**HCR-ISB-0101 (Crest View Residency Block A, Two-Bed Apartment A).** The price of PKR 18,500,000 falls in Slab 2. Commission is PKR 18,500,000 x 1.75% = PKR 323,750. Adding the admin fee of PKR 7,500 gives PKR 331,250."
+      ],
+      "anchor": "HCR-ISB-0101",
+      "note": "Provides the named property price and the 1.75% commission calculation, excluding the token component."
+    },
+    {
+      "fact_id": "KF-050",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "The Block A unit (HCR-ISB-0101) costs PKR 18,500,000 and is planned for handover on 30 June 2028. The Block B unit (HCR-ISB-0102) costs PKR 19,200,000 and is planned for handover on 31 December 2028. Both measure 4 marla (1,089 sq ft), have 2 bedrooms and 2 bathrooms, and are offered under plan PP-B. Both are available."
+      ],
+      "anchor": "HCR-ISB-0102",
+      "note": "Confirms the Block B apartment price in the comparison."
+    },
+    {
+      "fact_id": "KF-054",
+      "document": "Services_and_Fees",
+      "evidence_type": "prose",
+      "snippets": [
+        "**HCR-ISB-0104 (Crest View Residency Block B, Three-Bed Apartment B).** The price of PKR 27,500,000 falls in Slab 3. Commission is PKR 27,500,000 x 1.5% = PKR 412,500. With the admin fee the total is PKR 420,000."
+      ],
+      "anchor": "HCR-ISB-0104",
+      "note": "Confirms the named apartment price; token amount remains primary-source evidence."
+    },
+    {
+      "fact_id": "KF-055",
+      "document": "Policies_and_Terms",
+      "evidence_type": "prose",
+      "snippets": [
+        "HCR-ISB-0105, price PKR 16,000,000: 1% is PKR 160,000."
+      ],
+      "anchor": "HCR-ISB-0105, price PKR 16,000,000:",
+      "note": "Confirms the named shop price; this transfer example does not itself assert the booking token."
+    },
+    {
+      "fact_id": "KF-055",
+      "document": "Services_and_Fees",
+      "evidence_type": "prose",
+      "snippets": [
+        "The surcharge is a percentage of the property price and is added to the total payable. The down payment is a percentage of the price, not of the price plus surcharge. The booking token, which is 2% of the price, is counted toward the down payment, so the buyer pays the remaining part of the down payment after the token. The balance, which is the rest of the price plus the surcharge, is paid in the stated number of instalments."
+      ],
+      "anchor": "2%",
+      "note": "Supplies the 2% token rule used with the primary shop price to calculate PKR 320,000."
+    },
+    {
+      "fact_id": "KF-057",
+      "document": "Policies_and_Terms",
+      "evidence_type": "prose",
+      "snippets": [
+        "HCR-ISB-0107, price PKR 62,000,000: token PKR 1,240,000."
+      ],
+      "anchor": "HCR-ISB-0107, price PKR 62,000,000:",
+      "note": "Confirms both named property price and booking token."
+    },
+    {
+      "fact_id": "KF-057",
+      "document": "Services_and_Fees",
+      "evidence_type": "prose",
+      "snippets": [
+        "**Referral on HCR-ISB-0107 (Ridge House).** Commission is PKR 62,000,000 x 1.5% = PKR 930,000. Ten percent would be PKR 93,000, but the cap is PKR 75,000, so the discount is PKR 75,000 and the commission after discount is PKR 855,000."
+      ],
+      "anchor": "HCR-ISB-0107",
+      "note": "Confirms the named Ridge House price through its worked commission example; not the token."
+    },
+    {
+      "fact_id": "KF-058",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "No. The token is part of the price you pay, and it is counted toward your down payment. On HCR-ISB-0108, for example, the down payment is PKR 8,400,000, of which the token of PKR 420,000 is already paid, leaving PKR 7,980,000 to pay."
+      ],
+      "anchor": "On HCR-ISB-0108, for example",
+      "note": "Confirms the named plot token and its inclusion in the down payment."
+    },
+    {
+      "fact_id": "KF-058",
+      "document": "Services_and_Fees",
+      "evidence_type": "prose",
+      "snippets": [
+        "**PP-A: HCR-ISB-0108 (Hilltop Enclave, Plot H-21), price PKR 21,000,000.**\n- Surcharge is 0%, so the total is PKR 21,000,000.\n- Down payment is 40% = PKR 8,400,000. The token of PKR 420,000 is included, so PKR 7,980,000 is further due.\n- The remaining 60% is PKR 12,600,000, paid over 4 quarterly instalments of PKR 3,150,000 each when divided equally."
+      ],
+      "anchor": "HCR-ISB-0108",
+      "note": "Confirms the named plot price, token and PP-A calculations."
+    },
+    {
+      "fact_id": "KF-060",
+      "document": "Services_and_Fees",
+      "evidence_type": "prose",
+      "snippets": [
+        "**HCR-RWP-0201 (Saffron Heights, One-Bed Apartment).** The price of PKR 8,400,000 falls in Slab 1. Commission is PKR 8,400,000 x 2.0% = PKR 168,000, above the minimum."
+      ],
+      "anchor": "HCR-RWP-0201",
+      "note": "Confirms the named apartment price; the quoted PKR 168,000 is commission, not a token."
+    },
+    {
+      "fact_id": "KF-061",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "The standard unit (HCR-RWP-0202) costs PKR 14,750,000. The corner unit (HCR-RWP-0203) costs PKR 15,250,000, because of its corner windows. Each measures 4 marla (1,089 sq ft), and both are planned for handover on 31 August 2027 under plan PP-C."
+      ],
+      "anchor": "HCR-RWP-0202",
+      "note": "Confirms the named standard apartment price."
+    },
+    {
+      "fact_id": "KF-061",
+      "document": "Policies_and_Terms",
+      "evidence_type": "prose",
+      "snippets": [
+        "The booking token is 2% of the property price. It is paid when the client decides to proceed and it is recorded by the finance team, which issues a written receipt called a rasid. The token is not a company fee. It forms part of the price paid for the property and is counted toward the down payment of the chosen payment plan."
+      ],
+      "anchor": "2%",
+      "note": "Supplies the 2% token rule used with the primary price to obtain PKR 295,000."
+    },
+    {
+      "fact_id": "KF-061",
+      "document": "Services_and_Fees",
+      "evidence_type": "prose",
+      "snippets": [
+        "**Early-bird on HCR-RWP-0202 (Saffron Heights, Two-Bed Apartment).** Commission is PKR 14,750,000 x 1.75% = PKR 258,125. The discount is 20% of that, PKR 51,625, so the commission after discount is PKR 206,500."
+      ],
+      "anchor": "HCR-RWP-0202",
+      "note": "Confirms the named apartment price used for the worked discount calculation."
+    },
+    {
+      "fact_id": "KF-062",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "The standard unit (HCR-RWP-0202) costs PKR 14,750,000. The corner unit (HCR-RWP-0203) costs PKR 15,250,000, because of its corner windows. Each measures 4 marla (1,089 sq ft), and both are planned for handover on 31 August 2027 under plan PP-C."
+      ],
+      "anchor": "HCR-RWP-0203",
+      "note": "Confirms the named corner apartment price."
+    },
+    {
+      "fact_id": "KF-064",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "The token is 2% of the property price. For HCR-RWP-0205 (price PKR 24,500,000) it is PKR 490,000. Since 1 January 2024 the rate has been 2%; an older rate that applied before that date is no longer in force."
+      ],
+      "anchor": "HCR-RWP-0205",
+      "note": "Confirms the named row house price and token."
+    },
+    {
+      "fact_id": "KF-064",
+      "document": "Policies_and_Terms",
+      "evidence_type": "prose",
+      "snippets": [
+        "HCR-RWP-0205, price PKR 24,500,000: token PKR 490,000."
+      ],
+      "anchor": "HCR-RWP-0205, price PKR 24,500,000:",
+      "note": "Confirms the named row house price and token."
+    },
+    {
+      "fact_id": "KF-066",
+      "document": "Services_and_Fees",
+      "evidence_type": "prose",
+      "snippets": [
+        "**PP-D: HCR-ATD-0302 (Pine Ridge Villas, Villa Type 2), price PKR 72,000,000 (used here as an illustration only, because the villa is currently reserved).**\n- Surcharge is 9% = PKR 6,480,000, so the total payable is PKR 78,480,000.\n- Down payment is 25% = PKR 18,000,000. The token of PKR 1,440,000 is included, so PKR 16,560,000 is further due.\n- The remaining 75% of the price plus the surcharge is PKR 54,000,000 + PKR 6,480,000 = PKR 60,480,000, paid over 36 monthly instalments. Divided equally, each is PKR 1,680,000."
+      ],
+      "anchor": "HCR-ATD-0302",
+      "note": "Confirms the named reserved villa price and booking token in a worked plan example."
+    },
+    {
+      "fact_id": "KF-067",
+      "document": "Policies_and_Terms",
+      "evidence_type": "prose",
+      "snippets": [
+        "HCR-ATD-0303, price PKR 9,500,000: token PKR 190,000."
+      ],
+      "anchor": "HCR-ATD-0303, price PKR 9,500,000:",
+      "note": "Confirms both named plot price and booking token."
+    },
+    {
+      "fact_id": "KF-067",
+      "document": "Services_and_Fees",
+      "evidence_type": "prose",
+      "snippets": [
+        "**HCR-ATD-0303 (Pine Ridge Plots, Plot P-12).** The price of PKR 9,500,000 falls in Slab 1. Commission is PKR 9,500,000 x 2.0% = PKR 190,000, which is above the PKR 150,000 minimum, so PKR 190,000 is charged."
+      ],
+      "anchor": "HCR-ATD-0303",
+      "note": "Confirms the named plot price; PKR 190,000 here is commission, not the booking token."
+    },
+    {
+      "fact_id": "KF-071",
+      "document": "Policies_and_Terms",
+      "evidence_type": "prose",
+      "snippets": [
+        "HCR-LHR-0402, price PKR 33,500,000: 1% is PKR 335,000."
+      ],
+      "anchor": "HCR-LHR-0402, price PKR 33,500,000:",
+      "note": "Confirms the named apartment price; this transfer example is not the buying commission calculation."
+    },
+    {
+      "fact_id": "KF-071",
+      "document": "Services_and_Fees",
+      "evidence_type": "prose",
+      "snippets": [
+        "**HCR-LHR-0402 (Lotus Gardens, Three-Bed Apartment).** The price of PKR 33,500,000 falls in Slab 3. Commission is PKR 33,500,000 x 1.5% = PKR 502,500."
+      ],
+      "anchor": "HCR-LHR-0402",
+      "note": "Confirms the named apartment price, rate and commission calculation."
+    },
+    {
+      "fact_id": "KF-073",
+      "document": "Services_and_Fees",
+      "evidence_type": "prose",
+      "snippets": [
+        "**An office floor valued at PKR 47,500,000.** The tier fee is PKR 40,000, plus PKR 10,000, so PKR 50,000."
+      ],
+      "anchor": "47,500,000",
+      "note": "Supplies the commercial valuation calculation for the stated property value."
+    },
+    {
+      "fact_id": "KF-075",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "The inventory holds 24 properties. At the effective date of this document, 17 are available, 4 are reserved and 3 are sold. Only available properties can be booked. A reserved property has already been booked by another client, and a sold property is shown for reference only."
+      ],
+      "anchor": "17 are available, 4 are reserved and 3 are sold",
+      "note": "Directly confirms all inventory status counts."
+    },
+    {
+      "fact_id": "KF-076",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "The earliest handover date among available properties is 31 December 2026. It applies to Plot H-21 in Hilltop Enclave (HCR-ISB-0108) and Plot P-12 in Pine Ridge Plots (HCR-ATD-0303). The latest date in the whole inventory is 30 September 2029, for the Lotus Gardens penthouse."
+      ],
+      "anchor": "31 December 2026",
+      "note": "Directly confirms the earliest available-property handover date."
+    },
+    {
+      "fact_id": "KF-077",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "The earliest handover date among available properties is 31 December 2026. It applies to Plot H-21 in Hilltop Enclave (HCR-ISB-0108) and Plot P-12 in Pine Ridge Plots (HCR-ATD-0303). The latest date in the whole inventory is 30 September 2029, for the Lotus Gardens penthouse."
+      ],
+      "anchor": "30 September 2029, for the Lotus Gardens penthouse",
+      "note": "Confirms the latest inventory handover date and penthouse identity."
+    },
+    {
+      "fact_id": "KF-080",
+      "document": "Company_Overview",
+      "evidence_type": "table_row",
+      "snippets": [
+        "| Abbottabad Branch | Shop 3, Hill Arcade, Orchard Road, Abbottabad | +92 992 5550 3001 |"
+      ],
+      "anchor": "+92 992 5550 3001",
+      "note": "Supplies the Abbottabad branch viewing contact line, not a personal direct number."
+    },
+    {
+      "fact_id": "KF-081",
+      "document": "Company_Overview",
+      "evidence_type": "table_row",
+      "snippets": [
+        "| Rawalpindi Branch | Office 7, Pine Plaza, Garden Road, Rawalpindi | +92 51 5550 2001 |"
+      ],
+      "anchor": "+92 51 5550 2001",
+      "note": "Supplies the Rawalpindi branch viewing contact line, not a personal direct number."
+    },
+    {
+      "fact_id": "KF-082",
+      "document": "Company_Overview",
+      "evidence_type": "table_row",
+      "snippets": [
+        "| Nadia Khalid | Senior Property Consultant, Rawalpindi | nadia.khalid@himalayacrest.example | +92 51 5550 2011 |"
+      ],
+      "anchor": "+92 51 5550 2011",
+      "note": "Directly confirms Nadia Khalid's telephone number."
+    },
+    {
+      "fact_id": "KF-083",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "One marla is 272.25 sq ft. One kanal is 20 marla, or 5,445 sq ft. A lakh is 100,000 and a crore is 10,000,000. So a 7 marla plot measures 1,906 sq ft, and a price of PKR 21,000,000 is PKR 2.1 crore."
+      ],
+      "anchor": "272.25",
+      "note": "Confirms marla and kanal unit conversions."
+    },
+    {
+      "fact_id": "KF-084",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "The buyer pays a buying commission, which is one flat percentage of the full price. The percentage depends on the price band: 2.0% up to PKR 10,000,000, 1.75% from PKR 10,000,001 to PKR 25,000,000, and 1.5% above PKR 25,000,000. The minimum commission is PKR 150,000. An admin fee of PKR 7,500 is added per transaction."
+      ],
+      "anchor": "1.75%",
+      "note": "Confirms the middle buying commission slab and its price band."
+    },
+    {
+      "fact_id": "KF-085",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "The buyer pays a buying commission, which is one flat percentage of the full price. The percentage depends on the price band: 2.0% up to PKR 10,000,000, 1.75% from PKR 10,000,001 to PKR 25,000,000, and 1.5% above PKR 25,000,000. The minimum commission is PKR 150,000. An admin fee of PKR 7,500 is added per transaction."
+      ],
+      "anchor": "150,000",
+      "note": "Confirms the minimum buying commission."
+    },
+    {
+      "fact_id": "KF-086",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "The buyer pays a buying commission, which is one flat percentage of the full price. The percentage depends on the price band: 2.0% up to PKR 10,000,000, 1.75% from PKR 10,000,001 to PKR 25,000,000, and 1.5% above PKR 25,000,000. The minimum commission is PKR 150,000. An admin fee of PKR 7,500 is added per transaction."
+      ],
+      "anchor": "7,500",
+      "note": "Confirms the buying transaction admin fee."
+    },
+    {
+      "fact_id": "KF-087",
+      "document": "Property_Listings",
+      "evidence_type": "table_row",
+      "snippets": [
+        "| HCR-ISB-0101 | Crest View Residency Block A, Two-Bed Apartment A | Islamabad | 4 marla (1,089 sq ft) | PKR 18,500,000 | available | PP-B |"
+      ],
+      "anchor": "HCR-ISB-0101",
+      "note": "Supplies the named property price used in the buying commission calculation; fees are established in the primary source."
+    },
+    {
+      "fact_id": "KF-088",
+      "document": "Property_Listings",
+      "evidence_type": "table_row",
+      "snippets": [
+        "| HCR-LHR-0402 | Lotus Gardens, Three-Bed Apartment | Lahore | 8 marla (2,178 sq ft) | PKR 33,500,000 | available | PP-D |"
+      ],
+      "anchor": "HCR-LHR-0402",
+      "note": "Supplies the named property price used in the buying commission calculation."
+    },
+    {
+      "fact_id": "KF-089",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "The selling commission is one flat percentage of the sale price: 2.5% up to PKR 10,000,000, 2.25% from PKR 10,000,001 to PKR 25,000,000, and 2.0% above PKR 25,000,000. The minimum is PKR 200,000, and an admin fee of PKR 7,500 applies per transaction."
+      ],
+      "anchor": "2.25%",
+      "note": "Confirms the middle selling commission slab."
+    },
+    {
+      "fact_id": "KF-090",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "The selling commission is one flat percentage of the sale price: 2.5% up to PKR 10,000,000, 2.25% from PKR 10,000,001 to PKR 25,000,000, and 2.0% above PKR 25,000,000. The minimum is PKR 200,000, and an admin fee of PKR 7,500 applies per transaction."
+      ],
+      "anchor": "The minimum is PKR 200,000, and an admin fee",
+      "note": "Confirms the minimum selling commission."
+    },
+    {
+      "fact_id": "KF-092",
+      "document": "Company_Overview",
+      "evidence_type": "prose",
+      "snippets": [
+        "Seller listing agreements run for 90 days and can be renewed. The listing agreement can be cancelled by giving 7 days written notice."
+      ],
+      "anchor": "7 days",
+      "note": "Confirms the written seller-listing cancellation notice."
+    },
+    {
+      "fact_id": "KF-092",
+      "document": "Policies_and_Terms",
+      "evidence_type": "prose",
+      "snippets": [
+        "A listing agreement with a seller runs for 90 days and can be renewed. The seller may cancel it by giving 7 days written notice."
+      ],
+      "anchor": "7 days",
+      "note": "Confirms the seller-listing cancellation notice."
+    },
+    {
+      "fact_id": "KF-093",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "Both sides share it equally. The landlord pays half of one month's rent and the tenant pays half of one month's rent. Each side pays at least PKR 10,000. On a rent of PKR 90,000, each side therefore pays PKR 45,000. On a rent of PKR 12,000, half would be PKR 6,000, so each side pays the PKR 10,000 minimum."
+      ],
+      "anchor": "The landlord pays half of one month's rent",
+      "note": "Confirms the landlord pays half a month's rent, with the stated minimum."
+    },
+    {
+      "fact_id": "KF-093",
+      "document": "Policies_and_Terms",
+      "evidence_type": "prose",
+      "snippets": [
+        "The rental commission is shared equally. The landlord pays 50% of one month's rent and the tenant pays 50% of one month's rent, with a minimum of PKR 10,000 for each side."
+      ],
+      "anchor": "50%",
+      "note": "Directly confirms the landlord half-month commission."
+    },
+    {
+      "fact_id": "KF-095",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "The management fee is 8% of the monthly rent collected, with a minimum of PKR 6,000 per month. At a rent of PKR 150,000 the fee is PKR 12,000. At a rent of PKR 45,000, 8% would be PKR 3,600, which is below the minimum, so PKR 6,000 is charged. The two figures meet at a rent of PKR 75,000."
+      ],
+      "anchor": "8%",
+      "note": "Confirms the management percentage and minimum."
+    },
+    {
+      "fact_id": "KF-095",
+      "document": "Policies_and_Terms",
+      "evidence_type": "prose",
+      "snippets": [
+        "The management fee is 8% of the monthly rent collected, with a minimum of PKR 6,000 per month. At a rent of PKR 120,000, the fee is PKR 9,600 per month. At a rent of PKR 60,000, 8% would be PKR 4,800, so the minimum of PKR 6,000 applies."
+      ],
+      "anchor": "8%",
+      "note": "Confirms the management percentage and PKR 6,000 monthly minimum."
+    },
+    {
+      "fact_id": "KF-096",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "The management fee is 8% of the monthly rent collected, with a minimum of PKR 6,000 per month. At a rent of PKR 150,000 the fee is PKR 12,000. At a rent of PKR 45,000, 8% would be PKR 3,600, which is below the minimum, so PKR 6,000 is charged. The two figures meet at a rent of PKR 75,000."
+      ],
+      "anchor": "75,000",
+      "note": "Confirms where the management percentage meets the minimum."
+    },
+    {
+      "fact_id": "KF-097",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "Either side may end it by giving 45 days notice. Please send the notice to rentals@himalayacrest.example."
+      ],
+      "anchor": "45 days",
+      "note": "Confirms the management agreement notice period."
+    },
+    {
+      "fact_id": "KF-097",
+      "document": "Policies_and_Terms",
+      "evidence_type": "table_row",
+      "snippets": [
+        "| Either side ending a management agreement | 45 days |"
+      ],
+      "anchor": "45 days",
+      "note": "Confirms either party must give 45 days management notice."
+    },
+    {
+      "fact_id": "KF-098",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "The fee depends on the property's value: PKR 15,000 up to PKR 10,000,000; PKR 25,000 from PKR 10,000,001 to PKR 25,000,000; and PKR 40,000 above PKR 25,000,000. Commercial properties add PKR 10,000. A valuation of a PKR 30,000,000 home costs PKR 40,000, and the same value for an office costs PKR 50,000."
+      ],
+      "anchor": "PKR 25,000 from PKR 10,000,001 to PKR 25,000,000",
+      "note": "Confirms the valuation tier and applicable price band."
+    },
+    {
+      "fact_id": "KF-099",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "The fee depends on the property's value: PKR 15,000 up to PKR 10,000,000; PKR 25,000 from PKR 10,000,001 to PKR 25,000,000; and PKR 40,000 above PKR 25,000,000. Commercial properties add PKR 10,000. A valuation of a PKR 30,000,000 home costs PKR 40,000, and the same value for an office costs PKR 50,000."
+      ],
+      "anchor": "Commercial properties add PKR 10,000",
+      "note": "Confirms the commercial-property valuation addition."
+    },
+    {
+      "fact_id": "KF-100",
+      "document": "Property_Listings",
+      "evidence_type": "table_row",
+      "snippets": [
+        "| HCR-LHR-0404 | Canal View Centre, Office Floor | Lahore | 8 marla (2,178 sq ft) | PKR 47,500,000 | available | PP-B |"
+      ],
+      "anchor": "HCR-LHR-0404",
+      "note": "Supplies the commercial office identity and PKR 47,500,000 price used in the valuation calculation."
+    },
+    {
+      "fact_id": "KF-101",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "The fee is PKR 35,000 per transaction, charged once regardless of how many papers are prepared. Discounts do not apply to it."
+      ],
+      "anchor": "35,000",
+      "note": "Directly confirms the documentation support fee."
+    },
+    {
+      "fact_id": "KF-101",
+      "document": "Policies_and_Terms",
+      "evidence_type": "prose",
+      "snippets": [
+        "The documentation team prepares the transfer papers. Where the current holder appoints another person to sign on their behalf, a mukhtarnama (power of attorney) is prepared. Documentation support is charged separately at PKR 35,000 per transaction, as explained in the Services and Fees document."
+      ],
+      "anchor": "35,000",
+      "note": "Confirms documentation support is separately charged per transaction."
+    },
+    {
+      "fact_id": "KF-102",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "Yes. The advisory department, led from Lahore by Rabia Chaudhry, offers one-to-one sessions at PKR 20,000 per 60-minute session and a written portfolio review at PKR 60,000. Two sessions plus one review would cost PKR 100,000."
+      ],
+      "anchor": "20,000",
+      "note": "Confirms the advisory consultation fee and session duration."
+    },
+    {
+      "fact_id": "KF-103",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "Yes. The advisory department, led from Lahore by Rabia Chaudhry, offers one-to-one sessions at PKR 20,000 per 60-minute session and a written portfolio review at PKR 60,000. Two sessions plus one review would cost PKR 100,000."
+      ],
+      "anchor": "100,000",
+      "note": "Confirms the worked total for two sessions plus a review."
+    },
+    {
+      "fact_id": "KF-104",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "Yes. A client introduced by an existing client receives 10% off the commission, with a ceiling of PKR 75,000. A client who qualifies for both the referral discount and the early-bird discount cannot add them together; the larger one is applied."
+      ],
+      "anchor": "75,000",
+      "note": "Confirms the referral percentage and maximum discount."
+    },
+    {
+      "fact_id": "KF-105",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "Yes. A buyer who pays the booking token within 7 days of the first viewing gets 20% off the buying commission. On HCR-RWP-0202 the commission of PKR 258,125 falls by PKR 51,625 to PKR 206,500. The discount does not touch the admin fee or other charges."
+      ],
+      "anchor": "20%",
+      "note": "Confirms the early-bird percentage and eligibility period."
+    },
+    {
+      "fact_id": "KF-106",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "Yes. A client introduced by an existing client receives 10% off the commission, with a ceiling of PKR 75,000. A client who qualifies for both the referral discount and the early-bird discount cannot add them together; the larger one is applied."
+      ],
+      "anchor": "larger one",
+      "note": "Confirms discounts cannot be combined and the larger applies."
+    },
+    {
+      "fact_id": "KF-107",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "Yes. A buyer who pays the booking token within 7 days of the first viewing gets 20% off the buying commission. On HCR-RWP-0202 the commission of PKR 258,125 falls by PKR 51,625 to PKR 206,500. The discount does not touch the admin fee or other charges."
+      ],
+      "anchor": "206,500",
+      "note": "Confirms the early-bird rule and worked discounted commission for HCR-RWP-0202."
+    },
+    {
+      "fact_id": "KF-107",
+      "document": "Property_Listings",
+      "evidence_type": "table_row",
+      "snippets": [
+        "| HCR-RWP-0202 | Saffron Heights, Two-Bed Apartment | Rawalpindi | 4 marla (1,089 sq ft) | PKR 14,750,000 | available | PP-C |"
+      ],
+      "anchor": "HCR-RWP-0202",
+      "note": "Supplies the named apartment price underlying the discounted commission."
+    },
+    {
+      "fact_id": "KF-108",
+      "document": "Property_Listings",
+      "evidence_type": "table_row",
+      "snippets": [
+        "| HCR-ISB-0107 | Crest View Residency Villas, Ridge House | Islamabad | 10 marla (2,723 sq ft) | PKR 62,000,000 | available | PP-D |"
+      ],
+      "anchor": "HCR-ISB-0107",
+      "note": "Supplies the named Ridge House price underlying the capped referral calculation."
+    },
+    {
+      "fact_id": "KF-109",
+      "document": "Property_Listings",
+      "evidence_type": "table_row",
+      "snippets": [
+        "| HCR-ISB-0101 | Crest View Residency Block A, Two-Bed Apartment A | Islamabad | 4 marla (1,089 sq ft) | PKR 18,500,000 | available | PP-B |"
+      ],
+      "anchor": "HCR-ISB-0101",
+      "note": "Supplies the named apartment price underlying the competing-discount calculation."
+    },
+    {
+      "fact_id": "KF-111",
+      "document": "Policies_and_Terms",
+      "evidence_type": "table_row",
+      "snippets": [
+        "| PP-B | 30% | 8 | 24 months | Quarterly | 4% |"
+      ],
+      "anchor": "PP-B",
+      "note": "Supplies the eight-quarter PP-B plan parameters needed for the primary calculation."
+    },
+    {
+      "fact_id": "KF-111",
+      "document": "Property_Listings",
+      "evidence_type": "table_row",
+      "snippets": [
+        "| HCR-ISB-0101 | Crest View Residency Block A, Two-Bed Apartment A | Islamabad | 4 marla (1,089 sq ft) | PKR 18,500,000 | available | PP-B |"
+      ],
+      "anchor": "HCR-ISB-0101",
+      "note": "Confirms the named property price and assigned PP-B plan; instalment arithmetic is in the primary source."
+    },
+    {
+      "fact_id": "KF-112",
+      "document": "Property_Listings",
+      "evidence_type": "table_row",
+      "snippets": [
+        "| HCR-RWP-0201 | Saffron Heights, One-Bed Apartment | Rawalpindi | 2 marla (545 sq ft) | PKR 8,400,000 | available | PP-C |"
+      ],
+      "anchor": "HCR-RWP-0201",
+      "note": "Supplies the named apartment price and assigned PP-C plan for the total-payable calculation."
+    },
+    {
+      "fact_id": "KF-113",
+      "document": "Property_Listings",
+      "evidence_type": "table_row",
+      "snippets": [
+        "| HCR-ISB-0101 | Crest View Residency Block A, Two-Bed Apartment A | Islamabad | 4 marla (1,089 sq ft) | PKR 18,500,000 | available | PP-B |"
+      ],
+      "anchor": "HCR-ISB-0101",
+      "note": "Supplies the named property identity and price used by the primary company-fees calculation; it does not itself quote the fee total."
+    },
+    {
+      "fact_id": "KF-115",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "Clients often ask whether the company charges extra for government fees. It does not collect them as company fees: government charges are payable by the client and are not included in company fees, and no rates are quoted in company documents."
+      ],
+      "anchor": "not included in company fees",
+      "note": "Confirms government charges are payable by the client, excluded from company fees."
+    },
+    {
+      "fact_id": "KF-115",
+      "document": "Policies_and_Terms",
+      "evidence_type": "prose",
+      "snippets": [
+        "Government charges connected with any sale, purchase, transfer or tenancy are payable by the client and are not included in company fees. No government rates are stated in any company document, and clients should ask the relevant authority for them."
+      ],
+      "anchor": "not included in company fees",
+      "note": "Confirms government charges are client liabilities excluded from company fees."
+    },
+    {
+      "fact_id": "KF-116",
+      "document": "Policies_and_Terms",
+      "evidence_type": "table_row",
+      "snippets": [
+        "| Booking token | 3% of price | 1 March 2019 to 31 December 2023 | 2% of price | 1 January 2024 | superseded |"
+      ],
+      "anchor": "3%",
+      "note": "Confirms the superseded booking-token value and its effective period."
+    },
+    {
+      "fact_id": "KF-117",
+      "document": "Policies_and_Terms",
+      "evidence_type": "prose",
+      "snippets": [
+        "HCR-ATD-0303, price PKR 9,500,000: 1% is PKR 95,000."
+      ],
+      "anchor": "HCR-ATD-0303, price PKR 9,500,000:",
+      "note": "Directly confirms the worked transfer fee for the named plot."
+    },
+    {
+      "fact_id": "KF-117",
+      "document": "Property_Listings",
+      "evidence_type": "table_row",
+      "snippets": [
+        "| HCR-ATD-0303 | Pine Ridge Plots, Plot P-12 | Abbottabad | 5 marla (1,361 sq ft) | PKR 9,500,000 | available | PP-A |"
+      ],
+      "anchor": "HCR-ATD-0303",
+      "note": "Supplies the named plot price used to calculate the 1% transfer fee."
+    },
+    {
+      "fact_id": "KF-118",
+      "document": "Policies_and_Terms",
+      "evidence_type": "prose",
+      "snippets": [
+        "A refund is paid within 21 working days of approval. Approval and payment are handled by the finance team under the Finance and Accounts Manager, Usman Gillani (usman.gillani@himalayacrest.example, +92 51 5550 1017). Clients with questions about the status of a refund should quote the booking receipt number and the property ID."
+      ],
+      "anchor": "usman.gillani@himalayacrest.example",
+      "note": "Supplies the refund manager email and direct telephone number."
+    },
+    {
+      "fact_id": "KF-119",
+      "document": "Property_Listings",
+      "evidence_type": "prose",
+      "snippets": [
+        "Status counts at the effective date of this document: 17 properties are available, 4 are reserved and 3 are sold."
+      ],
+      "anchor": "17 properties are available, 4 are reserved and 3 are sold",
+      "note": "Confirms all three inventory status counts."
+    },
+    {
+      "fact_id": "KF-120",
+      "document": "Property_Listings",
+      "evidence_type": "table_row",
+      "snippets": [
+        "| HCR-ISB-0104 | Crest View Residency Block B, Three-Bed Apartment B | Islamabad | 6 marla (1,634 sq ft) | PKR 27,500,000 | available | PP-B |"
+      ],
+      "anchor": "HCR-ISB-0104",
+      "note": "Provides an available apartment at the stated price; the primary source establishes its company charges."
+    },
+    {
+      "fact_id": "KF-120",
+      "document": "Services_and_Fees",
+      "evidence_type": "prose",
+      "snippets": [
+        "**HCR-ISB-0104 (Crest View Residency Block B, Three-Bed Apartment B).** The price of PKR 27,500,000 falls in Slab 3. Commission is PKR 27,500,000 x 1.5% = PKR 412,500. With the admin fee the total is PKR 420,000."
+      ],
+      "anchor": "27,500,000",
+      "note": "Provides the commission plus admin calculation for the apartment price."
+    },
+    {
+      "fact_id": "KF-121",
+      "document": "Property_Listings",
+      "evidence_type": "prose",
+      "snippets": [
+        "Properties with a handover date in 2026 are the plots in Hilltop Enclave (HCR-ISB-0108 and HCR-ISB-0109), the Pine Ridge plots (HCR-ATD-0303 and HCR-ATD-0304) and Garden Road Plaza Shop 4 (HCR-RWP-0204). The earliest handover date among available properties is 31 December 2026; the latest handover date in the inventory is 30 September 2029, for the Lotus Gardens penthouse."
+      ],
+      "anchor": "31 December 2026",
+      "note": "Names the relevant 2026 plots and states the earliest available handover date; primary FAQ identifies the two available plots."
+    },
+    {
+      "fact_id": "KF-122",
+      "document": "Services_and_Fees",
+      "evidence_type": "table_row",
+      "snippets": [
+        "| Slab 2 | PKR 10,000,001 to PKR 25,000,000 | 2.25% |"
+      ],
+      "anchor": "2.25%",
+      "note": "Supplies the middle-band selling rate: PKR 20,000,000 times 2.25% gives PKR 450,000."
+    },
+    {
+      "fact_id": "KF-123",
+      "document": "Services_and_Fees",
+      "evidence_type": "prose",
+      "snippets": [
+        "- The landlord pays 50% of one month's rent.\n- The tenant pays 50% of one month's rent.\n- The minimum for each side is PKR 10,000."
+      ],
+      "anchor": "50%",
+      "note": "Supplies both parties' half-month rental commission and minimum; PKR 90,000 times 50% gives PKR 45,000."
+    },
+    {
+      "fact_id": "KF-124",
+      "document": "Policies_and_Terms",
+      "evidence_type": "prose",
+      "snippets": [
+        "The deposit is 2 months of rent. For a monthly rent of PKR 80,000 the deposit is PKR 160,000. The deposit is held for the length of the tenancy and is returned within 14 days after the unit is handed back, once the condition of the unit has been checked."
+      ],
+      "anchor": "2 months",
+      "note": "Confirms the deposit size and 14-day handback return period."
+    },
+    {
+      "fact_id": "KF-124",
+      "document": "Services_and_Fees",
+      "evidence_type": "prose",
+      "snippets": [
+        "The security deposit on a let is 2 months of rent. It is returned within 14 days after the unit is handed back. A tenant who wishes to leave must give 30 days notice, and a landlord who wishes to end a tenancy must give 60 days notice. Tenants are responsible for minor repairs of up to PKR 10,000 per item. These terms are set out in full in the Policies and Terms document."
+      ],
+      "anchor": "2 months",
+      "note": "Confirms the deposit size and return period."
+    },
+    {
+      "fact_id": "KF-125",
+      "document": "Policies_and_Terms",
+      "evidence_type": "prose",
+      "snippets": [
+        "The notice periods in this document are deliberately different for the two sides of a tenancy: 30 days for the tenant and 60 days for the landlord. The management agreement notice period of 45 days is separate from both and applies to either side of that agreement."
+      ],
+      "anchor": "30 days",
+      "note": "Confirms the tenant and landlord notice periods and distinguishes management notice."
+    },
+    {
+      "fact_id": "KF-125",
+      "document": "Services_and_Fees",
+      "evidence_type": "prose",
+      "snippets": [
+        "The security deposit on a let is 2 months of rent. It is returned within 14 days after the unit is handed back. A tenant who wishes to leave must give 30 days notice, and a landlord who wishes to end a tenancy must give 60 days notice. Tenants are responsible for minor repairs of up to PKR 10,000 per item. These terms are set out in full in the Policies and Terms document."
+      ],
+      "anchor": "30 days",
+      "note": "Confirms 30-day tenant and 60-day landlord notice."
+    },
+    {
+      "fact_id": "KF-126",
+      "document": "Policies_and_Terms",
+      "evidence_type": "prose",
+      "snippets": [
+        "HCR-RWP-0205, price PKR 24,500,000: token PKR 490,000."
+      ],
+      "anchor": "HCR-RWP-0205, price PKR 24,500,000:",
+      "note": "Directly confirms the named row house price and token."
+    },
+    {
+      "fact_id": "KF-126",
+      "document": "Property_Listings",
+      "evidence_type": "table_row",
+      "snippets": [
+        "| HCR-RWP-0205 | PKR 490,000 | 28 February 2028 | PP-B |"
+      ],
+      "anchor": "HCR-RWP-0205",
+      "note": "Directly confirms the named row house booking token."
+    },
+    {
+      "fact_id": "KF-127",
+      "document": "Policies_and_Terms",
+      "evidence_type": "table_row",
+      "snippets": [
+        "| PKR 500,000 | PKR 500 | PKR 25,000 | Day 50 of the penalty |"
+      ],
+      "anchor": "500,000",
+      "note": "Directly confirms the worked overdue-instalment daily penalty and cap."
+    },
+    {
+      "fact_id": "KF-127",
+      "document": "Services_and_Fees",
+      "evidence_type": "prose",
+      "snippets": [
+        "An instalment that is not paid on its due date has a grace period of 10 days. After that a late-payment penalty of 0.1% of the overdue instalment is charged for each day, capped at 5% of that instalment. On an overdue instalment of PKR 1,000,000 the penalty is PKR 1,000 per day, and the cap of PKR 50,000 is reached on day 50 of the penalty. The full rules are in the Policies and Terms document."
+      ],
+      "anchor": "0.1%",
+      "note": "Supplies the daily penalty rate and 5% cap used with the primary PKR 500,000 amount."
+    },
+    {
+      "fact_id": "KF-128",
+      "document": "Policies_and_Terms",
+      "evidence_type": "prose",
+      "snippets": [
+        "HCR may cancel a booking for non-payment only when two conditions are both met: the instalment has been overdue for 60 days, and the company has given the client 15 days written notice. Refunds after such a cancellation follow the rules in section 4."
+      ],
+      "anchor": "60 days",
+      "note": "Confirms both the overdue period and required written notice."
+    },
+    {
+      "fact_id": "KF-129",
+      "document": "Policies_and_Terms",
+      "evidence_type": "table_row",
+      "snippets": [
+        "| Window 2 | From day 8 to day 30 | 50% | 50% |"
+      ],
+      "anchor": "50%",
+      "note": "Supplies the day-10 refund percentage; half of the primary PKR 295,000 token is PKR 147,500."
+    },
+    {
+      "fact_id": "KF-129",
+      "document": "Property_Listings",
+      "evidence_type": "table_row",
+      "snippets": [
+        "| HCR-RWP-0202 | PKR 295,000 | 31 August 2027 | PP-C |"
+      ],
+      "anchor": "HCR-RWP-0202",
+      "note": "Supplies a PKR 295,000 booking token, the monetary input for the primary refund example."
+    },
+    {
+      "fact_id": "KF-130",
+      "document": "Policies_and_Terms",
+      "evidence_type": "prose",
+      "snippets": [
+        "A refund is paid within 21 working days of approval. Approval and payment are handled by the finance team under the Finance and Accounts Manager, Usman Gillani (usman.gillani@himalayacrest.example, +92 51 5550 1017). Clients with questions about the status of a refund should quote the booking receipt number and the property ID."
+      ],
+      "anchor": "21 working days",
+      "note": "Directly confirms the approved-refund payment period."
+    },
+    {
+      "fact_id": "KF-131",
+      "document": "Policies_and_Terms",
+      "evidence_type": "prose",
+      "snippets": [
+        "The transfer fee is 1% of the property price, with a minimum of PKR 50,000."
+      ],
+      "anchor": "1%",
+      "note": "Supplies the transfer rule; 1% of the primary PKR 24,500,000 price is PKR 245,000, above the minimum."
+    },
+    {
+      "fact_id": "KF-131",
+      "document": "Property_Listings",
+      "evidence_type": "table_row",
+      "snippets": [
+        "| HCR-RWP-0205 | Saffron Row Houses, Row House | Rawalpindi | 5 marla (1,361 sq ft) | PKR 24,500,000 | available | PP-B |"
+      ],
+      "anchor": "HCR-RWP-0205",
+      "note": "Supplies the named property price underlying its transfer fee."
+    },
+    {
+      "fact_id": "KF-132",
+      "document": "Services_and_Fees",
+      "evidence_type": "table_row",
+      "snippets": [
+        "| Above PKR 25,000,000 | PKR 40,000 |"
+      ],
+      "anchor": "40,000",
+      "note": "Supplies the valuation tier applicable to the primary PKR 30,000,000 home."
+    },
+    {
+      "fact_id": "KF-133",
+      "document": "Policies_and_Terms",
+      "evidence_type": "table_row",
+      "snippets": [
+        "| Acknowledgement of the complaint | Within 2 working days |"
+      ],
+      "anchor": "2 working days",
+      "note": "Directly confirms the complaint acknowledgement deadline."
+    },
+    {
+      "fact_id": "KF-134",
+      "document": "Policies_and_Terms",
+      "evidence_type": "prose",
+      "snippets": [
+        "The booking token is 2% of the property price. It is paid when the client decides to proceed and it is recorded by the finance team, which issues a written receipt called a rasid. The token is not a company fee. It forms part of the price paid for the property and is counted toward the down payment of the chosen payment plan."
+      ],
+      "anchor": "2%",
+      "note": "Supplies the booking-token percentage and explains the token as part of the price."
+    },
+    {
+      "fact_id": "KF-134",
+      "document": "Services_and_Fees",
+      "evidence_type": "prose",
+      "snippets": [
+        "The surcharge is a percentage of the property price and is added to the total payable. The down payment is a percentage of the price, not of the price plus surcharge. The booking token, which is 2% of the price, is counted toward the down payment, so the buyer pays the remaining part of the down payment after the token. The balance, which is the rest of the price plus the surcharge, is paid in the stated number of instalments."
+      ],
+      "anchor": "2%",
+      "note": "Supplies the booking-token percentage; the primary FAQ establishes the bayana synonym."
+    },
+    {
+      "fact_id": "KF-135",
+      "document": "Property_Listings",
+      "evidence_type": "table_row",
+      "snippets": [
+        "| HCR-ISB-0108 | Hilltop Enclave, Plot H-21 | Islamabad | 7 marla (1,906 sq ft) | PKR 21,000,000 | available | PP-A |"
+      ],
+      "anchor": "HCR-ISB-0108",
+      "note": "Confirms the seven-marla plot area of 1,906 square feet."
+    },
+    {
+      "fact_id": "KF-136",
+      "document": "Policies_and_Terms",
+      "evidence_type": "table_row",
+      "snippets": [
+        "| Rental deposit | 3 months of rent | 1 June 2018 to 31 May 2022 | 2 months of rent | 1 June 2022 | superseded |"
+      ],
+      "anchor": "3 months",
+      "note": "Confirms the superseded deposit and the end of its effective period."
+    },
+    {
+      "fact_id": "KF-137",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "The token is 2% of the property price. For HCR-RWP-0205 (price PKR 24,500,000) it is PKR 490,000. Since 1 January 2024 the rate has been 2%; an older rate that applied before that date is no longer in force."
+      ],
+      "anchor": "2%",
+      "note": "Directly confirms the current token percentage."
+    },
+    {
+      "fact_id": "KF-137",
+      "document": "Property_Listings",
+      "evidence_type": "prose",
+      "snippets": [
+        "The booking token for every property is 2% of its price."
+      ],
+      "anchor": "2%",
+      "note": "Directly confirms the universal booking-token rule."
+    },
+    {
+      "fact_id": "KF-137",
+      "document": "Services_and_Fees",
+      "evidence_type": "prose",
+      "snippets": [
+        "The surcharge is a percentage of the property price and is added to the total payable. The down payment is a percentage of the price, not of the price plus surcharge. The booking token, which is 2% of the price, is counted toward the down payment, so the buyer pays the remaining part of the down payment after the token. The balance, which is the rest of the price plus the surcharge, is paid in the stated number of instalments."
+      ],
+      "anchor": "2%",
+      "note": "Confirms the token percentage and its inclusion in the down payment."
+    },
+    {
+      "fact_id": "KF-138",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "Within 7 days of the booking date: the token is refunded less a 10% deduction, so 90% comes back."
+      ],
+      "anchor": "90%",
+      "note": "Confirms the first refund window and its deduction/refund shares."
+    },
+    {
+      "fact_id": "KF-138",
+      "document": "Services_and_Fees",
+      "evidence_type": "prose",
+      "snippets": [
+        "A cancellation of a booking must be requested in writing by email to bookings@himalayacrest.example. If a booking is cancelled within 7 days of the booking date, 90% of the token is refunded; from day 8 to day 30, 50% of the token is refunded; after day 30 the token is not refundable. A refund on the token of PKR 370,000 cancelled on day 5 is PKR 333,000, and on day 20 it is PKR 185,000."
+      ],
+      "anchor": "90%",
+      "note": "Confirms the first refund window and refunded share."
+    },
+    {
+      "fact_id": "KF-139",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "From day 8 to day 30: the token is refunded less a 50% deduction, so 50% comes back."
+      ],
+      "anchor": "50%",
+      "note": "Confirms the second refund window and shares."
+    },
+    {
+      "fact_id": "KF-139",
+      "document": "Services_and_Fees",
+      "evidence_type": "prose",
+      "snippets": [
+        "A cancellation of a booking must be requested in writing by email to bookings@himalayacrest.example. If a booking is cancelled within 7 days of the booking date, 90% of the token is refunded; from day 8 to day 30, 50% of the token is refunded; after day 30 the token is not refundable. A refund on the token of PKR 370,000 cancelled on day 5 is PKR 333,000, and on day 20 it is PKR 185,000."
+      ],
+      "anchor": "50%",
+      "note": "Confirms the second refund window and share."
+    },
+    {
+      "fact_id": "KF-140",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "After day 30: the token cannot be refunded."
+      ],
+      "anchor": "day 30",
+      "note": "Confirms no token refund after the second window."
+    },
+    {
+      "fact_id": "KF-140",
+      "document": "Services_and_Fees",
+      "evidence_type": "prose",
+      "snippets": [
+        "A cancellation of a booking must be requested in writing by email to bookings@himalayacrest.example. If a booking is cancelled within 7 days of the booking date, 90% of the token is refunded; from day 8 to day 30, 50% of the token is refunded; after day 30 the token is not refundable. A refund on the token of PKR 370,000 cancelled on day 5 is PKR 333,000, and on day 20 it is PKR 185,000."
+      ],
+      "anchor": "not refundable",
+      "note": "Confirms no token refund after day 30."
+    },
+    {
+      "fact_id": "KF-141",
+      "document": "Property_Listings",
+      "evidence_type": "table_row",
+      "snippets": [
+        "| HCR-ISB-0101 | PKR 370,000 | 30 June 2028 | PP-B |"
+      ],
+      "anchor": "HCR-ISB-0101",
+      "note": "Supplies the PKR 370,000 token used in the primary day-five refund calculation."
+    },
+    {
+      "fact_id": "KF-141",
+      "document": "Services_and_Fees",
+      "evidence_type": "prose",
+      "snippets": [
+        "A cancellation of a booking must be requested in writing by email to bookings@himalayacrest.example. If a booking is cancelled within 7 days of the booking date, 90% of the token is refunded; from day 8 to day 30, 50% of the token is refunded; after day 30 the token is not refundable. A refund on the token of PKR 370,000 cancelled on day 5 is PKR 333,000, and on day 20 it is PKR 185,000."
+      ],
+      "anchor": "PKR 333,000, and on day 20",
+      "note": "Directly confirms the day-five refund example and the applicable refund window."
+    },
+    {
+      "fact_id": "KF-142",
+      "document": "Property_Listings",
+      "evidence_type": "table_row",
+      "snippets": [
+        "| HCR-ISB-0107 | PKR 1,240,000 | 30 September 2027 | PP-D |"
+      ],
+      "anchor": "HCR-ISB-0107",
+      "note": "Supplies the PKR 1,240,000 token used in the primary day-three refund calculation."
+    },
+    {
+      "fact_id": "KF-143",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "Amounts paid over and above the token are refunded less a 15% deduction. If you had paid PKR 2,000,000 beyond the token, you would receive PKR 1,700,000."
+      ],
+      "anchor": "15%",
+      "note": "Confirms the beyond-token deduction and worked refund."
+    },
+    {
+      "fact_id": "KF-144",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "The refund is paid within 21 working days of approval. Working days are Monday to Friday."
+      ],
+      "anchor": "21 working days",
+      "note": "Confirms the refund payment deadline."
+    },
+    {
+      "fact_id": "KF-145",
+      "document": "Company_Overview",
+      "evidence_type": "prose",
+      "snippets": [
+        "Clients who need a quick answer about a viewing should note that viewings can be cancelled with at least 24 hours notice, which allows the consultant to release the time slot for another client."
+      ],
+      "anchor": "24 hours",
+      "note": "Confirms the viewing-cancellation notice period; does not independently state the no-charge term."
+    },
+    {
+      "fact_id": "KF-145",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "Please give at least 24 hours notice so the time slot can be offered to someone else. There is no charge for cancelling with proper notice."
+      ],
+      "anchor": "24 hours",
+      "note": "Confirms the viewing notice period and no-charge cancellation with proper notice."
+    },
+    {
+      "fact_id": "KF-145",
+      "document": "Property_Listings",
+      "evidence_type": "prose",
+      "snippets": [
+        "A viewing can be cancelled by giving at least 24 hours notice to the branch that arranged it."
+      ],
+      "anchor": "24 hours",
+      "note": "Confirms the viewing-cancellation notice period; the primary source establishes no charge."
+    },
+    {
+      "fact_id": "KF-146",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "You have a grace period of 10 days after the due date. After that, a penalty of 0.1% of the overdue instalment is charged for each day, up to a ceiling of 5% of that instalment. On an overdue instalment of PKR 500,000, the penalty is PKR 500 per day and stops at PKR 25,000."
+      ],
+      "anchor": "10 days",
+      "note": "Confirms the instalment grace period."
+    },
+    {
+      "fact_id": "KF-146",
+      "document": "Services_and_Fees",
+      "evidence_type": "prose",
+      "snippets": [
+        "An instalment that is not paid on its due date has a grace period of 10 days. After that a late-payment penalty of 0.1% of the overdue instalment is charged for each day, capped at 5% of that instalment. On an overdue instalment of PKR 1,000,000 the penalty is PKR 1,000 per day, and the cap of PKR 50,000 is reached on day 50 of the penalty. The full rules are in the Policies and Terms document."
+      ],
+      "anchor": "10 days",
+      "note": "Confirms the instalment grace period."
+    },
+    {
+      "fact_id": "KF-147",
+      "document": "Services_and_Fees",
+      "evidence_type": "prose",
+      "snippets": [
+        "An instalment that is not paid on its due date has a grace period of 10 days. After that a late-payment penalty of 0.1% of the overdue instalment is charged for each day, capped at 5% of that instalment. On an overdue instalment of PKR 1,000,000 the penalty is PKR 1,000 per day, and the cap of PKR 50,000 is reached on day 50 of the penalty. The full rules are in the Policies and Terms document."
+      ],
+      "anchor": "1,000,000",
+      "note": "Confirms the worked million-rupee instalment daily penalty and cap."
+    },
+    {
+      "fact_id": "KF-149",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "Only after an instalment has been overdue for 60 days and the company has given 15 days written notice."
+      ],
+      "anchor": "60 days",
+      "note": "Confirms both nonpayment-cancellation conditions."
+    },
+    {
+      "fact_id": "KF-150",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "Yes, subject to a transfer fee of 1% of the property price, with a minimum of PKR 50,000. Transfers are not allowed in the first 30 days after booking, and processing takes 10 working days. For HCR-RWP-0205, the fee is 1% of PKR 24,500,000, which is PKR 245,000."
+      ],
+      "anchor": "1%",
+      "note": "Confirms the transfer fee and minimum."
+    },
+    {
+      "fact_id": "KF-151",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "Yes, subject to a transfer fee of 1% of the property price, with a minimum of PKR 50,000. Transfers are not allowed in the first 30 days after booking, and processing takes 10 working days. For HCR-RWP-0205, the fee is 1% of PKR 24,500,000, which is PKR 245,000."
+      ],
+      "anchor": "30 days",
+      "note": "Confirms the transfer exclusion period and processing time."
+    },
+    {
+      "fact_id": "KF-152",
+      "document": "Property_Listings",
+      "evidence_type": "table_row",
+      "snippets": [
+        "| HCR-LHR-0402 | Lotus Gardens, Three-Bed Apartment | Lahore | 8 marla (2,178 sq ft) | PKR 33,500,000 | available | PP-D |"
+      ],
+      "anchor": "HCR-LHR-0402",
+      "note": "Supplies the named apartment price underlying its PKR 335,000 transfer fee."
+    },
+    {
+      "fact_id": "KF-153",
+      "document": "Property_Listings",
+      "evidence_type": "table_row",
+      "snippets": [
+        "| HCR-ISB-0105 | Summit Business Hub, Shop 12 | Islamabad | 2 marla (545 sq ft) | PKR 16,000,000 | available | PP-C |"
+      ],
+      "anchor": "HCR-ISB-0105",
+      "note": "Supplies the named shop price underlying its PKR 160,000 transfer fee."
+    },
+    {
+      "fact_id": "KF-155",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "The deposit is 2 months of rent. It is returned within 14 days after the tenant has handed the unit back."
+      ],
+      "anchor": "2 months",
+      "note": "Supplies the multiplier: two months at the primary PKR 80,000 rent is PKR 160,000."
+    },
+    {
+      "fact_id": "KF-156",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "A tenant must give 30 days notice. A landlord who wants to end the tenancy must give 60 days notice."
+      ],
+      "anchor": "60 days",
+      "note": "Confirms the landlord notice period."
+    },
+    {
+      "fact_id": "KF-157",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "A tenant must give 30 days notice. A landlord who wants to end the tenancy must give 60 days notice."
+      ],
+      "anchor": "30 days",
+      "note": "Confirms the tenant notice period."
+    },
+    {
+      "fact_id": "KF-158",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "The tenant covers minor repairs up to PKR 10,000 per item. Larger repairs are the responsibility of the owner. Owners who use the management service can leave the coordination of repairs to the management team."
+      ],
+      "anchor": "10,000",
+      "note": "Directly confirms tenant responsibility and the per-item limit."
+    },
+    {
+      "fact_id": "KF-158",
+      "document": "Services_and_Fees",
+      "evidence_type": "prose",
+      "snippets": [
+        "The security deposit on a let is 2 months of rent. It is returned within 14 days after the unit is handed back. A tenant who wishes to leave must give 30 days notice, and a landlord who wishes to end a tenancy must give 60 days notice. Tenants are responsible for minor repairs of up to PKR 10,000 per item. These terms are set out in full in the Policies and Terms document."
+      ],
+      "anchor": "10,000",
+      "note": "Confirms the minor-repair responsibility and per-item limit."
+    },
+    {
+      "fact_id": "KF-159",
+      "document": "Company_Overview",
+      "evidence_type": "prose",
+      "snippets": [
+        "Clients sometimes ask how long a record is kept after a transaction ends. The company retains client records for 7 years after the last transaction, after which they are reviewed for secure disposal."
+      ],
+      "anchor": "7 years",
+      "note": "Confirms retention after the last transaction."
+    },
+    {
+      "fact_id": "KF-159",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "Records are retained for 7 years after your last transaction. Requests about your data go to privacy@himalayacrest.example."
+      ],
+      "anchor": "7 years",
+      "note": "Confirms retention after the last transaction."
+    },
+    {
+      "fact_id": "KF-160",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "You will receive an acknowledgement within 2 working days. The company aims to resolve the complaint within 15 working days."
+      ],
+      "anchor": "2 working days",
+      "note": "Confirms the acknowledgement deadline."
+    },
+    {
+      "fact_id": "KF-161",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "You will receive an acknowledgement within 2 working days. The company aims to resolve the complaint within 15 working days."
+      ],
+      "anchor": "15 working days",
+      "note": "Confirms the complaint-resolution target."
+    },
+    {
+      "fact_id": "KF-162",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "If the complaint is still unresolved after 15 working days, you may escalate it to the Chief Operating Officer, Sana Qadri, who gives a decision within 5 working days. A final review by the Chief Executive Officer follows if needed, with a decision within 30 days of the escalation."
+      ],
+      "anchor": "5 working days",
+      "note": "Confirms the escalated COO decision deadline."
+    },
+    {
+      "fact_id": "KF-163",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "If the complaint is still unresolved after 15 working days, you may escalate it to the Chief Operating Officer, Sana Qadri, who gives a decision within 5 working days. A final review by the Chief Executive Officer follows if needed, with a decision within 30 days of the escalation."
+      ],
+      "anchor": "30 days",
+      "note": "Confirms the CEO final-review deadline."
+    },
+    {
+      "fact_id": "KF-164",
+      "document": "Property_Listings",
+      "evidence_type": "table_row",
+      "snippets": [
+        "| HCR-ISB-0104 | PKR 550,000 | 31 December 2028 | PP-B |"
+      ],
+      "anchor": "HCR-ISB-0104",
+      "note": "Supplies the PKR 550,000 token used in the primary day-six refund calculation."
+    },
+    {
+      "fact_id": "KF-165",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "Another frequent question is whether older figures still apply. They do not. The buying commission for the lowest price band was 2.5% until 28 February 2025 and has been 2.0% since 1 March 2025. The rental deposit used to be 3 months of rent until 31 May 2022 and is now 2 months. The late-payment penalty was 0.15% per day until 30 June 2023 and is now 0.1% per day. Please quote only the current values."
+      ],
+      "anchor": "0.15%",
+      "note": "Confirms the historical late-payment rate and end date, not its start date."
+    },
+    {
+      "fact_id": "KF-167",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "Another frequent question is whether older figures still apply. They do not. The buying commission for the lowest price band was 2.5% until 28 February 2025 and has been 2.0% since 1 March 2025. The rental deposit used to be 3 months of rent until 31 May 2022 and is now 2 months. The late-payment penalty was 0.15% per day until 30 June 2023 and is now 0.1% per day. Please quote only the current values."
+      ],
+      "anchor": "2.5%",
+      "note": "Confirms the superseded lowest-band buying rate and end date."
+    },
+    {
+      "fact_id": "KF-167",
+      "document": "Services_and_Fees",
+      "evidence_type": "table_row",
+      "snippets": [
+        "| Buying commission, Slab 1 | 2.5% | 1 January 2023 to 28 February 2025 | superseded |"
+      ],
+      "anchor": "2.5%",
+      "note": "Confirms the superseded commission and its effective period."
+    },
+    {
+      "fact_id": "KF-168",
+      "document": "FAQs",
+      "evidence_type": "prose",
+      "snippets": [
+        "Another frequent question is whether older figures still apply. They do not. The buying commission for the lowest price band was 2.5% until 28 February 2025 and has been 2.0% since 1 March 2025. The rental deposit used to be 3 months of rent until 31 May 2022 and is now 2 months. The late-payment penalty was 0.15% per day until 30 June 2023 and is now 0.1% per day. Please quote only the current values."
+      ],
+      "anchor": "3 months",
+      "note": "Confirms the superseded rental deposit and end date, not its start date."
+    },
+    {
+      "fact_id": "KF-169",
+      "document": "Services_and_Fees",
+      "evidence_type": "table_row",
+      "snippets": [
+        "| Valuation fee, up to PKR 10,000,000 | PKR 12,000 | 1 January 2023 to 31 December 2024 | superseded |"
+      ],
+      "anchor": "12,000",
+      "note": "Confirms the superseded lowest valuation tier."
+    },
+    {
+      "fact_id": "KF-170",
+      "document": "Company_Overview",
+      "evidence_type": "table_row",
+      "snippets": [
+        "| Sana Qadri | Chief Operating Officer | sana.qadri@himalayacrest.example | +92 51 5550 1011 |"
+      ],
+      "anchor": "sana.qadri@himalayacrest.example",
+      "note": "Directly supplies the named COO email and direct telephone number."
+    }
+  ]
+}

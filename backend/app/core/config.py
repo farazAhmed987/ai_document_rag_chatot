@@ -52,6 +52,8 @@ class Settings(BaseSettings):
 
     CHUNK_TOKENS: int = Field(default=500, gt=0)
     CHUNK_OVERLAP: int = Field(default=60, ge=0)
+    MIN_CHUNK_TOKENS: int = Field(default=80, gt=0)
+    MAX_TABLE_TOKENS: int = Field(default=1500, gt=0)
     DENSE_K: int = Field(default=20, gt=0)
     KEYWORD_K: int = Field(default=20, gt=0)
     RERANK_TOP_N: int = Field(default=5, gt=0)
@@ -90,6 +92,10 @@ class Settings(BaseSettings):
         """Require a strictly smaller overlap than the chunk size."""
         if self.CHUNK_OVERLAP >= self.CHUNK_TOKENS:
             raise ValueError("CHUNK_OVERLAP must be smaller than CHUNK_TOKENS")
+        if self.MIN_CHUNK_TOKENS >= self.CHUNK_TOKENS:
+            raise ValueError("MIN_CHUNK_TOKENS must be smaller than CHUNK_TOKENS")
+        if self.MAX_TABLE_TOKENS < self.CHUNK_TOKENS:
+            raise ValueError("MAX_TABLE_TOKENS must be at least CHUNK_TOKENS")
         return self
 
     def require_database_url(self, *, analytics: bool = False) -> str:
