@@ -11,8 +11,11 @@ dynamic = ["dependencies"]
 
 [project.optional-dependencies]
 ml = [
+    "torch==2.15.0+cpu",
     "sentence-transformers==6.2.0",
-    "torch==2.15.0",
+    "transformers==5.22.2",
+    "tokenizers==0.23.3",
+    "huggingface-hub==2.4.0",
 ]
 
 [tool.setuptools.packages.find]
@@ -45,7 +48,7 @@ show_error_codes = true
 warn_unused_configs = true
 
 [[tool.mypy.overrides]]
-module = ["sentence_transformers"]
+module = ["sentence_transformers", "torch"]
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]

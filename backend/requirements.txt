@@ -23,7 +23,9 @@ reportlab>=4.2,<5
 markdown-it-py>=3,<5
 
 # Tokenizer only; no torch or embedding weights in the Phase 4 runtime.
-transformers==4.57.6
+transformers==5.22.2
+tokenizers==0.23.3
+huggingface-hub==2.4.0
 sentencepiece==0.2.2
 # Preserve the declared Python 3.11 typing target; newer NumPy stubs use 3.12 syntax.
 numpy==2.3.5
