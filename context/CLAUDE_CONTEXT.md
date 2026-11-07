@@ -26,13 +26,8 @@ Multi-company RAG chatbot dashboard for the DevSynt AI Internship (Task 5). Comp
 - Release Tag Target: `v0.4-chunking` (approved release tag).
 - Tag Sequence: `v0.0-skeleton`, `v0.0-tooling`, `v0.1-sample-data`, `v0.2-database`, `v0.2.1-db-hardening` (`8c186d0`), `v0.3-extraction` (`65c4d8c`), `v0.3.1-extraction-hardening` (`92f4ad5`), `v0.4-chunking`.
 
-## Phase 4 Status & Chunking Contract
-- Snapshot: Phase 4 chunking passed, merged into main and tagged v0.4-chunking. Primary verification is 170/170 and related-document evidence verification is 176/176 using evidence map v1.0.1. Code merge SHA: 68dedd4665d73059212def5bd56b51ebb06eed5a; CI URL: https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42385811834. Phase 5 embedding is next but has not started.
-- Locked decisions: Cross-document key facts list a related document only when it holds a needed component (see data/facts/key_facts.amendments.md). Evidence anchors match with number boundaries. Gitleaks checksum false positives allowlisted in .gitleaks.toml with compound condition.
-- Contract: Contiguous non-table segments sharing page and section; chunks never cross page or section boundaries.
-- Cross-doc facts are verified per related document through `data/facts/cross_doc_evidence.json` (A-6).
-- Sizing: `MIN_CHUNK_TOKENS=80` (body); `overlap=60` (body); ceiling `CHUNK_TOKENS * 1.15` (incl header); `MAX_TABLE_TOKENS=1500` (incl header, lead-in, repeated headers). Subminimum allowed only for `sole_chunk_of_segment` and `unit_indivisible`. Small tails merge or rebalance.
-- Errors: Oversized rows or headers raise `ChunkingBudgetError` (code `CHUNK_BUDGET_EXCEEDED`). Header cap is 25% of `CHUNK_TOKENS`.
-- Privacy & Splitting: Atomic chunking; diagnostics omit content, headings, filename. Overlong plain-text runs use deterministic hard splitting.
-- Non-blocking notes: N1–N7 recorded in `context/PROJECT_STATUS.md` (header budget, cross-page tables, transient metadata, unpinned tokenizer, CI test scope, minimal CI permissions, external samples).
-- Governance: Phase 4 merged and released under `v0.4-chunking`. Phase 5 embedding is NOT started and requires explicit user instructions.
+## Phase 5 Status & Embedding Contract
+- Snapshot: Phase 5 embedding implemented on branch `phase-5-embedding`. Core/offline suite passed (218 passed, 1 skipped, 23 deselected, 89.79% cov), all embedder modules >=85% (bge_m3 93.88%, fake 93.75%, base 100%, factory 100%). Six model tests passed. Benchmark: 221.27s (<600s), 0.58 chunks/s, peak RSS 3.05 GB. Informational retrieval smoke: Hit@1 63.16%, Hit@5 94.74%, MRR 0.774. Phase 4 regression: 170/170 primary, 176/176 related. Phase 5 is NOT merged, NOT tagged, and NOT yet passed. Phase 6 is NOT authorized.
+- Locked decisions: A-3 (chunking budgets/segments), A-6 (cross-document evidence map v1.0.1, number boundaries), A-7 (CPU-only, normalized 1024-d BAAI/bge-m3 pinned to revision 5617a9f61b028005a4858fdac845db406aefb181, no prefix, batch size 16, max length 2048 with typed error on excess; fake embedder for core/CI without torch; benchmark under 10m).
+- Non-blocking notes: N1–N7 recorded in `context/PROJECT_STATUS.md`.
+- Governance: Phase 5 requires Claude's review and the user's explicit "Phase 5 passed" before merge/tag. Phase 6 is NOT authorized.
