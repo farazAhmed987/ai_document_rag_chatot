@@ -28,8 +28,10 @@ Multi-company RAG chatbot dashboard for the DevSynt AI Internship (Task 5). Comp
 - Tag Sequence: `v0.0-skeleton`, `v0.0-tooling`, `v0.1-sample-data`, `v0.2-database`, `v0.2.1-db-hardening` (`8c186d0`), `v0.3-extraction` (`65c4d8c`), `v0.3.1-extraction-hardening` (`92f4ad5`).
 
 ## Phase 4 Status & Chunking Contract
-- Status: Phase 4 Stage 1 (tests only) was authorized by Claude on 2026-10-31. No Phase 4 implementation or pytest RED/GREEN evidence exists. Phase 4 is NOT passed. Phase 5 is NOT authorized.
+- Status: Phase 4 chunking implemented on branch phase-4-chunking (not merged, not tagged). Evidence map v1.0.1 (176 pairs). Awaiting Claude's review of the chunking code and the user's 'Phase 4 passed'. Phases 5 and 6 not authorized.
+- Locked decisions: Cross-document key facts list a related document only when it holds a needed component (see data/facts/key_facts.amendments.md).
 - Contract: Contiguous non-table segments sharing page and section; chunks never cross page or section boundaries.
+- Cross-doc facts are verified per related document through `data/facts/cross_doc_evidence.json` (A-6).
 - Sizing: `MIN_CHUNK_TOKENS=80` (body); `overlap=60` (body); ceiling `CHUNK_TOKENS * 1.15` (incl header); `MAX_TABLE_TOKENS=1500` (incl header, lead-in, repeated headers). Subminimum allowed only for `sole_chunk_of_segment` and `unit_indivisible`. Small tails merge or rebalance.
 - Errors: Oversized rows or headers raise `ChunkingBudgetError` (code `CHUNK_BUDGET_EXCEEDED`). Header cap is 25% of `CHUNK_TOKENS`.
 - Privacy & Splitting: Atomic chunking; diagnostics omit content, headings, filename. Overlong plain-text runs use deterministic hard splitting.
