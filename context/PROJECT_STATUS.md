@@ -1,5 +1,5 @@
 # Project Status
-Last updated: 2026-11-07 | Updated by: Antigravity | Current phase: Phase 5 (embedding) implemented on branch phase-5-embedding, awaiting review.
+Last updated: 2026-11-07 | Updated by: Antigravity | Current phase: Phase 5 corrective round completed on branch phase-5-embedding, awaiting Claude validation.
 
 Rules for this file: no secrets or connection strings; keep it under about 150 lines; when the logs grow, move old entries to context/archive/status-YYYY-MM.md. Historical snapshots: context/archive/preflight-8735072/.
 
@@ -29,7 +29,7 @@ Rules for this file: no secrets or connection strings; keep it under about 150 l
 | 3 | Extraction and cleaning | Passed | v0.3-extraction | 2026-10-31 | Commit 65c4d8c; PDF, DOCX, TXT, MD extractors |
 | — | Hardening Part B: Extraction, structure & CI hardening | Passed | v0.3.1-extraction-hardening | 2026-10-31 | Commit 92f4ad5; 100 items (99 pass, 1 opt skip), 90.75% cov, 170/170 facts |
 | 4 | Chunking | Passed | v0.4-chunking | 2026-11-07 | Primary 170/170; related evidence 176/176; evidence map v1.0.1; final tests and CI green. Include https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42385811834. |
-| 5 | Embedding module (BGE-M3) | In review: HOLD (code inspection & clean-env validation) | | | Implementation commit bc0bce1; pre-review context deeda0f; A-8 batch 16; model tests passed; benchmark 221s; Phase 5 NOT passed, NOT merged, NOT tagged; Phase 6 NOT authorized |
+| 5 | Embedding module (BGE-M3) | In review: CHANGES REQUIRED (corrective gates passed, awaiting validation) | | | Code commit ce06ca00321e0c0f8196e37525091429ad60cb9e; A-8 batch 16; A-9 dependency alignment; model tests passed; benchmark 400s; Phase 5 NOT passed, NOT merged, NOT tagged; Phase 6 NOT authorized |
 | 6 | Ingestion service end to end (CLI) | Not started | | | NOT authorized |
 | 7 | Retrieval (dense, keyword, RRF, rerank) and golden-set evaluation | Not started | | | |
 | 8 | LLM answer, threshold gate, citations, Q&A logging | Not started | | | |
@@ -38,7 +38,7 @@ Rules for this file: no secrets or connection strings; keep it under about 150 l
 | 11 | Hardening, README, diagram, demo video, LinkedIn post | Not started | | | |
 
 ## Current step
-Phase 5 implemented on branch phase-5-embedding. Implementation commit bc0bce1; pre-review context commit deeda0f; gates passed; Claude verdict remains on HOLD pending code inspection and clean-environment validation. Phase 5 is NOT passed, NOT merged and NOT tagged. Phase 6 is NOT authorized.
+Phase 5 corrective round (CHANGES REQUIRED by Claude, 2026-11-07): dependency alignment (A-9), offline-before-import, model-load lock, factory 1024-d and backend validation, extra batch/concurrency tests. Checks passed at ce06ca00321e0c0f8196e37525091429ad60cb9e; awaiting Claude validation. Phase 5 is NOT passed, NOT merged, NOT tagged. Phase 6 is NOT authorized.
 
 
 ## Phase 4 Chunking Contract & Governance
@@ -55,6 +55,7 @@ Phase 5 implemented on branch phase-5-embedding. Implementation commit bc0bce1; 
 ## Gate log (newest first, append only)
 | Date | Phase | Commands run | Result | Commit or tag |
 |---|---|---|---|---|
+| 2026-11-07 | 5 Corrective Round | ruff, format, mypy, pytest --cov (89.91%), check_phase_coverage, verify_chunks (170/170, 176/176), clean ML pip check, clean ML core suite, 6 model tests, embed_benchmark (400s), fresh-clone core suite | PASS | ce06ca00321e0c0f8196e37525091429ad60cb9e (awaiting Claude validation) |
 | 2026-11-07 | 5 Stage 2 | ruff, format, mypy (39 files), pytest --cov (89.79%), check_phase_coverage, verify_chunks (170/170, 176/176), 6 model tests, embed_benchmark (221s) | PASS | Branch phase-5-embedding (awaiting review) |
 | 2026-11-07 | 4 Merge & Release | ruff, format, mypy, pytest --cov (89.23%), verify_chunks (170/170, 176/176), CI run 42385811834 | PASS | Commit 68dedd4 / tag v0.4-chunking |
 | 2026-11-03 | 4 Stage 2 A-6 | ruff, format, mypy, pytest --cov, verify_chunks | PASS | Commit 3a17a20 (189 pass, 88.30% cov, primary 170/170, related 176/176, map v1.0.1) |
@@ -69,6 +70,13 @@ Phase 5 implemented on branch phase-5-embedding. Implementation commit bc0bce1; 
 ## Decisions log (newest first)
 | Date | Decision | Reason |
 |---|---|---|
+| 2026-11-07 | Option A: sentence-transformers 6.2.0 retained; transformers 5.22.2, tokenizers 0.23.3 and huggingface-hub 2.4.0 pinned in core and ML requirements | Phase 4 chunk fingerprints identical across old/new tokenizer stacks (hash 9e3c4ee12f868ad3df7ea9f7fdb6d79f829beb2eb42756fbe607c88063a6b809). |
+| 2026-11-07 | local_files_only remains offline enforcement; environment variables are set before imports as a second layer; prepare_model runs online only | Prevents any network requests during model loading and caching while guaranteeing offline inference. |
+| 2026-11-07 | Factory validates dimension equals the chunk-column dimension and rejects unknown backends before model import | Guards against configuration mismatch before heavy ML imports. |
+| 2026-11-07 | Smoke metrics are document-level and informational | Informational evaluation metric only; not a gating threshold. |
+| 2026-11-07 | Tokenizer revision pinning decision remains pending Claude review before Phase 6 | Deferred to Claude decision before Phase 6. |
+| 2026-11-07 | No schema migration is authorized | Database pgvector column remains vector(1024); no migrations created. |
+| 2026-11-07 | Phase 5 remains awaiting Claude validation | Phase 5 is NOT passed, NOT merged, and NOT tagged. Phase 6 is NOT authorized. |
 | 2026-11-07 | Embedding batch default is 16 instead of the initial prompt’s 32 | Amendment A-8 records that it was selected from the CPU memory/latency benchmark. |
 | 2026-11-07 | Phase 4 tokenizer revision remains unpinned | Must be aligned with the embedder revision before Phase 6. |
 | 2026-11-07 | No chunks-table schema or migration change is authorized | ChunkDraft-to-table mapping requires a separate Claude decision during Phase 6 planning. |
@@ -121,6 +129,7 @@ Company name: Himalaya Crest Realty (Pvt.) Ltd.
 - Mentor deadline (12 September 2026 in brief) has passed; real deadline remains unconfirmed with mentor.
 
 ## Session log (one line per session, newest first)
+- 2026-11-07 | Phase 5 corrective round completed; Option A dependencies aligned (A-9); offline env, model lock, 1024-d factory checks implemented; all gates, clean-ML, benchmark (400s), fresh clone, and CI passed at ce06ca0 | Antigravity
 - 2026-11-07 | Phase 5 code inspection and clean ML-env test executed; HOLD review and A-8 recorded; awaiting Claude verdict | Antigravity
 - 2026-11-07 | Phase 5 Stage 1 RED & Stage 2 GREEN completed on phase-5-embedding; offline gates, model tests, benchmark (221s) and regression passed; awaiting review | Antigravity
 - 2026-11-07 | Phase 4 approved by Claude with non-blocking notes, user stated "Phase 4 passed", merged into main, final local gates and main CI passed, v0.4-chunking approved release tag, Phase 5 not started | Antigravity

@@ -116,3 +116,14 @@ source-specific evidence map. Original facts and sample documents are unchanged.
 - **Reason:** The value is based on the measured CPU memory/latency benchmark and keeps the runtime within the approved ten-minute limit.
 - **Scope:** This changes only the embedding batch default. It does not alter chunking, embedding dimension, normalization, model revision, retrieval behavior or database schema.
 - **Status:** Approved for Phase 5 review by Claude on 2026-11-07.
+
+## A-9 — Phase 5 dependency alignment (2026-11-07)
+
+- **Title:** Phase 5 dependency alignment
+- **Decision:** `sentence-transformers==6.2.0` is retained. Core and ML dependencies are aligned to `transformers==5.22.2`, `tokenizers==0.23.3`, and `huggingface-hub==2.4.0` (with `torch==2.15.0+cpu` in ML extra and requirements).
+- **Proof:**
+  - Baseline chunk fingerprint (transformers 4.57.6): `9e3c4ee12f868ad3df7ea9f7fdb6d79f829beb2eb42756fbe607c88063a6b809`
+  - Candidate chunk fingerprint (transformers 5.22.2): `9e3c4ee12f868ad3df7ea9f7fdb6d79f829beb2eb42756fbe607c88063a6b809`
+  - Identical chunk counts across all 5 PDFs: Company_Overview.pdf (32), FAQs.pdf (16), Policies_and_Terms.pdf (24), Property_Listings.pdf (19), Services_and_Fees.pdf (35); Total = 126.
+  - Both verification runs confirmed Primary: 170/170 and Related: 176/176 (`verify_chunks.py` stable diff empty, PASS).
+- **Scope:** No chunk content, order, indices, pages, sections or counts changed. No schema migration was created. Database pgvector column remains `vector(1024)`.
