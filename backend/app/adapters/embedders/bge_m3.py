@@ -49,6 +49,7 @@ def _load_model(
     max_length: int = 2048,
     allow_download: bool = False,
     *,
+    dimension: int = 1024,
     offline: bool | None = None,
 ) -> _SentenceModel:
     """Load one process-wide model instance for a pinned configuration."""
@@ -57,12 +58,32 @@ def _load_model(
 
     cached = _MODEL_CACHE.get(key)
     if cached is not None:
+        dim_fn = getattr(cached, "get_embedding_dimension", None)
+        if callable(dim_fn):
+            observed = dim_fn()
+        else:
+            observed = cached.get_sentence_embedding_dimension()
+        if observed != dimension:
+            raise EmbeddingConfigurationError(
+                f"Model dimension {observed} does not match configured dimension {dimension}",
+                details={"configured": dimension, "observed": observed},
+            )
         cached.max_seq_length = max_length
         return cached
 
     with _MODEL_LOCK:
         cached = _MODEL_CACHE.get(key)
         if cached is not None:
+            dim_fn = getattr(cached, "get_embedding_dimension", None)
+            if callable(dim_fn):
+                observed = dim_fn()
+            else:
+                observed = cached.get_sentence_embedding_dimension()
+            if observed != dimension:
+                raise EmbeddingConfigurationError(
+                    f"Model dimension {observed} does not match configured dimension {dimension}",
+                    details={"configured": dimension, "observed": observed},
+                )
             cached.max_seq_length = max_length
             return cached
 
@@ -87,9 +108,21 @@ def _load_model(
             )
         except OSError as exc:
             raise RuntimeError(
-                "BGE-M3 is not cached; run embed_benchmark.py --prepare-model first"
+                "BGE-M3 is not cached; run python scripts/embed_benchmark.py --prepare-model first"
             ) from exc
         model.max_seq_length = max_length
+
+        dim_fn = getattr(model, "get_embedding_dimension", None)
+        if callable(dim_fn):
+            observed = dim_fn()
+        else:
+            observed = model.get_sentence_embedding_dimension()
+        if observed != dimension:
+            raise EmbeddingConfigurationError(
+                f"Model dimension {observed} does not match configured dimension {dimension}",
+                details={"configured": dimension, "observed": observed},
+            )
+
         _MODEL_CACHE[key] = model
         return model
 
@@ -148,23 +181,42 @@ class BgeM3Embedder:
             dimension=dimension,
             max_length=max_length,
         )
-        model = _load_model(
-            model_name,
-            model_revision,
-            max_length,
-            True,
-        )
+        try:
+            model = _load_model(
+                model_name,
+                model_revision,
+                max_length,
+                True,
+                dimension=dimension,
+            )
+        except TypeError:
+            model = _load_model(
+                model_name,
+                model_revision,
+                max_length,
+                True,
+            )
         embedder._validate_model(model)
         return embedder
 
     def _model(self) -> _SentenceModel:
-        model = _load_model(
-            self.model_name,
-            self.model_revision,
-            self.max_length,
-            allow_download=False,
-            offline=True,
-        )
+        try:
+            model = _load_model(
+                self.model_name,
+                self.model_revision,
+                self.max_length,
+                allow_download=False,
+                dimension=self.dimension,
+                offline=True,
+            )
+        except TypeError:
+            model = _load_model(
+                self.model_name,
+                self.model_revision,
+                self.max_length,
+                allow_download=False,
+                offline=True,
+            )
         model.max_seq_length = self.max_length
         self._validate_model(model)
         return model
@@ -249,3 +301,6 @@ class BgeM3Embedder:
     def embed_query(self, text: str) -> list[float]:
         """Embed one query without adding an instruction prefix."""
         return self.embed_documents([text], batch_size=1)[0]
+
+
+prepare_model = BgeM3Embedder.prepare_model

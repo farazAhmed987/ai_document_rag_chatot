@@ -815,3 +815,136 @@ def test_fake_empty_batch() -> None:
     fake = load("app.adapters.embedders.fake")
     embedder = fake.FakeEmbedder(dimension=1024)
     assert embedder.embed_documents([], batch_size=16) == []
+
+
+def test_prepare_model_offline_raises_typed_configuration_error(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    bge = load("app.adapters.embedders.bge_m3")
+    errors = load("app.core.errors")
+    assert hasattr(bge, "prepare_model"), (
+        "prepare_model must be exported at module level"
+    )
+    for var in ("HF_HUB_OFFLINE", "TRANSFORMERS_OFFLINE"):
+        monkeypatch.delenv("HF_HUB_OFFLINE", raising=False)
+        monkeypatch.delenv("TRANSFORMERS_OFFLINE", raising=False)
+        monkeypatch.setenv(var, "1")
+        with pytest.raises(errors.EmbeddingConfigurationError, match="online"):
+            bge.prepare_model(
+                model_name="BAAI/bge-m3",
+                model_revision="0" * 40,
+                dimension=1024,
+                max_length=2048,
+            )
+        with pytest.raises(errors.EmbeddingConfigurationError, match="online"):
+            bge.BgeM3Embedder.prepare_model(
+                model_name="BAAI/bge-m3",
+                model_revision="0" * 40,
+                dimension=1024,
+                max_length=2048,
+            )
+
+
+def test_dimension_mismatch_does_not_poison_model_cache(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    bge = load("app.adapters.embedders.bge_m3")
+    errors = load("app.core.errors")
+    bge._load_model.cache_clear()
+
+    class MismatchedModel(FakeSentenceTransformer):
+        def __init__(self, *args: Any, **kwargs: Any) -> None:
+            super().__init__(dimension=768)
+
+    module = ModuleType("sentence_transformers")
+    module.SentenceTransformer = MismatchedModel  # type: ignore[attr-defined]
+    monkeypatch.setitem(sys.modules, "sentence_transformers", module)
+
+    torch_mod = ModuleType("torch")
+    torch_mod.device = lambda d: d  # type: ignore[attr-defined]
+    monkeypatch.setitem(sys.modules, "torch", torch_mod)
+
+    embedder = bge.BgeM3Embedder(
+        model_name="BAAI/bge-m3",
+        model_revision="0" * 40,
+        dimension=1024,
+        max_length=2048,
+    )
+    with pytest.raises(errors.EmbeddingConfigurationError, match="dimension"):
+        embedder.embed_query("test query")
+
+    assert len(bge._MODEL_CACHE) == 0, (
+        "Model cache must be empty after dimension mismatch"
+    )
+
+
+def test_model_max_seq_length_is_set_before_cache(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    bge = load("app.adapters.embedders.bge_m3")
+    bge._load_model.cache_clear()
+
+    max_seq_when_cached: list[int] = []
+
+    class MonitoredCache(dict):
+        def __setitem__(self, key: Any, value: Any) -> None:
+            max_seq_when_cached.append(getattr(value, "max_seq_length", None))
+            super().__setitem__(key, value)
+
+    monitored_cache = MonitoredCache()
+    monkeypatch.setattr(bge, "_MODEL_CACHE", monitored_cache)
+
+    class CustomSeqModel(FakeSentenceTransformer):
+        def __init__(self, *args: Any, **kwargs: Any) -> None:
+            super().__init__(dimension=1024)
+            self.max_seq_length = 512
+
+    module = ModuleType("sentence_transformers")
+    module.SentenceTransformer = CustomSeqModel  # type: ignore[attr-defined]
+    monkeypatch.setitem(sys.modules, "sentence_transformers", module)
+
+    torch_mod = ModuleType("torch")
+    torch_mod.device = lambda d: d  # type: ignore[attr-defined]
+    monkeypatch.setitem(sys.modules, "torch", torch_mod)
+
+    model = bge._load_model(
+        "BAAI/bge-m3",
+        "0" * 40,
+        max_length=2048,
+        dimension=1024,
+        offline=True,
+    )
+    assert model.max_seq_length == 2048
+    assert max_seq_when_cached == [2048]
+
+
+def test_missing_cache_error_points_to_model_preparation(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    bge = load("app.adapters.embedders.bge_m3")
+    bge._load_model.cache_clear()
+
+    class MissingModel:
+        def __init__(self, *args: object, **kwargs: object) -> None:
+            raise OSError("model files not found in offline cache")
+
+    module = ModuleType("sentence_transformers")
+    module.SentenceTransformer = MissingModel  # type: ignore[attr-defined]
+    monkeypatch.setitem(sys.modules, "sentence_transformers", module)
+
+    torch_mod = ModuleType("torch")
+    torch_mod.device = lambda d: d  # type: ignore[attr-defined]
+    monkeypatch.setitem(sys.modules, "torch", torch_mod)
+
+    embedder = bge.BgeM3Embedder(
+        model_name="BAAI/bge-m3",
+        model_revision="0" * 40,
+        dimension=1024,
+        max_length=2048,
+    )
+    with pytest.raises(RuntimeError) as exc_info:
+        embedder.embed_query("text")
+
+    error_message = str(exc_info.value)
+    assert "python scripts/embed_benchmark.py --prepare-model" in error_message
+    assert "verify_chunks.py --prepare-tokenizer" not in error_message
