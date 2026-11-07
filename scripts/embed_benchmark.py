@@ -16,9 +16,14 @@ from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
 
-from app.adapters.embedders.base import Embedder
-from app.adapters.embedders.bge_m3 import BgeM3Embedder
-from app.adapters.embedders.factory import create_embedder
+try:
+    from app.adapters.embedders.base import Embedder
+    from app.adapters.embedders.bge_m3 import BgeM3Embedder
+    from app.adapters.embedders.factory import create_embedder
+except ImportError:
+    Embedder = Any  # type: ignore[misc,assignment]
+    BgeM3Embedder = Any  # type: ignore[misc,assignment]
+    create_embedder = None  # type: ignore[assignment]
 from app.adapters.extractors.factory import extract_document
 from app.adapters.tokenizers.bge_m3 import BgeM3TokenCounter
 from app.core.config import REPO_ROOT, Settings, get_settings

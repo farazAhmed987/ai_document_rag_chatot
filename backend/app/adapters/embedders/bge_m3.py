@@ -3,7 +3,8 @@
 from __future__ import annotations
 
 import math
-from functools import lru_cache
+import os
+import threading
 from typing import Protocol, cast
 
 from app.core.errors import EmbeddingConfigurationError, EmbeddingInputError
@@ -29,6 +30,8 @@ class _SentenceModel(Protocol):
 
     def get_sentence_embedding_dimension(self) -> int | None: ...
 
+    def get_embedding_dimension(self) -> int | None: ...
+
     def encode(self, texts: list[str], **kwargs: object) -> _Array: ...
 
 
@@ -36,34 +39,67 @@ class _SentenceTransformerFactory(Protocol):
     def __call__(self, model_name: str, **kwargs: object) -> _SentenceModel: ...
 
 
-@lru_cache(maxsize=4)
+_MODEL_LOCK = threading.Lock()
+_MODEL_CACHE: dict[tuple[str, str], _SentenceModel] = {}
+
+
 def _load_model(
     model_name: str,
     model_revision: str,
-    max_length: int,
-    allow_download: bool,
+    max_length: int = 2048,
+    allow_download: bool = False,
+    *,
+    offline: bool | None = None,
 ) -> _SentenceModel:
     """Load one process-wide model instance for a pinned configuration."""
-    try:
-        from sentence_transformers import SentenceTransformer
-    except ImportError as exc:
-        raise RuntimeError(
-            "BGE-M3 requires the dependencies in backend/requirements-ml.txt"
-        ) from exc
-    try:
-        model = cast(_SentenceTransformerFactory, SentenceTransformer)(
-            model_name,
-            revision=model_revision,
-            device="cpu",
-            local_files_only=not allow_download,
-            trust_remote_code=False,
-        )
-    except OSError as exc:
-        raise RuntimeError(
-            "BGE-M3 is not cached; run embed_benchmark.py --prepare-model first"
-        ) from exc
-    model.max_seq_length = max_length
-    return model
+    key = (model_name, model_revision)
+    is_offline = not allow_download if offline is None else offline
+
+    cached = _MODEL_CACHE.get(key)
+    if cached is not None:
+        cached.max_seq_length = max_length
+        return cached
+
+    with _MODEL_LOCK:
+        cached = _MODEL_CACHE.get(key)
+        if cached is not None:
+            cached.max_seq_length = max_length
+            return cached
+
+        if is_offline:
+            os.environ.setdefault("HF_HUB_OFFLINE", "1")
+            os.environ.setdefault("TRANSFORMERS_OFFLINE", "1")
+
+        try:
+            import torch  # noqa: F401
+            from sentence_transformers import SentenceTransformer
+        except ImportError as exc:
+            raise RuntimeError(
+                "BGE-M3 requires the dependencies in backend/requirements-ml.txt"
+            ) from exc
+        try:
+            model = cast(_SentenceTransformerFactory, SentenceTransformer)(
+                model_name,
+                revision=model_revision,
+                device="cpu",
+                local_files_only=is_offline,
+                trust_remote_code=False,
+            )
+        except OSError as exc:
+            raise RuntimeError(
+                "BGE-M3 is not cached; run embed_benchmark.py --prepare-model first"
+            ) from exc
+        model.max_seq_length = max_length
+        _MODEL_CACHE[key] = model
+        return model
+
+
+def _clear_cache() -> None:
+    with _MODEL_LOCK:
+        _MODEL_CACHE.clear()
+
+
+_load_model.cache_clear = _clear_cache  # type: ignore[attr-defined]
 
 
 def _unit_vector(values: list[float]) -> list[float]:
@@ -99,13 +135,25 @@ class BgeM3Embedder:
         max_length: int,
     ) -> BgeM3Embedder:
         """Explicitly download and cache the pinned model, never implicitly."""
+        if (
+            os.environ.get("HF_HUB_OFFLINE") == "1"
+            or os.environ.get("TRANSFORMERS_OFFLINE") == "1"
+        ):
+            raise EmbeddingConfigurationError(
+                "Model preparation must run online; HF_HUB_OFFLINE or TRANSFORMERS_OFFLINE is enabled"
+            )
         embedder = cls(
             model_name=model_name,
             model_revision=model_revision,
             dimension=dimension,
             max_length=max_length,
         )
-        model = _load_model(model_name, model_revision, max_length, True)
+        model = _load_model(
+            model_name,
+            model_revision,
+            max_length,
+            True,
+        )
         embedder._validate_model(model)
         return embedder
 
@@ -114,14 +162,19 @@ class BgeM3Embedder:
             self.model_name,
             self.model_revision,
             self.max_length,
-            False,
+            allow_download=False,
+            offline=True,
         )
         model.max_seq_length = self.max_length
         self._validate_model(model)
         return model
 
     def _validate_model(self, model: _SentenceModel) -> None:
-        observed = model.get_sentence_embedding_dimension()
+        dim_fn = getattr(model, "get_embedding_dimension", None)
+        if callable(dim_fn):
+            observed = dim_fn()
+        else:
+            observed = model.get_sentence_embedding_dimension()
         if observed != self.dimension:
             raise EmbeddingConfigurationError(
                 (

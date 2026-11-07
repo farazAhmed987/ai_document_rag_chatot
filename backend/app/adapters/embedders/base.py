@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Protocol, runtime_checkable
+from typing import Any, Protocol, overload, runtime_checkable
 
 from app.core.errors import EmbeddingConfigurationError
 
@@ -27,19 +27,46 @@ class Embedder(Protocol):
         ...
 
 
+@overload
 def validate_embedder_dimension(
-    embedder: Embedder, required_dimension: int
-) -> Embedder:
-    """Fail before use when the adapter and pgvector dimensions disagree."""
-    if embedder.dimension != required_dimension:
+    embedder: Embedder,
+    required_dimension: int,
+    model_name: str | None = ...,
+) -> Embedder: ...
+
+
+@overload
+def validate_embedder_dimension(
+    embedder: int,
+    required_dimension: int,
+    model_name: str | None = ...,
+) -> int: ...
+
+
+def validate_embedder_dimension(
+    embedder: Embedder | int,
+    required_dimension: int,
+    model_name: str | None = None,
+) -> Any:
+    """Fail before use when the adapter/setting and pgvector dimensions disagree."""
+    configured: int
+    if isinstance(embedder, int):
+        configured = embedder
+    else:
+        configured = embedder.dimension
+
+    if configured != required_dimension:
+        details: dict[str, Any] = {
+            "configured": configured,
+            "required": required_dimension,
+        }
+        if model_name is not None:
+            details["model_name"] = model_name
         raise EmbeddingConfigurationError(
             (
-                f"Embedder dimension {embedder.dimension} does not match required "
+                f"Embedder dimension {configured} does not match required "
                 f"dimension {required_dimension}"
             ),
-            details={
-                "configured": embedder.dimension,
-                "required": required_dimension,
-            },
+            details=details,
         )
     return embedder
