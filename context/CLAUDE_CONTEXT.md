@@ -20,21 +20,19 @@ Multi-company RAG chatbot dashboard for the DevSynt AI Internship (Task 5). Comp
   - Verification: Strict pipeline fact verifier requiring single-line `table_row` matches; 170/170 canonical facts verified.
 
 ## Git Baseline & Release Tags
-- Inspected Remote Baseline: `origin/main` at `8735072` (`8735072a4c48c0c0ae5ad2f2659cc1f05b8addd7`).
-- Preflight Docs Checkpoint: `26e89a0` (docs commit; not a code release).
-- Local Main State: local `main` has documentation-only commits ahead of `origin/main`.
-- Release Tag Target: `v0.3.1-extraction-hardening` at `92f4ad5` (`92f4ad56f9fa1068396c5cdfe6b6387396c519fa`).
-- Distinction: local `main` is ahead of `origin/main` by documentation commits while the release tag sits at `92f4ad5`; they are not identical. Historical snapshots archived at `context/archive/preflight-8735072/`.
-- Tag Sequence: `v0.0-skeleton`, `v0.0-tooling`, `v0.1-sample-data`, `v0.2-database`, `v0.2.1-db-hardening` (`8c186d0`), `v0.3-extraction` (`65c4d8c`), `v0.3.1-extraction-hardening` (`92f4ad5`).
+- Inspected Remote Baseline: `origin/main` at `68dedd4` (`68dedd4665d73059212def5bd56b51ebb06eed5a`).
+- Code Merge SHA: `68dedd4665d73059212def5bd56b51ebb06eed5a`.
+- Code CI URL: https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42385811834.
+- Release Tag Target: `v0.4-chunking` (approved release tag).
+- Tag Sequence: `v0.0-skeleton`, `v0.0-tooling`, `v0.1-sample-data`, `v0.2-database`, `v0.2.1-db-hardening` (`8c186d0`), `v0.3-extraction` (`65c4d8c`), `v0.3.1-extraction-hardening` (`92f4ad5`), `v0.4-chunking`.
 
 ## Phase 4 Status & Chunking Contract
-- Status: Phase 4 on phase-4-chunking, CI green on fe4d455, awaiting security fix and Claude code review. Phases 5 and 6 not authorized.
-- Locked decisions: Cross-document key facts list a related document only when it holds a needed component (see data/facts/key_facts.amendments.md).
+- Snapshot: Phase 4 chunking passed, merged into main and tagged v0.4-chunking. Primary verification is 170/170 and related-document evidence verification is 176/176 using evidence map v1.0.1. Code merge SHA: 68dedd4665d73059212def5bd56b51ebb06eed5a; CI URL: https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42385811834. Phase 5 embedding is next but has not started.
+- Locked decisions: Cross-document key facts list a related document only when it holds a needed component (see data/facts/key_facts.amendments.md). Evidence anchors match with number boundaries. Gitleaks checksum false positives allowlisted in .gitleaks.toml with compound condition.
 - Contract: Contiguous non-table segments sharing page and section; chunks never cross page or section boundaries.
 - Cross-doc facts are verified per related document through `data/facts/cross_doc_evidence.json` (A-6).
 - Sizing: `MIN_CHUNK_TOKENS=80` (body); `overlap=60` (body); ceiling `CHUNK_TOKENS * 1.15` (incl header); `MAX_TABLE_TOKENS=1500` (incl header, lead-in, repeated headers). Subminimum allowed only for `sole_chunk_of_segment` and `unit_indivisible`. Small tails merge or rebalance.
 - Errors: Oversized rows or headers raise `ChunkingBudgetError` (code `CHUNK_BUDGET_EXCEEDED`). Header cap is 25% of `CHUNK_TOKENS`.
 - Privacy & Splitting: Atomic chunking; diagnostics omit content, headings, filename. Overlong plain-text runs use deterministic hard splitting.
-- Governance: Stage 1 modifies only `backend/tests/`; RED tests are not committed or pushed. Phase branch pushed only after technical GREEN. Merge and release tagging require user's explicit "Phase 4 passed". Later context updates cite exact code SHA with "checks passed; awaiting Claude validation" in a separate docs-only commit.
-- SRD Authority: Attached SRD v1.0 is authoritative; replace docs/SRD.md byte-for-byte in Stage 2 with SHA-256 evidence; amendments in docs/SRD_AMENDMENTS.md.
-- Review Considerations: All prior test results (99 passed, 1 skipped, 90.75% coverage, 170/170 facts) are historical validation from Phase 3 / Hardening B at tag `92f4ad5`, not newly rerun during this preflight. Full evidence preserved in `context/archive/preflight-8735072/`. External sample test skipped; `app/core/logging.py` at 0% coverage; mentor deadline unconfirmed.
+- Non-blocking notes: N1–N7 recorded in `context/PROJECT_STATUS.md` (header budget, cross-page tables, transient metadata, unpinned tokenizer, CI test scope, minimal CI permissions, external samples).
+- Governance: Phase 4 merged and released under `v0.4-chunking`. Phase 5 embedding is NOT started and requires explicit user instructions.
