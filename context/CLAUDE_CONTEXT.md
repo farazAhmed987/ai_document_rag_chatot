@@ -20,14 +20,16 @@ Multi-company RAG chatbot dashboard for the DevSynt AI Internship (Task 5). Comp
   - Verification: Strict pipeline fact verifier requiring single-line `table_row` matches; 170/170 canonical facts verified.
 
 ## Git Baseline & Release Tags
-- Inspected Remote Baseline: `origin/main` at `68dedd4` (`68dedd4665d73059212def5bd56b51ebb06eed5a`).
-- Code Merge SHA: `68dedd4665d73059212def5bd56b51ebb06eed5a`.
-- Code CI URL: https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42385811834.
-- Release Tag Target: `v0.4-chunking` (approved release tag).
+- Phase 4 `main` and `v0.4-chunking` target are `c861425` (`c8614259002399f165e4bf3f183ec37d25deeb18`).
+- `68dedd4` (`68dedd4665d73059212def5bd56b51ebb06eed5a`) is the Phase 4 code-merge commit only.
+- Code Merge CI URL: https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42385811834.
+- Final tagged-commit CI: https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42386247733.
 - Tag Sequence: `v0.0-skeleton`, `v0.0-tooling`, `v0.1-sample-data`, `v0.2-database`, `v0.2.1-db-hardening` (`8c186d0`), `v0.3-extraction` (`65c4d8c`), `v0.3.1-extraction-hardening` (`92f4ad5`), `v0.4-chunking`.
 
 ## Phase 5 Status & Embedding Contract
-- Snapshot: Phase 5 embedding implemented on branch `phase-5-embedding`. Core/offline suite passed (218 passed, 1 skipped, 23 deselected, 89.79% cov), all embedder modules >=85% (bge_m3 93.88%, fake 93.75%, base 100%, factory 100%). Six model tests passed. Benchmark: 221.27s (<600s), 0.58 chunks/s, peak RSS 3.05 GB. Informational retrieval smoke: Hit@1 63.16%, Hit@5 94.74%, MRR 0.774. Phase 4 regression: 170/170 primary, 176/176 related. Phase 5 is NOT merged, NOT tagged, and NOT yet passed. Phase 6 is NOT authorized.
-- Locked decisions: A-3 (chunking budgets/segments), A-6 (cross-document evidence map v1.0.1, number boundaries), A-7 (CPU-only, normalized 1024-d BAAI/bge-m3 pinned to revision 5617a9f61b028005a4858fdac845db406aefb181, no prefix, batch size 16, max length 2048 with typed error on excess; fake embedder for core/CI without torch; benchmark under 10m).
+- Snapshot: Phase 5 embedding implemented on branch `phase-5-embedding`. Implementation commit is `bc0bce1` (`bc0bce156916be0c5793d7428df690256c9ea209`); `deeda0f` is the pre-review context commit, not the post-update branch HEAD. Core/offline suite passed (218 passed, 1 skipped, 23 deselected, 89.79% cov), all embedder modules >=85% (bge_m3 93.88%, fake 93.75%, base 100%, factory 100%). Six model tests passed. Benchmark: 221.27s (<600s), 0.58 chunks/s, peak RSS 3.05 GB. Informational retrieval smoke: Hit@1 63.16%, Hit@5 94.74%, MRR 0.774. Phase 4 regression: 170/170 primary, 176/176 related.
+- Phase 5 is on HOLD for Claude code inspection and clean-environment validation.
+- Phase 5 is NOT passed, merged, or tagged. Phase 6 is NOT authorized. No Phase 6 schema migration is authorized.
+- Locked decisions: A-3 (chunking budgets/segments), A-6 (cross-document evidence map v1.0.1, number boundaries), A-7 (CPU-only, normalized 1024-d BAAI/bge-m3 pinned to revision 5617a9f61b028005a4858fdac845db406aefb181, no prefix, max length 2048 with typed error on excess; fake embedder for core/CI without torch; benchmark under 10m), A-8 (default embedding batch size 16 selected from CPU benchmark).
 - Non-blocking notes: N1–N7 recorded in `context/PROJECT_STATUS.md`.
 - Governance: Phase 5 requires Claude's review and the user's explicit "Phase 5 passed" before merge/tag. Phase 6 is NOT authorized.

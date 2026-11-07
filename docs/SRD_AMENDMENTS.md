@@ -108,3 +108,11 @@ source-specific evidence map. Original facts and sample documents are unchanged.
   fake embedder and must not install torch.
 - The Phase 5 cosine smoke search is an informational in-memory measurement.
   It does not implement or tune the Phase 7 retrieval service.
+
+## A-8 — Phase 5 CPU embedding batch default (2026-11-07)
+
+- **Title:** Phase 5 CPU embedding batch default
+- **Decision:** The Phase 5 BGE-M3 default embedding batch size is 16 rather than the original 32 specified in the initial implementation prompt.
+- **Reason:** The value is based on the measured CPU memory/latency benchmark and keeps the runtime within the approved ten-minute limit.
+- **Scope:** This changes only the embedding batch default. It does not alter chunking, embedding dimension, normalization, model revision, retrieval behavior or database schema.
+- **Status:** Approved for Phase 5 review by Claude on 2026-11-07.

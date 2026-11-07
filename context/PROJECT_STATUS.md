@@ -6,11 +6,13 @@ Rules for this file: no secrets or connection strings; keep it under about 150 l
 ## Environment
 - OS: Fedora Linux 44 | Python: 3.12.16 | venv: .venv at repo root | IDE: Antigravity
 - Repo: https://github.com/farazAhmed987/ai_document_rag_chatot
-- Inspected Remote Baseline: origin/main at 68dedd4 (68dedd4665d73059212def5bd56b51ebb06eed5a)
+- Current origin/main after Phase 4 release: c8614259002399f165e4bf3f183ec37d25deeb18
+- Phase 4 code merge: 68dedd4665d73059212def5bd56b51ebb06eed5a
+- v0.4-chunking tag target: c8614259002399f165e4bf3f183ec37d25deeb18
+- Code-merge CI: https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42385811834
+- Final tagged-commit CI: https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42386247733
 - Branch State: phase-5-embedding (starts at c8614259002399f165e4bf3f183ec37d25deeb18)
 - Pinned Model Revision: BAAI/bge-m3 at 5617a9f61b028005a4858fdac845db406aefb181
-- Code Merge SHA: 68dedd4665d73059212def5bd56b51ebb06eed5a
-- Code CI URL: https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42385811834
 - Release Tag Target: v0.4-chunking (Phase 4 release; Phase 5 not tagged)
 - Operational database: PostgreSQL 17.11 on Supabase (pgvector 0.8.2, session pooler, RLS forced, rag_app role restricted)
 - Analytics database: PostgreSQL 17.11 on Supabase (session pooler, independent migrations)
@@ -27,7 +29,7 @@ Rules for this file: no secrets or connection strings; keep it under about 150 l
 | 3 | Extraction and cleaning | Passed | v0.3-extraction | 2026-10-31 | Commit 65c4d8c; PDF, DOCX, TXT, MD extractors |
 | — | Hardening Part B: Extraction, structure & CI hardening | Passed | v0.3.1-extraction-hardening | 2026-10-31 | Commit 92f4ad5; 100 items (99 pass, 1 opt skip), 90.75% cov, 170/170 facts |
 | 4 | Chunking | Passed | v0.4-chunking | 2026-11-07 | Primary 170/170; related evidence 176/176; evidence map v1.0.1; final tests and CI green. Include https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42385811834. |
-| 5 | Embedding module (BGE-M3) | In review: implementation & offline gates passed | | | Pinned BGE-M3 (5617a9f); 218 unit tests passed (89.79% cov); 6 model tests passed; benchmark 221s (<600s); Phase 4 regression 170/170, 176/176; not merged/tagged; Phase 6 NOT authorized |
+| 5 | Embedding module (BGE-M3) | In review: HOLD (code inspection & clean-env validation) | | | Implementation commit bc0bce1; pre-review context deeda0f; A-8 batch 16; model tests passed; benchmark 221s; Phase 5 NOT passed, NOT merged, NOT tagged; Phase 6 NOT authorized |
 | 6 | Ingestion service end to end (CLI) | Not started | | | NOT authorized |
 | 7 | Retrieval (dense, keyword, RRF, rerank) and golden-set evaluation | Not started | | | |
 | 8 | LLM answer, threshold gate, citations, Q&A logging | Not started | | | |
@@ -36,10 +38,8 @@ Rules for this file: no secrets or connection strings; keep it under about 150 l
 | 11 | Hardening, README, diagram, demo video, LinkedIn post | Not started | | | |
 
 ## Current step
-- Working on: Phase 5 embedding implementation and offline green gates completed on branch phase-5-embedding.
-- Last result: Offline unit suite (218 passed, 1 skipped, 23 deselected, 89.79% cov); per-module coverage >=85% (chunking 95%, bge_m3 adapter 93.88%, fake 93.75%, base 100%, factory 100%); 6 model tests passed; benchmark total 221.27s (load 5.22s, embed 216.05s, 0.58 chunks/s, peak RSS 3.05 GB, under 10m); informational smoke: Hit@1 63.16%, Hit@5 94.74%, MRR 0.774; Phase 4 regression 170/170 primary, 176/176 related.
-- Status: Phase 5 is implemented on branch `phase-5-embedding`. Phase 5 is NOT passed. Not merged and not tagged. Phase 6 is NOT authorized.
-- Blocked by: Awaiting Claude's review and the user's "Phase 5 passed".
+Phase 5 implemented on branch phase-5-embedding. Implementation commit bc0bce1; pre-review context commit deeda0f; gates passed; Claude verdict remains on HOLD pending code inspection and clean-environment validation. Phase 5 is NOT passed, NOT merged and NOT tagged. Phase 6 is NOT authorized.
+
 
 ## Phase 4 Chunking Contract & Governance
 - Segmentation: Contiguous non-table segments sharing page & section; chunks never cross page or section boundaries.
@@ -69,6 +69,10 @@ Rules for this file: no secrets or connection strings; keep it under about 150 l
 ## Decisions log (newest first)
 | Date | Decision | Reason |
 |---|---|---|
+| 2026-11-07 | Embedding batch default is 16 instead of the initial prompt’s 32 | Amendment A-8 records that it was selected from the CPU memory/latency benchmark. |
+| 2026-11-07 | Phase 4 tokenizer revision remains unpinned | Must be aligned with the embedder revision before Phase 6. |
+| 2026-11-07 | No chunks-table schema or migration change is authorized | ChunkDraft-to-table mapping requires a separate Claude decision during Phase 6 planning. |
+| 2026-11-07 | Live RLS policy verification remains required before Phase 6 | Tenancy and isolation invariants must be reverified on operational DB before Phase 6. |
 | 2026-11-07 | Phase 5 CPU BGE-M3 runtime (A-7) | Pinned BAAI/bge-m3 revision 5617a9f61b028005a4858fdac845db406aefb181; lazy CPU loader; fake embedder for core/CI; batch size 16; max length 2048; benchmark under 10m (221s); informational smoke search |
 | 2026-11-07 | Phase 4 passed; merged into main and tagged v0.4-chunking | User authorized merge and release; all gates and main CI passed; non-blocking notes N1–N7 recorded |
 | 2026-11-03 | No --no-verify; Gitleaks checksum false positive handled by narrow .gitleaks.toml allowlist | CI secret scan must scan the repo, not staged files |
@@ -117,6 +121,7 @@ Company name: Himalaya Crest Realty (Pvt.) Ltd.
 - Mentor deadline (12 September 2026 in brief) has passed; real deadline remains unconfirmed with mentor.
 
 ## Session log (one line per session, newest first)
+- 2026-11-07 | Phase 5 code inspection and clean ML-env test executed; HOLD review and A-8 recorded; awaiting Claude verdict | Antigravity
 - 2026-11-07 | Phase 5 Stage 1 RED & Stage 2 GREEN completed on phase-5-embedding; offline gates, model tests, benchmark (221s) and regression passed; awaiting review | Antigravity
 - 2026-11-07 | Phase 4 approved by Claude with non-blocking notes, user stated "Phase 4 passed", merged into main, final local gates and main CI passed, v0.4-chunking approved release tag, Phase 5 not started | Antigravity
 - 2026-11-03 | Phase 4 interim review; security fix requested | Claude
