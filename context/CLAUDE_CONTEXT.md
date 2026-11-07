@@ -28,7 +28,7 @@ Multi-company RAG chatbot dashboard for the DevSynt AI Internship (Task 5). Comp
 - Tag Sequence: `v0.0-skeleton`, `v0.0-tooling`, `v0.1-sample-data`, `v0.2-database`, `v0.2.1-db-hardening` (`8c186d0`), `v0.3-extraction` (`65c4d8c`), `v0.3.1-extraction-hardening` (`92f4ad5`).
 
 ## Phase 4 Status & Chunking Contract
-- Status: Phase 4 chunking implemented on branch phase-4-chunking (not merged, not tagged). Evidence map v1.0.1 (176 pairs). Awaiting Claude's review of the chunking code and the user's 'Phase 4 passed'. Phases 5 and 6 not authorized.
+- Status: Phase 4 on phase-4-chunking, CI green on fe4d455, awaiting security fix and Claude code review. Phases 5 and 6 not authorized.
 - Locked decisions: Cross-document key facts list a related document only when it holds a needed component (see data/facts/key_facts.amendments.md).
 - Contract: Contiguous non-table segments sharing page and section; chunks never cross page or section boundaries.
 - Cross-doc facts are verified per related document through `data/facts/cross_doc_evidence.json` (A-6).

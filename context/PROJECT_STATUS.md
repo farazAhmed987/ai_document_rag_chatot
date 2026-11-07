@@ -25,7 +25,7 @@ Rules for this file: no secrets or connection strings; keep it under about 150 l
 | — | Hardening Part A: Database & tenant role isolation | Passed | v0.2.1-db-hardening | 2026-10-31 | Commit 8c186d0; rag_app role, forced RLS, 17 DB tests pass |
 | 3 | Extraction and cleaning | Passed | v0.3-extraction | 2026-10-31 | Commit 65c4d8c; PDF, DOCX, TXT, MD extractors |
 | — | Hardening Part B: Extraction, structure & CI hardening | Passed | v0.3.1-extraction-hardening | 2026-10-31 | Commit 92f4ad5; 100 items (99 pass, 1 opt skip), 90.75% cov, 170/170 facts |
-| 4 | Chunking | In review: A-6 decisions applied, awaiting Claude final verdict | | | Evidence map v1.0.1, 176/176 related pairs, primary 170/170, key_facts related_documents amended for 7 pairs (see data/facts/key_facts.amendments.md) |
+| 4 | Chunking | In review: evidence map v1.0.1 done, security fix pending, Claude code review pending | | | Evidence map v1.0.1, 176/176 related pairs, primary 170/170, key_facts related_documents amended for 7 pairs (see data/facts/key_facts.amendments.md) |
 | 5 | Embedding module (BGE-M3) | Not started | | | NOT authorized |
 | 6 | Ingestion service end to end (CLI) | Not started | | | NOT authorized |
 | 7 | Retrieval (dense, keyword, RRF, rerank) and golden-set evaluation | Not started | | | |
@@ -66,6 +66,7 @@ Rules for this file: no secrets or connection strings; keep it under about 150 l
 ## Decisions log (newest first)
 | Date | Decision | Reason |
 |---|---|---|
+| 2026-11-03 | No --no-verify; Gitleaks checksum false positive handled by narrow .gitleaks.toml allowlist | CI secret scan must scan the repo, not staged files |
 | 2026-11-03 | Remove 7 related_documents entries lacking source evidence (KF-018, 020, 022, 027, 029, 165, 170) | A related document must contain a component the answer needs; shared entity names or generic or conflicting values are distractors. Source data and golden set unchanged. |
 | 2026-11-03 | Evidence anchors must match with number boundaries | Substring anchors such as 10,000 inside 10,000,000 passed trivially. |
 | 2026-11-03 | Cross-document verification contract (Phase 4, amendment A-6) | Primary key-fact snippets are verified in the primary document (170/170). Each (fact_id, related document) pair named in key_facts.json is verified against a versioned, source-specific evidence map (data/facts/cross_doc_evidence.json): exact snippets taken from the source text, all inside ONE actual chunk, table evidence on one row. key_facts.json, sample documents and golden set are unchanged. The map is frozen once approved; chunker defects are fixed in code, never by editing the map. Pairs with no genuine support are reported as unsupported_pairs and need Claude's decision. Author-environment results (151 passed, 1 skipped, 88.19%) are not Antigravity evidence. Previous "118/170" metric is retired. |
@@ -101,10 +102,12 @@ Company name: Himalaya Crest Realty (Pvt.) Ltd.
 - Accepted: FAQs 3106 words; regex false positives; KF-040 and KF-048 are 81 and 82 characters; G hits are only omitted-topics in facts.md; all 24 property IDs match.
 
 ## Known issues and open questions
+- CI gitleaks step may have scanned nothing; fixed in the security commit
 - Phase 4 chunking code not yet reviewed by Claude.
 - Mentor deadline (12 September 2026 in brief) has passed; real deadline remains unconfirmed with mentor.
 
 ## Session log (one line per session, newest first)
+- 2026-11-03 | Phase 4 interim review; security fix requested | Claude
 - 2026-11-03 | Phase 4 A-6 decisions applied, evidence map v1.0.1 | Antigravity
 - 2026-10-31 | Preflight context corrections and historical archive created | Antigravity
 - 2026-10-31 | Phase 4 preflight executed; live RLS verified; decisions recorded | Antigravity
