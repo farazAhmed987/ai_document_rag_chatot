@@ -43,9 +43,17 @@ jobs:
       - name: Tests including committed sample PDFs
         working-directory: backend
         run: pytest -m "not db and not model" --cov=app --cov-report=term-missing --cov-report=json:coverage.json --cov-fail-under=88
-      - name: Phase 4 module coverage
+      - name: Phase module coverage
         working-directory: backend
-        run: python ../scripts/check_phase_coverage.py coverage.json --module app/services/chunking.py --module app/schemas/chunking.py --module app/adapters/tokenizers/bge_m3.py
+        run: >-
+          python ../scripts/check_phase_coverage.py coverage.json
+          --module app/services/chunking.py
+          --module app/schemas/chunking.py
+          --module app/adapters/tokenizers/bge_m3.py
+          --module app/adapters/embedders/base.py
+          --module app/adapters/embedders/fake.py
+          --module app/adapters/embedders/factory.py
+          --module app/adapters/embedders/bge_m3.py
       - name: Pre-commit
         run: pre-commit run --all-files
       - name: Protected file integrity

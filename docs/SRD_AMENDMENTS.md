@@ -91,3 +91,20 @@ source-specific evidence map. Original facts and sample documents are unchanged.
 - The previous `118/170` result used a wrong contract and is retired. It is not
   the acceptance metric for A-6. Phase 4 still requires explicit user approval;
   Phase 5 and Phase 6 remain unauthorized.
+
+## A-7 — Phase 5 embedding runtime (2026-11-07)
+
+- The Phase 5 execution contract uses CPU-only, dense, normalized 1024-d
+  `BAAI/bge-m3` embeddings with no query or document instruction prefix.
+- The model is pinned to Hugging Face revision
+  `5617a9f61b028005a4858fdac845db406aefb181`, loaded lazily once per process,
+  and operates offline after an explicit preparation command.
+- The default embedding batch size is 16, superseding the batch-of-32 example
+  in SRD section 8.1 for the measured CPU environment.
+- `EMBEDDING_MAX_LENGTH` defaults to 2048. Inputs above that token limit fail
+  with a typed error instead of being silently truncated.
+- Heavy ML dependencies live outside the core/CI installation. Model tests are
+  local-only under the registered `model` marker; CI uses the deterministic
+  fake embedder and must not install torch.
+- The Phase 5 cosine smoke search is an informational in-memory measurement.
+  It does not implement or tune the Phase 7 retrieval service.

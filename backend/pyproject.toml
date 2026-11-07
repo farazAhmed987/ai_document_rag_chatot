@@ -9,6 +9,12 @@ description = "Multi-tenant document RAG chatbot backend"
 requires-python = ">=3.11,<3.13"
 dynamic = ["dependencies"]
 
+[project.optional-dependencies]
+ml = [
+    "sentence-transformers==6.2.0",
+    "torch==2.15.0",
+]
+
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["app", "app.*"]
@@ -37,6 +43,10 @@ plugins = ["pydantic.mypy"]
 files = ["app"]
 show_error_codes = true
 warn_unused_configs = true
+
+[[tool.mypy.overrides]]
+module = ["sentence_transformers"]
+ignore_missing_imports = true
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
