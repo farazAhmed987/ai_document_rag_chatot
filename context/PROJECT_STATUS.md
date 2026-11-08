@@ -1,5 +1,5 @@
 # Project Status
-Last updated: 2026-11-08 | Updated by: Antigravity | Current phase: Phase 5 passed (v0.5-embedding tagged), Phase 6 read-only preflight.
+Last updated: 2026-11-08 | Updated by: Antigravity | Current phase: Phase 6 authorized by Claude 2026-11-08, Stage 1 (tests only) pending. Phase 5 Passed (v0.5-embedding, merge 5e2bf49). Phase 6 is NOT passed; no implementation exists.
 
 Rules for this file: no secrets or connection strings; keep it under about 150 lines; when the logs grow, move old entries to context/archive/status-YYYY-MM.md. Historical snapshots: context/archive/preflight-8735072/.
 
@@ -30,7 +30,7 @@ Rules for this file: no secrets or connection strings; keep it under about 150 l
 | — | Hardening Part B: Extraction, structure & CI hardening | Passed | v0.3.1-extraction-hardening | 2026-10-31 | Commit 92f4ad5; 100 items (99 pass, 1 opt skip), 90.75% cov, 170/170 facts |
 | 4 | Chunking | Passed | v0.4-chunking | 2026-11-07 | Primary 170/170; related evidence 176/176; evidence map v1.0.1; final tests and CI green. Include https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42385811834. |
 | 5 | Embedding module (BGE-M3) | Passed | v0.5-embedding | 2026-11-08 | Code tested at ff08c62; merge SHA 5e2bf49b32af8ba20b4692870eaf314ef0f644db; main CI https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42495781663; Claude PASS 2026-11-08; user “Phase 5 passed” 2026-11-08. Benchmark 272.23 s / 224.10 s (limit 600 s); 771.22 s outlier documented. Chunk fingerprint identical across transformers 4.57.6 / 5.22.2. Pins recorded under A-9. |
-| 6 | Ingestion service end to end (CLI) | Not started | | | NOT authorized |
+| 6 | Ingestion service end to end (CLI) | In progress: Stage 1 RED pending | | | Authorized by Claude 2026-11-08; Prep 6A tests-first; NOT passed; no implementation exists |
 | 7 | Retrieval (dense, keyword, RRF, rerank) and golden-set evaluation | Not started | | | |
 | 8 | LLM answer, threshold gate, citations, Q&A logging | Not started | | | |
 | 9 | FastAPI endpoints | Not started | | | |
@@ -38,7 +38,7 @@ Rules for this file: no secrets or connection strings; keep it under about 150 l
 | 11 | Hardening, README, diagram, demo video, LinkedIn post | Not started | | | |
 
 ## Current step
-Current step: Phase 6 read-only preflight. Phase 6 implementation is NOT yet authorized.
+Current step: Phase 6 authorized by Claude 2026-11-08, Stage 1 (tests only) pending. Phase 5 Passed (v0.5-embedding, merge 5e2bf49). Phase 6 is NOT passed; no implementation exists.
 
 
 ## Phase 4 Chunking Contract & Governance
@@ -72,6 +72,7 @@ Current step: Phase 6 read-only preflight. Phase 6 implementation is NOT yet aut
 ## Decisions log (newest first)
 | Date | Decision | Reason |
 |---|---|---|
+| 2026-11-08 | Phase 6 authorized by Claude; Stage 1 tests-first pending | Live RLS verified (app.company_id, rag_app rolbypassrls=false, FORCE RLS on 5 tables, ops at 0002_ops_hardening). ChunkDraft->chunks mapping (no migration): persist chunk_index, page, section, content (header+body), token_count; embedding from embedder; tsv generated; transient metadata dropped. Ingestion errors in documents.error_message as "[CODE] safe message" (<=500 chars, no doc content, amendment A-10 in Stage 2). Tokenizer revision pinned to EMBEDDING_MODEL_REVISION and module-level prepare_model alias removed in Prep 6A (fingerprint 9e3c4ee12f868ad3df7ea9f7fdb6d79f829beb2eb42756fbe607c88063a6b809 unchanged). Ingestion ceiling 900s total, one run, top output. Embedding outside DB tx; chunk replacement in one short tx; failed status in separate tx after rollback. rag_app privileges verified read-only before Stage 1. |
 | 2026-11-08 | Phase 5 passed and tagged v0.5-embedding | User authorized release; controlled rerun passed (272.23 s and 224.10 s, limit 600 s); main merge CI 42495781663 passed; tagged at 5e2bf49b32af8ba20b4692870eaf314ef0f644db |
 | 2026-11-08 | Performance waiver NOT granted; Option A controlled rerun first | Two idle-machine runs authorized; diagnostics round pre-authorized if either exceeds 600 s. Module-level prepare_model alias is a non-blocking deviation to remove in next code commit. "Checks passed" may be recorded only when every check including benchmark exit 0 passed. |
 | 2026-11-08 | Model validation and max_seq_length enforcement before caching | Prevents cache poisoning on dimension mismatch, enforces max sequence length, raises typed EmbeddingConfigurationError on offline prepare_model, and provides exact prepare command |
@@ -124,12 +125,6 @@ Company name: Himalaya Crest Realty (Pvt.) Ltd.
 - Accepted: FAQs 3106 words; regex false positives; KF-040 and KF-048 are 81 and 82 characters; G hits are only omitted-topics in facts.md; all 24 property IDs match.
 
 ## Known issues and open questions
-- Phase 6 open decisions:
-  - Pin tokenizer revision to the embedding model revision.
-  - Decide ChunkDraft-to-chunks-table mapping.
-  - Verify live RLS policies and rag_app role.
-  - Remove the module-level prepare_model alias in the first authorized Phase 6 code commit after confirming no callers.
-  - Expect real sample ingestion to take approximately 4–13 minutes on this CPU; establish the timing/rerun gate before execution.
 - Benchmark variance: controlled rerun was 272.23 s and 224.10 s (limit 600 s); earlier 771.22 s outlier retained as documented limitation.
 - N1: Table headers that exceed the 25% budget cause ChunkingBudgetError with code HEADER_TOO_LARGE; production documents with very wide tables may need schema refinement.
 - N2: Table rows spanning a page break are treated as separate tables by PyMuPDF; the chunker does not stitch them. Acceptable for Phase 4; revisit if cross-page tables appear in real customer data.
@@ -141,6 +136,7 @@ Company name: Himalaya Crest Realty (Pvt.) Ltd.
 - Mentor deadline (12 September 2026 in brief) has passed; real deadline remains unconfirmed with mentor.
 
 ## Session log (one line per session, newest first)
+- 2026-11-08 | Phase 6 authorized by Claude, context updated, Step 0 privilege check and Prep 6A Stage 1 RED initiated | Antigravity
 - 2026-11-08 | Phase 5 passed, merged into main (5e2bf49), tagged v0.5-embedding, main CI passed (42495781663), Phase 6 read-only preflight started | Antigravity
 - 2026-11-08 | Phase 5 final corrective patch completed; 4 verified defects resolved; all core, model, chunking, benchmark, fresh-clone, and CI gates passed at ff08c62a04568f2ddda9cdf1dd6a50c239d01c8d | Antigravity
 - 2026-11-07 | Phase 5 corrective round completed; Option A dependencies aligned (A-9); offline env, model lock, 1024-d factory checks implemented; all gates, clean-ML, benchmark (400s), fresh clone, and CI passed at ce06ca0 | Antigravity
