@@ -20,19 +20,16 @@ Multi-company RAG chatbot dashboard for the DevSynt AI Internship (Task 5). Comp
   - Verification: Strict pipeline fact verifier requiring single-line `table_row` matches; 170/170 canonical facts verified.
 
 ## Git Baseline & Release Tags
-- Inspected Remote Baseline: `origin/main` at `68dedd4` (`68dedd4665d73059212def5bd56b51ebb06eed5a`).
-- Code Merge SHA: `68dedd4665d73059212def5bd56b51ebb06eed5a`.
-- Code CI URL: https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42385811834.
-- Release Tag Target: `v0.4-chunking` (approved release tag).
+- Phase 4 `main` and `v0.4-chunking` target are `c861425` (`c8614259002399f165e4bf3f183ec37d25deeb18`).
+- `68dedd4` (`68dedd4665d73059212def5bd56b51ebb06eed5a`) is the Phase 4 code-merge commit only.
+- Code Merge CI URL: https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42385811834.
+- Final tagged-commit CI: https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42386247733.
 - Tag Sequence: `v0.0-skeleton`, `v0.0-tooling`, `v0.1-sample-data`, `v0.2-database`, `v0.2.1-db-hardening` (`8c186d0`), `v0.3-extraction` (`65c4d8c`), `v0.3.1-extraction-hardening` (`92f4ad5`), `v0.4-chunking`.
 
-## Phase 4 Status & Chunking Contract
-- Snapshot: Phase 4 chunking passed, merged into main and tagged v0.4-chunking. Primary verification is 170/170 and related-document evidence verification is 176/176 using evidence map v1.0.1. Code merge SHA: 68dedd4665d73059212def5bd56b51ebb06eed5a; CI URL: https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42385811834. Phase 5 embedding is next but has not started.
-- Locked decisions: Cross-document key facts list a related document only when it holds a needed component (see data/facts/key_facts.amendments.md). Evidence anchors match with number boundaries. Gitleaks checksum false positives allowlisted in .gitleaks.toml with compound condition.
-- Contract: Contiguous non-table segments sharing page and section; chunks never cross page or section boundaries.
-- Cross-doc facts are verified per related document through `data/facts/cross_doc_evidence.json` (A-6).
-- Sizing: `MIN_CHUNK_TOKENS=80` (body); `overlap=60` (body); ceiling `CHUNK_TOKENS * 1.15` (incl header); `MAX_TABLE_TOKENS=1500` (incl header, lead-in, repeated headers). Subminimum allowed only for `sole_chunk_of_segment` and `unit_indivisible`. Small tails merge or rebalance.
-- Errors: Oversized rows or headers raise `ChunkingBudgetError` (code `CHUNK_BUDGET_EXCEEDED`). Header cap is 25% of `CHUNK_TOKENS`.
-- Privacy & Splitting: Atomic chunking; diagnostics omit content, headings, filename. Overlong plain-text runs use deterministic hard splitting.
-- Non-blocking notes: N1–N7 recorded in `context/PROJECT_STATUS.md` (header budget, cross-page tables, transient metadata, unpinned tokenizer, CI test scope, minimal CI permissions, external samples).
-- Governance: Phase 4 merged and released under `v0.4-chunking`. Phase 5 embedding is NOT started and requires explicit user instructions.
+## Phase 5 Status & Embedding Contract
+- Snapshot: Phase 5 corrective code tested at ff08c62: unit, coverage, static, model, Phase 4 regression, core fresh-clone and CI checks passed. PERFORMANCE GATE NOT MET: final benchmark 771.22 s (limit 600 s), exit 1; earlier runs on the same code/model were 221 s and 400 s, so variance is unexplained. Claude decision 2026-11-08: Option A controlled rerun (two idle-machine runs, no code change). Phase 5 is NOT passed, NOT merged, NOT tagged. Phase 6 is NOT authorized.
+- Model cache & validation fixes: `prepare_model()` raises `EmbeddingConfigurationError` when offline flags are present; `bge_m3.py` exports module-level `prepare_model` (non-blocking deviation to be removed in next authorized code commit); model dimension is validated under `_MODEL_LOCK` before caching so dimension mismatch never poisons `_MODEL_CACHE`; `max_seq_length` is explicitly assigned configured `max_length` before caching or encoding; missing-cache error directs user to `python scripts/embed_benchmark.py --prepare-model`.
+- Option A dependency alignment (A-9): `sentence-transformers==6.2.0`, `transformers==5.22.2`, `tokenizers==0.23.3`, `huggingface-hub==2.4.0`. Chunk fingerprints identical across old/new tokenizers (hash `9e3c4ee12f868ad3df7ea9f7fdb6d79f829beb2eb42756fbe607c88063a6b809`; primary 170/170, related 176/176).
+- Two-layer offline enforcement: `local_files_only=True` plus `HF_HUB_OFFLINE="1"` and `TRANSFORMERS_OFFLINE="1"` set before heavy imports; thread-safe process cache with double-checked lock. Factory validates dimension matches `CHUNK_EMBEDDING_DIMENSION = 1024` and rejects unknown backends before model import.
+- Locked decisions: A-3 (chunking budgets/segments), A-6 (cross-document evidence map v1.0.1, number boundaries), A-7 (CPU-only, normalized 1024-d BAAI/bge-m3 pinned to revision 5617a9f61b028005a4858fdac845db406aefb181, no prefix, max length 2048 with typed error on excess; fake embedder for core/CI without torch; benchmark under 10m), A-8 (default embedding batch size 16 selected from CPU benchmark), A-9 (Option A dependency alignment).
+- Status & Governance: Phase 5 is NOT passed, NOT merged, and NOT tagged. Phase 6 is NOT authorized. No schema migration authorized. Phase 5 remains awaiting Claude validation.

@@ -89,3 +89,17 @@ class ChunkingBudgetError(AppError):
 
     default_code = "CHUNK_BUDGET_EXCEEDED"
     status_code = 422
+
+
+class EmbeddingConfigurationError(AppError):
+    """Embedding backend conflicts with the fixed vector schema."""
+
+    default_code = "embedding_dimension_mismatch"
+    status_code = 500
+
+
+class EmbeddingInputError(AppError):
+    """Embedding input cannot be represented without truncation."""
+
+    default_code = "embedding_input_too_long"
+    status_code = 422

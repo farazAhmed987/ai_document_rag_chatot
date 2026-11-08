@@ -6,6 +6,7 @@ No database connection or credential logging occurs during settings loading.
 
 from __future__ import annotations
 
+import re
 from functools import lru_cache
 from pathlib import Path
 from typing import Literal
@@ -39,7 +40,11 @@ class Settings(BaseSettings):
     DB_RUNTIME_ROLE: str = "rag_app"
 
     EMBEDDING_MODEL_NAME: str = "BAAI/bge-m3"
+    EMBEDDING_MODEL_REVISION: str = "5617a9f61b028005a4858fdac845db406aefb181"
     EMBEDDING_DIMENSION: int = Field(default=1024, gt=0)
+    EMBEDDER_BACKEND: Literal["bge-m3", "fake"] = "bge-m3"
+    EMBEDDING_BATCH_SIZE: int = Field(default=16, gt=0)
+    EMBEDDING_MAX_LENGTH: int = Field(default=2048, ge=2048, le=8192)
     RERANKER_MODEL_NAME: str = "BAAI/bge-reranker-v2-m3"
 
     STORAGE_BACKEND: str = "local"
@@ -86,6 +91,14 @@ class Settings(BaseSettings):
         elif value.startswith("postgresql://"):
             value = "postgresql+psycopg://" + value[len("postgresql://") :]
         return SecretStr(value)
+
+    @field_validator("EMBEDDING_MODEL_REVISION")
+    @classmethod
+    def validate_embedding_revision(cls, value: str) -> str:
+        """Require an immutable lowercase Hugging Face commit revision."""
+        if not re.fullmatch(r"[0-9a-f]{40}", value):
+            raise ValueError("EMBEDDING_MODEL_REVISION must be a 40-character SHA")
+        return value
 
     @model_validator(mode="after")
     def validate_chunk_window(self) -> Settings:

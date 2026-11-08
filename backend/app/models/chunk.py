@@ -24,6 +24,8 @@ from sqlalchemy.orm import Mapped, mapped_column
 
 from app.models.base import Base
 
+CHUNK_EMBEDDING_DIMENSION = 1024
+
 
 class Chunk(Base):
     """1024-dimensional chunk tied to a document of the same tenant."""
@@ -59,7 +61,9 @@ class Chunk(Base):
     section: Mapped[str | None] = mapped_column(Text)
     content: Mapped[str] = mapped_column(Text, nullable=False)
     token_count: Mapped[int | None] = mapped_column(Integer)
-    embedding: Mapped[list[float]] = mapped_column(Vector(1024), nullable=False)
+    embedding: Mapped[list[float]] = mapped_column(
+        Vector(CHUNK_EMBEDDING_DIMENSION), nullable=False
+    )
     tsv: Mapped[str] = mapped_column(
         TSVECTOR,
         Computed("to_tsvector('simple'::regconfig, content)", persisted=True),

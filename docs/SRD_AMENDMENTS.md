@@ -91,3 +91,39 @@ source-specific evidence map. Original facts and sample documents are unchanged.
 - The previous `118/170` result used a wrong contract and is retired. It is not
   the acceptance metric for A-6. Phase 4 still requires explicit user approval;
   Phase 5 and Phase 6 remain unauthorized.
+
+## A-7 — Phase 5 embedding runtime (2026-11-07)
+
+- The Phase 5 execution contract uses CPU-only, dense, normalized 1024-d
+  `BAAI/bge-m3` embeddings with no query or document instruction prefix.
+- The model is pinned to Hugging Face revision
+  `5617a9f61b028005a4858fdac845db406aefb181`, loaded lazily once per process,
+  and operates offline after an explicit preparation command.
+- The default embedding batch size is 16, superseding the batch-of-32 example
+  in SRD section 8.1 for the measured CPU environment.
+- `EMBEDDING_MAX_LENGTH` defaults to 2048. Inputs above that token limit fail
+  with a typed error instead of being silently truncated.
+- Heavy ML dependencies live outside the core/CI installation. Model tests are
+  local-only under the registered `model` marker; CI uses the deterministic
+  fake embedder and must not install torch.
+- The Phase 5 cosine smoke search is an informational in-memory measurement.
+  It does not implement or tune the Phase 7 retrieval service.
+
+## A-8 — Phase 5 CPU embedding batch default (2026-11-07)
+
+- **Title:** Phase 5 CPU embedding batch default
+- **Decision:** The Phase 5 BGE-M3 default embedding batch size is 16 rather than the original 32 specified in the initial implementation prompt.
+- **Reason:** The value is based on the measured CPU memory/latency benchmark and keeps the runtime within the approved ten-minute limit.
+- **Scope:** This changes only the embedding batch default. It does not alter chunking, embedding dimension, normalization, model revision, retrieval behavior or database schema.
+- **Status:** Approved for Phase 5 review by Claude on 2026-11-07.
+
+## A-9 — Phase 5 dependency alignment (2026-11-07)
+
+- **Title:** Phase 5 dependency alignment
+- **Decision:** `sentence-transformers==6.2.0` is retained. Core and ML dependencies are aligned to `transformers==5.22.2`, `tokenizers==0.23.3`, and `huggingface-hub==2.4.0` (with `torch==2.15.0+cpu` in ML extra and requirements).
+- **Proof:**
+  - Baseline chunk fingerprint (transformers 4.57.6): `9e3c4ee12f868ad3df7ea9f7fdb6d79f829beb2eb42756fbe607c88063a6b809`
+  - Candidate chunk fingerprint (transformers 5.22.2): `9e3c4ee12f868ad3df7ea9f7fdb6d79f829beb2eb42756fbe607c88063a6b809`
+  - Identical chunk counts across all 5 PDFs: Company_Overview.pdf (32), FAQs.pdf (16), Policies_and_Terms.pdf (24), Property_Listings.pdf (19), Services_and_Fees.pdf (35); Total = 126.
+  - Both verification runs confirmed Primary: 170/170 and Related: 176/176 (`verify_chunks.py` stable diff empty, PASS).
+- **Scope:** No chunk content, order, indices, pages, sections or counts changed. No schema migration was created. Database pgvector column remains `vector(1024)`.
