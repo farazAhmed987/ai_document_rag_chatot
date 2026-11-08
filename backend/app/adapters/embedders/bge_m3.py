@@ -301,6 +301,3 @@ class BgeM3Embedder:
     def embed_query(self, text: str) -> list[float]:
         """Embed one query without adding an instruction prefix."""
         return self.embed_documents([text], batch_size=1)[0]
-
-
-prepare_model = BgeM3Embedder.prepare_model

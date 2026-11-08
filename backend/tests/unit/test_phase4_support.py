@@ -89,7 +89,7 @@ def test_missing_cache_has_explicit_preparation_instruction(
     fake = ModuleType("transformers")
     fake.AutoTokenizer = SimpleNamespace(from_pretrained=missing)
     monkeypatch.setitem(sys.modules, "transformers", fake)
-    with pytest.raises(RuntimeError, match="--prepare-tokenizer"):
+    with pytest.raises(RuntimeError, match="--prepare-model"):
         bge_m3.BgeM3TokenCounter().count("body")
 
 

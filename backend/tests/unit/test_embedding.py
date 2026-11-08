@@ -822,20 +822,10 @@ def test_prepare_model_offline_raises_typed_configuration_error(
 ) -> None:
     bge = load("app.adapters.embedders.bge_m3")
     errors = load("app.core.errors")
-    assert hasattr(bge, "prepare_model"), (
-        "prepare_model must be exported at module level"
-    )
     for var in ("HF_HUB_OFFLINE", "TRANSFORMERS_OFFLINE"):
         monkeypatch.delenv("HF_HUB_OFFLINE", raising=False)
         monkeypatch.delenv("TRANSFORMERS_OFFLINE", raising=False)
         monkeypatch.setenv(var, "1")
-        with pytest.raises(errors.EmbeddingConfigurationError, match="online"):
-            bge.prepare_model(
-                model_name="BAAI/bge-m3",
-                model_revision="0" * 40,
-                dimension=1024,
-                max_length=2048,
-            )
         with pytest.raises(errors.EmbeddingConfigurationError, match="online"):
             bge.BgeM3Embedder.prepare_model(
                 model_name="BAAI/bge-m3",

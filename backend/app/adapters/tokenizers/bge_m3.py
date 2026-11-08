@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 from functools import lru_cache
-from typing import Protocol, cast
+from typing import Any, Protocol, cast
+
+from app.core.config import get_settings
 
 
 class _Tokenizer(Protocol):
@@ -15,14 +17,19 @@ class _TokenizerFactory(Protocol):
         self,
         name: str,
         *,
+        revision: str,
         local_files_only: bool,
         trust_remote_code: bool,
         use_fast: bool,
     ) -> _Tokenizer: ...
 
 
-@lru_cache(maxsize=2)
-def _load_tokenizer(allow_download: bool) -> _Tokenizer:
+@lru_cache(maxsize=8)
+def _load_tokenizer(
+    model_name: str,
+    model_revision: str,
+    allow_download: bool,
+) -> _Tokenizer:
     try:
         from transformers import AutoTokenizer
     except ImportError as exc:
@@ -31,26 +38,46 @@ def _load_tokenizer(allow_download: bool) -> _Tokenizer:
         ) from exc
     try:
         tokenizer = cast(_TokenizerFactory, AutoTokenizer).from_pretrained(
-            "BAAI/bge-m3",
+            model_name,
+            revision=model_revision,
             local_files_only=not allow_download,
             trust_remote_code=False,
             use_fast=True,
         )
-    except OSError as exc:
+    except OSError:
         raise RuntimeError(
-            "BGE-M3 tokenizer is not cached; run verify_chunks.py --prepare-tokenizer first"
-        ) from exc
+            "BGE-M3 tokenizer is not cached; run python scripts/embed_benchmark.py --prepare-model first"
+        ) from None
     return tokenizer
 
 
 class BgeM3TokenCounter:
     """Load the tokenizer on first use; normal counting is strictly offline."""
 
-    @staticmethod
-    def prepare_cache() -> None:
+    def __init__(
+        self,
+        *,
+        model_name: str | None = None,
+        model_revision: str | None = None,
+    ) -> None:
+        settings = get_settings()
+        self.model_name = model_name or settings.EMBEDDING_MODEL_NAME
+        self.model_revision = model_revision or settings.EMBEDDING_MODEL_REVISION
+
+    def prepare_cache(self: Any = None) -> None:
         """Explicitly download tokenizer files, never model weights."""
-        _load_tokenizer(True)
+        if isinstance(self, BgeM3TokenCounter):
+            name = self.model_name
+            rev = self.model_revision
+        else:
+            settings = get_settings()
+            name = settings.EMBEDDING_MODEL_NAME
+            rev = settings.EMBEDDING_MODEL_REVISION
+        _load_tokenizer(name, rev, True)
 
     def count(self, text: str) -> int:
         """Count content tokens, excluding tokenizer-added special tokens."""
-        return len(_load_tokenizer(False).encode(text, add_special_tokens=False))
+        tokenizer = _load_tokenizer(self.model_name, self.model_revision, False)
+        return len(tokenizer.encode(text, add_special_tokens=False))
+
+    count_tokens = count
