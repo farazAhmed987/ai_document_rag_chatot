@@ -21,15 +21,22 @@ Multi-company RAG chatbot dashboard for the DevSynt AI Internship (Task 5). Comp
 
 ## Git Baseline & Release Tags
 - Phase 4 `main` and `v0.4-chunking` target are `c861425` (`c8614259002399f165e4bf3f183ec37d25deeb18`).
-- `68dedd4` (`68dedd4665d73059212def5bd56b51ebb06eed5a`) is the Phase 4 code-merge commit only.
-- Code Merge CI URL: https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42385811834.
-- Final tagged-commit CI: https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42386247733.
-- Tag Sequence: `v0.0-skeleton`, `v0.0-tooling`, `v0.1-sample-data`, `v0.2-database`, `v0.2.1-db-hardening` (`8c186d0`), `v0.3-extraction` (`65c4d8c`), `v0.3.1-extraction-hardening` (`92f4ad5`), `v0.4-chunking`.
+- Phase 5 tested code SHA: `ff08c62` (`ff08c62a04568f2ddda9cdf1dd6a50c239d01c8d`).
+- Phase 5 merge SHA: `5e2bf49` (`5e2bf49b32af8ba20b4692870eaf314ef0f644db`).
+- `v0.5-embedding` release tag target: `5e2bf49b32af8ba20b4692870eaf314ef0f644db`.
+- Phase 5 Main Merge CI URL: https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42495781663.
+- Tag Sequence: `v0.0-skeleton`, `v0.0-tooling`, `v0.1-sample-data`, `v0.2-database`, `v0.2.1-db-hardening` (`8c186d0`), `v0.3-extraction` (`65c4d8c`), `v0.3.1-extraction-hardening` (`92f4ad5`), `v0.4-chunking` (`c861425`), `v0.5-embedding` (`5e2bf49`).
 
 ## Phase 5 Status & Embedding Contract
-- Snapshot: Phase 5 corrective code tested at ff08c62: unit, coverage, static, model, Phase 4 regression, core fresh-clone and CI checks passed. PERFORMANCE GATE NOT MET: final benchmark 771.22 s (limit 600 s), exit 1; earlier runs on the same code/model were 221 s and 400 s, so variance is unexplained. Claude decision 2026-11-08: Option A controlled rerun (two idle-machine runs, no code change). Phase 5 is NOT passed, NOT merged, NOT tagged. Phase 6 is NOT authorized.
+- Snapshot: Phase 5 passed. User authorized release on 2026-11-08 ("Phase 5 passed") following Claude PASS. Merged into main at `5e2bf49b32af8ba20b4692870eaf314ef0f644db` (`5e2bf49`) and tagged `v0.5-embedding`. Tested code commit: `ff08c62a04568f2ddda9cdf1dd6a50c239d01c8d`. Main CI passed: https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42495781663. Controlled benchmarks passed at 272.23 s and 224.10 s (limit 600 s; 771.22 s outlier retained as documented limitation). Chunk fingerprints identical across transformers 4.57.6 and 5.22.2 (`9e3c4ee12f868ad3df7ea9f7fdb6d79f829beb2eb42756fbe607c88063a6b809`; primary 170/170, related 176/176).
 - Model cache & validation fixes: `prepare_model()` raises `EmbeddingConfigurationError` when offline flags are present; `bge_m3.py` exports module-level `prepare_model` (non-blocking deviation to be removed in next authorized code commit); model dimension is validated under `_MODEL_LOCK` before caching so dimension mismatch never poisons `_MODEL_CACHE`; `max_seq_length` is explicitly assigned configured `max_length` before caching or encoding; missing-cache error directs user to `python scripts/embed_benchmark.py --prepare-model`.
-- Option A dependency alignment (A-9): `sentence-transformers==6.2.0`, `transformers==5.22.2`, `tokenizers==0.23.3`, `huggingface-hub==2.4.0`. Chunk fingerprints identical across old/new tokenizers (hash `9e3c4ee12f868ad3df7ea9f7fdb6d79f829beb2eb42756fbe607c88063a6b809`; primary 170/170, related 176/176).
+- Option A dependency alignment (A-9): `torch==2.15.0+cpu`, `sentence-transformers==6.2.0`, `transformers==5.22.2`, `tokenizers==0.23.3`, `huggingface-hub==2.4.0`.
 - Two-layer offline enforcement: `local_files_only=True` plus `HF_HUB_OFFLINE="1"` and `TRANSFORMERS_OFFLINE="1"` set before heavy imports; thread-safe process cache with double-checked lock. Factory validates dimension matches `CHUNK_EMBEDDING_DIMENSION = 1024` and rejects unknown backends before model import.
 - Locked decisions: A-3 (chunking budgets/segments), A-6 (cross-document evidence map v1.0.1, number boundaries), A-7 (CPU-only, normalized 1024-d BAAI/bge-m3 pinned to revision 5617a9f61b028005a4858fdac845db406aefb181, no prefix, max length 2048 with typed error on excess; fake embedder for core/CI without torch; benchmark under 10m), A-8 (default embedding batch size 16 selected from CPU benchmark), A-9 (Option A dependency alignment).
-- Status & Governance: Phase 5 is NOT passed, NOT merged, and NOT tagged. Phase 6 is NOT authorized. No schema migration authorized. Phase 5 remains awaiting Claude validation.
+- Status & Governance: Phase 5 is PASSED, MERGED and TAGGED (`v0.5-embedding`). Current step: Phase 6 read-only preflight. Phase 6 implementation is NOT yet authorized. No schema migration authorized.
+- Open Phase 6 decisions:
+  - Pin tokenizer revision to embedding model revision.
+  - Decide ChunkDraft-to-chunks-table mapping.
+  - Verify live RLS policies and rag_app role.
+  - Remove module-level `prepare_model` alias in first authorized Phase 6 code commit after confirming no callers.
+  - Expect real sample ingestion to take approximately 4–13 minutes on this CPU; establish timing/rerun gate before execution.

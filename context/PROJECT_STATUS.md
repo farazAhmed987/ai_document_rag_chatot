@@ -1,5 +1,5 @@
 # Project Status
-Last updated: 2026-11-08 | Updated by: Antigravity | Current phase: Phase 5 final corrective patch completed on branch phase-5-embedding, awaiting Claude validation.
+Last updated: 2026-11-08 | Updated by: Antigravity | Current phase: Phase 5 passed (v0.5-embedding tagged), Phase 6 read-only preflight.
 
 Rules for this file: no secrets or connection strings; keep it under about 150 lines; when the logs grow, move old entries to context/archive/status-YYYY-MM.md. Historical snapshots: context/archive/preflight-8735072/.
 
@@ -7,13 +7,13 @@ Rules for this file: no secrets or connection strings; keep it under about 150 l
 - OS: Fedora Linux 44 | Python: 3.12.16 | venv: .venv at repo root | IDE: Antigravity
 - Repo: https://github.com/farazAhmed987/ai_document_rag_chatot
 - Current origin/main after Phase 4 release: c8614259002399f165e4bf3f183ec37d25deeb18
-- Phase 4 code merge: 68dedd4665d73059212def5bd56b51ebb06eed5a
-- v0.4-chunking tag target: c8614259002399f165e4bf3f183ec37d25deeb18
-- Code-merge CI: https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42385811834
-- Final tagged-commit CI: https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42386247733
-- Branch State: phase-5-embedding (starts at c8614259002399f165e4bf3f183ec37d25deeb18)
+- Phase 5 code tested: ff08c62a04568f2ddda9cdf1dd6a50c239d01c8d
+- Phase 5 code merge: 5e2bf49b32af8ba20b4692870eaf314ef0f644db
+- v0.5-embedding tag target: 5e2bf49b32af8ba20b4692870eaf314ef0f644db
+- Phase 5 Main Merge CI: https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42495781663
+- Branch State: main (at 5e2bf49b32af8ba20b4692870eaf314ef0f644db)
 - Pinned Model Revision: BAAI/bge-m3 at 5617a9f61b028005a4858fdac845db406aefb181
-- Release Tag Target: v0.4-chunking (Phase 4 release; Phase 5 not tagged)
+- Release Tag Target: v0.5-embedding (Phase 5 released at 5e2bf49b32af8ba20b4692870eaf314ef0f644db)
 - Operational database: PostgreSQL 17.11 on Supabase (pgvector 0.8.2, session pooler, RLS forced, rag_app role restricted)
 - Analytics database: PostgreSQL 17.11 on Supabase (session pooler, independent migrations)
 - RLS Live Verification: VERIFIED (pg_policies uses app.company_id on all 5 tables; rag_app has rolbypassrls=False, rolinherit=True; role-membership inheritance not audited in this preflight)
@@ -29,7 +29,7 @@ Rules for this file: no secrets or connection strings; keep it under about 150 l
 | 3 | Extraction and cleaning | Passed | v0.3-extraction | 2026-10-31 | Commit 65c4d8c; PDF, DOCX, TXT, MD extractors |
 | — | Hardening Part B: Extraction, structure & CI hardening | Passed | v0.3.1-extraction-hardening | 2026-10-31 | Commit 92f4ad5; 100 items (99 pass, 1 opt skip), 90.75% cov, 170/170 facts |
 | 4 | Chunking | Passed | v0.4-chunking | 2026-11-07 | Primary 170/170; related evidence 176/176; evidence map v1.0.1; final tests and CI green. Include https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42385811834. |
-| 5 | Embedding module (BGE-M3) | In review: CHANGES REQUIRED (performance gate not met, awaiting controlled rerun) | | | Code commit ff08c62a04568f2ddda9cdf1dd6a50c239d01c8d; model validation before cache; max_seq_length enforced; benchmark 771.22s (limit 600s, exit 1); Phase 5 NOT passed, NOT merged, NOT tagged; Phase 6 NOT authorized |
+| 5 | Embedding module (BGE-M3) | Passed | v0.5-embedding | 2026-11-08 | Code tested at ff08c62; merge SHA 5e2bf49b32af8ba20b4692870eaf314ef0f644db; main CI https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42495781663; Claude PASS 2026-11-08; user “Phase 5 passed” 2026-11-08. Benchmark 272.23 s / 224.10 s (limit 600 s); 771.22 s outlier documented. Chunk fingerprint identical across transformers 4.57.6 / 5.22.2. Pins recorded under A-9. |
 | 6 | Ingestion service end to end (CLI) | Not started | | | NOT authorized |
 | 7 | Retrieval (dense, keyword, RRF, rerank) and golden-set evaluation | Not started | | | |
 | 8 | LLM answer, threshold gate, citations, Q&A logging | Not started | | | |
@@ -38,7 +38,7 @@ Rules for this file: no secrets or connection strings; keep it under about 150 l
 | 11 | Hardening, README, diagram, demo video, LinkedIn post | Not started | | | |
 
 ## Current step
-Phase 5 corrective code tested at ff08c62: unit, coverage, static, model, Phase 4 regression, core fresh-clone and CI checks passed. PERFORMANCE GATE NOT MET: final benchmark 771.22 s (limit 600 s), exit 1; earlier runs on the same code/model were 221 s and 400 s, so variance is unexplained. Claude decision 2026-11-08: Option A controlled rerun (two idle-machine runs, no code change). Phase 5 is NOT passed, NOT merged, NOT tagged. Phase 6 is NOT authorized.
+Current step: Phase 6 read-only preflight. Phase 6 implementation is NOT yet authorized.
 
 
 ## Phase 4 Chunking Contract & Governance
@@ -55,6 +55,7 @@ Phase 5 corrective code tested at ff08c62: unit, coverage, static, model, Phase 
 ## Gate log (newest first, append only)
 | Date | Phase | Commands run | Result | Commit or tag |
 |---|---|---|---|---|
+| 2026-11-08 | 5 Release & Merge | merge --no-ff, ruff, format, mypy, pytest --cov (89.57%), verify_chunks (170/170, 176/176), 6 model tests, main CI 42495781663 | PASS | 5e2bf49b32af8ba20b4692870eaf314ef0f644db / tag v0.5-embedding |
 | 2026-11-08 | 5 Final Corrective | ruff, format, mypy, pytest --cov (89.57%), check_phase_coverage, verify_chunks (170/170, 176/176), 6 model tests, fresh-clone core suite, embed_benchmark (126 chunks, 771.22s, exit 1) | NOT MET | ff08c62a04568f2ddda9cdf1dd6a50c239d01c8d (benchmark limit 600s not met) |
 | 2026-11-07 | 5 Corrective Round | ruff, format, mypy, pytest --cov (89.91%), check_phase_coverage, verify_chunks (170/170, 176/176), clean ML pip check, clean ML core suite, 6 model tests, embed_benchmark (400s), fresh-clone core suite | PASS | ce06ca00321e0c0f8196e37525091429ad60cb9e (awaiting Claude validation) |
 | 2026-11-07 | 5 Stage 2 | ruff, format, mypy (39 files), pytest --cov (89.79%), check_phase_coverage, verify_chunks (170/170, 176/176), 6 model tests, embed_benchmark (221s) | PASS | Branch phase-5-embedding (awaiting review) |
@@ -71,6 +72,7 @@ Phase 5 corrective code tested at ff08c62: unit, coverage, static, model, Phase 
 ## Decisions log (newest first)
 | Date | Decision | Reason |
 |---|---|---|
+| 2026-11-08 | Phase 5 passed and tagged v0.5-embedding | User authorized release; controlled rerun passed (272.23 s and 224.10 s, limit 600 s); main merge CI 42495781663 passed; tagged at 5e2bf49b32af8ba20b4692870eaf314ef0f644db |
 | 2026-11-08 | Performance waiver NOT granted; Option A controlled rerun first | Two idle-machine runs authorized; diagnostics round pre-authorized if either exceeds 600 s. Module-level prepare_model alias is a non-blocking deviation to remove in next code commit. "Checks passed" may be recorded only when every check including benchmark exit 0 passed. |
 | 2026-11-08 | Model validation and max_seq_length enforcement before caching | Prevents cache poisoning on dimension mismatch, enforces max sequence length, raises typed EmbeddingConfigurationError on offline prepare_model, and provides exact prepare command |
 | 2026-11-07 | Option A: sentence-transformers 6.2.0 retained; transformers 5.22.2, tokenizers 0.23.3 and huggingface-hub 2.4.0 pinned in core and ML requirements | Phase 4 chunk fingerprints identical across old/new tokenizer stacks (hash 9e3c4ee12f868ad3df7ea9f7fdb6d79f829beb2eb42756fbe607c88063a6b809). |
@@ -122,7 +124,13 @@ Company name: Himalaya Crest Realty (Pvt.) Ltd.
 - Accepted: FAQs 3106 words; regex false positives; KF-040 and KF-048 are 81 and 82 characters; G hits are only omitted-topics in facts.md; all 24 property IDs match.
 
 ## Known issues and open questions
-- Benchmark variance is 221–771 s on the same CPU. Cause remains unmeasured: contention/thermal throttling, dependency stack or max-sequence handling.
+- Phase 6 open decisions:
+  - Pin tokenizer revision to the embedding model revision.
+  - Decide ChunkDraft-to-chunks-table mapping.
+  - Verify live RLS policies and rag_app role.
+  - Remove the module-level prepare_model alias in the first authorized Phase 6 code commit after confirming no callers.
+  - Expect real sample ingestion to take approximately 4–13 minutes on this CPU; establish the timing/rerun gate before execution.
+- Benchmark variance: controlled rerun was 272.23 s and 224.10 s (limit 600 s); earlier 771.22 s outlier retained as documented limitation.
 - N1: Table headers that exceed the 25% budget cause ChunkingBudgetError with code HEADER_TOO_LARGE; production documents with very wide tables may need schema refinement.
 - N2: Table rows spanning a page break are treated as separate tables by PyMuPDF; the chunker does not stitch them. Acceptable for Phase 4; revisit if cross-page tables appear in real customer data.
 - N3: ChunkDraft carries transient metadata (e.g. section_path) that is dropped on persistence; verify DB schema in Phase 6 matches what the chunker produces.
@@ -133,6 +141,7 @@ Company name: Himalaya Crest Realty (Pvt.) Ltd.
 - Mentor deadline (12 September 2026 in brief) has passed; real deadline remains unconfirmed with mentor.
 
 ## Session log (one line per session, newest first)
+- 2026-11-08 | Phase 5 passed, merged into main (5e2bf49), tagged v0.5-embedding, main CI passed (42495781663), Phase 6 read-only preflight started | Antigravity
 - 2026-11-08 | Phase 5 final corrective patch completed; 4 verified defects resolved; all core, model, chunking, benchmark, fresh-clone, and CI gates passed at ff08c62a04568f2ddda9cdf1dd6a50c239d01c8d | Antigravity
 - 2026-11-07 | Phase 5 corrective round completed; Option A dependencies aligned (A-9); offline env, model lock, 1024-d factory checks implemented; all gates, clean-ML, benchmark (400s), fresh clone, and CI passed at ce06ca0 | Antigravity
 - 2026-11-07 | Phase 5 code inspection and clean ML-env test executed; HOLD review and A-8 recorded; awaiting Claude verdict | Antigravity
