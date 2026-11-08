@@ -29,7 +29,7 @@ Rules for this file: no secrets or connection strings; keep it under about 150 l
 | 3 | Extraction and cleaning | Passed | v0.3-extraction | 2026-10-31 | Commit 65c4d8c; PDF, DOCX, TXT, MD extractors |
 | — | Hardening Part B: Extraction, structure & CI hardening | Passed | v0.3.1-extraction-hardening | 2026-10-31 | Commit 92f4ad5; 100 items (99 pass, 1 opt skip), 90.75% cov, 170/170 facts |
 | 4 | Chunking | Passed | v0.4-chunking | 2026-11-07 | Primary 170/170; related evidence 176/176; evidence map v1.0.1; final tests and CI green. Include https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42385811834. |
-| 5 | Embedding module (BGE-M3) | In review: CHANGES REQUIRED (corrective gates passed, awaiting validation) | | | Code commit ff08c62a04568f2ddda9cdf1dd6a50c239d01c8d; model validation before cache; max_seq_length enforced; CI 42415383711 passed; Phase 5 NOT passed, NOT merged, NOT tagged; Phase 6 NOT authorized |
+| 5 | Embedding module (BGE-M3) | In review: CHANGES REQUIRED (performance gate not met, awaiting controlled rerun) | | | Code commit ff08c62a04568f2ddda9cdf1dd6a50c239d01c8d; model validation before cache; max_seq_length enforced; benchmark 771.22s (limit 600s, exit 1); Phase 5 NOT passed, NOT merged, NOT tagged; Phase 6 NOT authorized |
 | 6 | Ingestion service end to end (CLI) | Not started | | | NOT authorized |
 | 7 | Retrieval (dense, keyword, RRF, rerank) and golden-set evaluation | Not started | | | |
 | 8 | LLM answer, threshold gate, citations, Q&A logging | Not started | | | |
@@ -38,7 +38,7 @@ Rules for this file: no secrets or connection strings; keep it under about 150 l
 | 11 | Hardening, README, diagram, demo video, LinkedIn post | Not started | | | |
 
 ## Current step
-Phase 5 final corrective patch (2026-11-08): fixed 4 verified defects in bge_m3.py (typed EmbeddingConfigurationError on offline prepare_model; model validated before entering cache so mismatch leaves cache clean; explicit max_length assignment to max_seq_length before cache/encode; missing-cache error points to python scripts/embed_benchmark.py --prepare-model; module-level prepare_model alias). Checks passed at ff08c62a04568f2ddda9cdf1dd6a50c239d01c8d (CI 42415383711); awaiting Claude validation. Phase 5 is NOT passed, NOT merged, NOT tagged. Phase 6 is NOT authorized.
+Phase 5 corrective code tested at ff08c62: unit, coverage, static, model, Phase 4 regression, core fresh-clone and CI checks passed. PERFORMANCE GATE NOT MET: final benchmark 771.22 s (limit 600 s), exit 1; earlier runs on the same code/model were 221 s and 400 s, so variance is unexplained. Claude decision 2026-11-08: Option A controlled rerun (two idle-machine runs, no code change). Phase 5 is NOT passed, NOT merged, NOT tagged. Phase 6 is NOT authorized.
 
 
 ## Phase 4 Chunking Contract & Governance
@@ -55,7 +55,7 @@ Phase 5 final corrective patch (2026-11-08): fixed 4 verified defects in bge_m3.
 ## Gate log (newest first, append only)
 | Date | Phase | Commands run | Result | Commit or tag |
 |---|---|---|---|---|
-| 2026-11-08 | 5 Final Corrective | ruff, format, mypy, pytest --cov (89.57%), check_phase_coverage, verify_chunks (170/170, 176/176), 6 model tests, embed_benchmark (126 chunks, 771s), fresh-clone core suite | PASS | ff08c62a04568f2ddda9cdf1dd6a50c239d01c8d (awaiting Claude validation) |
+| 2026-11-08 | 5 Final Corrective | ruff, format, mypy, pytest --cov (89.57%), check_phase_coverage, verify_chunks (170/170, 176/176), 6 model tests, fresh-clone core suite, embed_benchmark (126 chunks, 771.22s, exit 1) | NOT MET | ff08c62a04568f2ddda9cdf1dd6a50c239d01c8d (benchmark limit 600s not met) |
 | 2026-11-07 | 5 Corrective Round | ruff, format, mypy, pytest --cov (89.91%), check_phase_coverage, verify_chunks (170/170, 176/176), clean ML pip check, clean ML core suite, 6 model tests, embed_benchmark (400s), fresh-clone core suite | PASS | ce06ca00321e0c0f8196e37525091429ad60cb9e (awaiting Claude validation) |
 | 2026-11-07 | 5 Stage 2 | ruff, format, mypy (39 files), pytest --cov (89.79%), check_phase_coverage, verify_chunks (170/170, 176/176), 6 model tests, embed_benchmark (221s) | PASS | Branch phase-5-embedding (awaiting review) |
 | 2026-11-07 | 4 Merge & Release | ruff, format, mypy, pytest --cov (89.23%), verify_chunks (170/170, 176/176), CI run 42385811834 | PASS | Commit 68dedd4 / tag v0.4-chunking |
@@ -71,6 +71,7 @@ Phase 5 final corrective patch (2026-11-08): fixed 4 verified defects in bge_m3.
 ## Decisions log (newest first)
 | Date | Decision | Reason |
 |---|---|---|
+| 2026-11-08 | Performance waiver NOT granted; Option A controlled rerun first | Two idle-machine runs authorized; diagnostics round pre-authorized if either exceeds 600 s. Module-level prepare_model alias is a non-blocking deviation to remove in next code commit. "Checks passed" may be recorded only when every check including benchmark exit 0 passed. |
 | 2026-11-08 | Model validation and max_seq_length enforcement before caching | Prevents cache poisoning on dimension mismatch, enforces max sequence length, raises typed EmbeddingConfigurationError on offline prepare_model, and provides exact prepare command |
 | 2026-11-07 | Option A: sentence-transformers 6.2.0 retained; transformers 5.22.2, tokenizers 0.23.3 and huggingface-hub 2.4.0 pinned in core and ML requirements | Phase 4 chunk fingerprints identical across old/new tokenizer stacks (hash 9e3c4ee12f868ad3df7ea9f7fdb6d79f829beb2eb42756fbe607c88063a6b809). |
 | 2026-11-07 | local_files_only remains offline enforcement; environment variables are set before imports as a second layer; prepare_model runs online only | Prevents any network requests during model loading and caching while guaranteeing offline inference. |
@@ -121,6 +122,7 @@ Company name: Himalaya Crest Realty (Pvt.) Ltd.
 - Accepted: FAQs 3106 words; regex false positives; KF-040 and KF-048 are 81 and 82 characters; G hits are only omitted-topics in facts.md; all 24 property IDs match.
 
 ## Known issues and open questions
+- Benchmark variance is 221–771 s on the same CPU. Cause remains unmeasured: contention/thermal throttling, dependency stack or max-sequence handling.
 - N1: Table headers that exceed the 25% budget cause ChunkingBudgetError with code HEADER_TOO_LARGE; production documents with very wide tables may need schema refinement.
 - N2: Table rows spanning a page break are treated as separate tables by PyMuPDF; the chunker does not stitch them. Acceptable for Phase 4; revisit if cross-page tables appear in real customer data.
 - N3: ChunkDraft carries transient metadata (e.g. section_path) that is dropped on persistence; verify DB schema in Phase 6 matches what the chunker produces.
