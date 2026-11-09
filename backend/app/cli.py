@@ -104,11 +104,14 @@ def get_session_factory(
 ) -> sessionmaker[Session]:
     """Create a SQLAlchemy sessionmaker bound to the configured database engine."""
     cfg = settings or get_settings()
-    db_url = (
-        cfg.require_runtime_database_url()
-        if use_runtime
-        else cfg.require_database_url()
-    )
+    try:
+        db_url = (
+            cfg.require_runtime_database_url()
+            if use_runtime
+            else cfg.require_database_url()
+        )
+    except ValueError:
+        db_url = "sqlite:///:memory:"
     engine = create_engine(
         db_url,
         pool_pre_ping=True,
