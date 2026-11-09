@@ -1,5 +1,5 @@
 # Project Status
-Last updated: 2026-11-08 | Updated by: Antigravity | Current phase: Phase 6 authorized by Claude 2026-11-08, Stage 1 (tests only) pending. Phase 5 Passed (v0.5-embedding, merge 5e2bf49). Phase 6 is NOT passed; no implementation exists.
+Last updated: 2026-11-09 | Updated by: Antigravity | Current phase: Phase 6 Corrective Implementation (A-11 / D1 Option A). Tested code SHA: 246a7e5f8831caf1a2e106cbafb456dff90c13d4. CI run 42656517317 (success). Phase 6 is NOT passed, merged, or tagged; awaiting Claude review.
 
 Rules for this file: no secrets or connection strings; keep it under about 150 lines; when the logs grow, move old entries to context/archive/status-YYYY-MM.md. Historical snapshots: context/archive/preflight-8735072/.
 
@@ -11,7 +11,7 @@ Rules for this file: no secrets or connection strings; keep it under about 150 l
 - Phase 5 code merge: 5e2bf49b32af8ba20b4692870eaf314ef0f644db
 - v0.5-embedding tag target: 5e2bf49b32af8ba20b4692870eaf314ef0f644db
 - Phase 5 Main Merge CI: https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42495781663
-- Branch State: main (at 5e2bf49b32af8ba20b4692870eaf314ef0f644db)
+- Branch State: phase-6-ingestion (code tested at 246a7e5f8831caf1a2e106cbafb456dff90c13d4)
 - Pinned Model Revision: BAAI/bge-m3 at 5617a9f61b028005a4858fdac845db406aefb181
 - Release Tag Target: v0.5-embedding (Phase 5 released at 5e2bf49b32af8ba20b4692870eaf314ef0f644db)
 - Operational database: PostgreSQL 17.11 on Supabase (pgvector 0.8.2, session pooler, RLS forced, rag_app role restricted)
@@ -30,7 +30,7 @@ Rules for this file: no secrets or connection strings; keep it under about 150 l
 | — | Hardening Part B: Extraction, structure & CI hardening | Passed | v0.3.1-extraction-hardening | 2026-10-31 | Commit 92f4ad5; 100 items (99 pass, 1 opt skip), 90.75% cov, 170/170 facts |
 | 4 | Chunking | Passed | v0.4-chunking | 2026-11-07 | Primary 170/170; related evidence 176/176; evidence map v1.0.1; final tests and CI green. Include https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42385811834. |
 | 5 | Embedding module (BGE-M3) | Passed | v0.5-embedding | 2026-11-08 | Code tested at ff08c62; merge SHA 5e2bf49b32af8ba20b4692870eaf314ef0f644db; main CI https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42495781663; Claude PASS 2026-11-08; user “Phase 5 passed” 2026-11-08. Benchmark 272.23 s / 224.10 s (limit 600 s); 771.22 s outlier documented. Chunk fingerprint identical across transformers 4.57.6 / 5.22.2. Pins recorded under A-9. |
-| 6 | Ingestion service end to end (CLI) | In progress: Stage 1 RED pending | | | Authorized by Claude 2026-11-08; Prep 6A tests-first; NOT passed; no implementation exists |
+| 6 | Ingestion service end to end (CLI) | Corrective implementation complete; gates passed; awaiting Claude review | | | Code tested at 246a7e5; CI run 42656517317 (success); direct rag_app runtime connection (A-11); 46 unit + 10 DB tests pass; 88.71% cov |
 | 7 | Retrieval (dense, keyword, RRF, rerank) and golden-set evaluation | Not started | | | |
 | 8 | LLM answer, threshold gate, citations, Q&A logging | Not started | | | |
 | 9 | FastAPI endpoints | Not started | | | |
@@ -38,7 +38,7 @@ Rules for this file: no secrets or connection strings; keep it under about 150 l
 | 11 | Hardening, README, diagram, demo video, LinkedIn post | Not started | | | |
 
 ## Current step
-Current step: Phase 6 authorized by Claude 2026-11-08, Stage 1 (tests only) pending. Phase 5 Passed (v0.5-embedding, merge 5e2bf49). Phase 6 is NOT passed; no implementation exists.
+Current step: Phase 6 corrective implementation complete under D1 Option A (A-11). Tested code SHA: 246a7e5f8831caf1a2e106cbafb456dff90c13d4. GitHub Actions CI run 42656517317 succeeded. Phase 6 is NOT passed; awaiting Claude review.
 
 
 ## Phase 4 Chunking Contract & Governance
@@ -55,6 +55,7 @@ Current step: Phase 6 authorized by Claude 2026-11-08, Stage 1 (tests only) pend
 ## Gate log (newest first, append only)
 | Date | Phase | Commands run | Result | Commit or tag |
 |---|---|---|---|---|
+| 2026-11-09 | 6 Corrective Implementation (A-11) | ruff, mypy, pytest --cov (88.71%), check_phase_coverage (all >=85%), 27 db tests, chunk_fingerprint (126, PASS), verify_chunks (170/170, 176/176), 6 model tests, fresh-clone gate, CI 42656517317 | PASS | 246a7e5f8831caf1a2e106cbafb456dff90c13d4 (awaiting Claude review) |
 | 2026-11-08 | 5 Release & Merge | merge --no-ff, ruff, format, mypy, pytest --cov (89.57%), verify_chunks (170/170, 176/176), 6 model tests, main CI 42495781663 | PASS | 5e2bf49b32af8ba20b4692870eaf314ef0f644db / tag v0.5-embedding |
 | 2026-11-08 | 5 Final Corrective | ruff, format, mypy, pytest --cov (89.57%), check_phase_coverage, verify_chunks (170/170, 176/176), 6 model tests, fresh-clone core suite, embed_benchmark (126 chunks, 771.22s, exit 1) | NOT MET | ff08c62a04568f2ddda9cdf1dd6a50c239d01c8d (benchmark limit 600s not met) |
 | 2026-11-07 | 5 Corrective Round | ruff, format, mypy, pytest --cov (89.91%), check_phase_coverage, verify_chunks (170/170, 176/176), clean ML pip check, clean ML core suite, 6 model tests, embed_benchmark (400s), fresh-clone core suite | PASS | ce06ca00321e0c0f8196e37525091429ad60cb9e (awaiting Claude validation) |
