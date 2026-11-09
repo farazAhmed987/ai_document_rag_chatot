@@ -18,7 +18,8 @@ from sqlalchemy.orm import Session, sessionmaker
 
 from app.core.config import get_settings
 from app.models import ChatSession, Chunk, Document, Message
-from app.repositories.base import admin_session, tenant_session
+from app.repositories.base import admin_assumed_tenant_session as tenant_session
+from app.repositories.base import admin_session
 from app.repositories.company import CompanyRepository
 from app.repositories.document import DocumentRepository
 

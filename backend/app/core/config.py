@@ -33,6 +33,7 @@ class Settings(BaseSettings):
     APP_ENV: str = "development"
     DATABASE_URL: SecretStr | None = None
     ANALYTICS_DATABASE_URL: SecretStr | None = None
+    RUNTIME_DATABASE_URL: SecretStr | None = None
     API_KEY: SecretStr | None = None
     MODEL_NAME: str | None = None
     REWRITE_MODEL_NAME: str | None = None
@@ -48,7 +49,7 @@ class Settings(BaseSettings):
     RERANKER_MODEL_NAME: str = "BAAI/bge-reranker-v2-m3"
 
     STORAGE_BACKEND: str = "local"
-    STORAGE_PATH: Path = REPO_ROOT / "data"
+    STORAGE_PATH: Path = REPO_ROOT / "data" / "storage"
     SUPABASE_URL: str | None = None
     MAX_UPLOAD_MB: int = Field(default=20, gt=0)
     MAX_PAGES: int = Field(default=300, gt=0)
@@ -100,6 +101,29 @@ class Settings(BaseSettings):
             raise ValueError("EMBEDDING_MODEL_REVISION must be a 40-character SHA")
         return value
 
+    @field_validator("STORAGE_BACKEND")
+    @classmethod
+    def validate_storage_backend(cls, value: str) -> str:
+        """Allow only local storage backend."""
+        if value != "local":
+            raise ValueError("STORAGE_BACKEND currently allows only 'local'")
+        return value
+
+    @field_validator("STORAGE_PATH", mode="before")
+    @classmethod
+    def validate_storage_path(cls, value: object) -> Path:
+        """Ensure STORAGE_PATH is non-empty."""
+        if isinstance(value, str):
+            if not value.strip():
+                raise ValueError("STORAGE_PATH cannot be empty")
+            p = Path(value)
+            return p if p.is_absolute() else REPO_ROOT / p
+        if isinstance(value, Path):
+            if not str(value).strip():
+                raise ValueError("STORAGE_PATH cannot be empty")
+            return value
+        raise ValueError("STORAGE_PATH must be a valid path")
+
     @model_validator(mode="after")
     def validate_chunk_window(self) -> Settings:
         """Require a strictly smaller overlap than the chunk size."""
@@ -127,6 +151,22 @@ class Settings(BaseSettings):
         secret = self.ANALYTICS_DATABASE_URL if analytics else self.DATABASE_URL
         if secret is None or not secret.get_secret_value():
             raise ValueError(f"{key} is not configured; set it in the root .env")
+        return secret.get_secret_value()
+
+    def require_runtime_database_url(self) -> str:
+        """Expose runtime connection URL for rag_app without logging it.
+
+        Returns:
+            SQLAlchemy-compatible PostgreSQL URL for rag_app.
+
+        Raises:
+            ValueError: If RUNTIME_DATABASE_URL is not configured.
+        """
+        secret = self.RUNTIME_DATABASE_URL
+        if secret is None or not secret.get_secret_value():
+            raise ValueError(
+                "RUNTIME_DATABASE_URL is not configured; set it in the root .env"
+            )
         return secret.get_secret_value()
 
 

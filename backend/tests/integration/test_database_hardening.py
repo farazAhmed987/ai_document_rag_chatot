@@ -16,7 +16,7 @@ from sqlalchemy.orm import Session, sessionmaker
 
 from app.core.config import Settings, get_settings
 from app.models import ChatSession, Chunk, Company, Document, Message
-from app.repositories.base import tenant_session
+from app.repositories.base import admin_assumed_tenant_session as tenant_session
 from app.repositories.document import DocumentRepository
 
 pytestmark = pytest.mark.db

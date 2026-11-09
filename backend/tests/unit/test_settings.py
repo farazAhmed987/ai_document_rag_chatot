@@ -6,6 +6,8 @@ Requirements: DM-2, IN-1 and RG-11.
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import pytest
 from pydantic import ValidationError
 
@@ -38,6 +40,21 @@ def test_settings_without_external_credentials() -> None:
     assert settings.MAX_UPLOAD_MB == 20
     assert settings.CHUNK_TOKENS == 500
     assert settings.CHUNK_OVERLAP == 60
+
+    with pytest.raises(ValueError, match="RUNTIME_DATABASE_URL is not configured"):
+        settings.require_runtime_database_url()
+
+    with pytest.raises(ValidationError):
+        Settings(_env_file=None, STORAGE_BACKEND="invalid_backend")
+
+    with pytest.raises(ValidationError):
+        Settings(_env_file=None, STORAGE_PATH="")
+
+    with pytest.raises(ValidationError):
+        Settings(_env_file=None, STORAGE_PATH=Path("   "))
+
+    with pytest.raises(ValidationError):
+        Settings(_env_file=None, STORAGE_PATH=123)  # type: ignore[arg-type]
 
 
 @pytest.mark.parametrize(

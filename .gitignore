@@ -18,6 +18,7 @@ htmlcov/
 # === Generated runtime data ===
 data/extracted/
 data/uploads/
+data/storage/
 backend/storage/
 logs/
 *.log
