@@ -25,6 +25,7 @@ from app.adapters.storage.local import LocalStorage
 from app.adapters.tokenizers.bge_m3 import BgeM3TokenCounter
 from app.core import logging as core_logging
 from app.core.config import Settings, get_settings
+from app.core.errors import DatabaseConfigurationError
 from app.core.ingest_errors import sanitize_ingestion_exception
 from app.repositories.base import admin_session, tenant_session
 from app.repositories.company import CompanyRepository
@@ -110,8 +111,18 @@ def get_session_factory(
             if use_runtime
             else cfg.require_database_url()
         )
-    except ValueError:
-        db_url = "sqlite:///:memory:"
+    except ValueError as err:
+        raise DatabaseConfigurationError(
+            "Database URL configuration is missing or invalid",
+            code="DATABASE_CONFIG_ERROR",
+        ) from err
+
+    if db_url.startswith("sqlite") or ":memory:" in db_url:
+        raise DatabaseConfigurationError(
+            "SQLite or in-memory databases are strictly forbidden",
+            code="DATABASE_CONFIG_ERROR",
+        )
+
     engine = create_engine(
         db_url,
         pool_pre_ping=True,
@@ -123,10 +134,7 @@ def get_ingestion_service(settings: Settings | None = None) -> Any:
     """Build an IngestionService instance using configured production adapters."""
     cfg = settings or get_settings()
     admin_session_fac = get_session_factory(cfg, use_runtime=False)
-    try:
-        runtime_session_fac = get_session_factory(cfg, use_runtime=True)
-    except ValueError:
-        runtime_session_fac = admin_session_fac
+    runtime_session_fac = get_session_factory(cfg, use_runtime=True)
     storage = LocalStorage(cfg.STORAGE_PATH)
     embedder = create_embedder(settings=cfg)
     token_counter = BgeM3TokenCounter()

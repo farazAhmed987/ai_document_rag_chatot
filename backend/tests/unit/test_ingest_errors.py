@@ -94,6 +94,19 @@ def test_unknown_error_uses_safe_class_name_without_exception_text() -> None:
     sanitized_bad = err_mod.sanitize_ingestion_exception(bad_code_exc, stage="chunking")
     assert sanitized_bad == "[INGESTION_ERROR] failed during chunking"
 
+    # StatusPersistFailedError sanitizes with INGESTION_STATUS_PERSIST_FAILED
+    from app.core.errors import StatusPersistFailedError
+
+    status_exc = StatusPersistFailedError(f"Database connection dropped {SENTINEL}")
+    sanitized_status = err_mod.sanitize_ingestion_exception(
+        status_exc, stage="status_persistence"
+    )
+    assert (
+        sanitized_status
+        == "[INGESTION_STATUS_PERSIST_FAILED] failed during status_persistence"
+    )
+    assert SENTINEL not in sanitized_status
+
 
 def test_error_and_logs_never_include_document_content_or_filename(
     caplog: pytest.LogCaptureFixture,

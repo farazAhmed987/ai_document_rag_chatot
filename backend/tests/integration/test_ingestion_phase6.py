@@ -491,8 +491,10 @@ def test_db_rag_app_cannot_bypass_rls_or_read_cross_tenant_rows(
             except (DBAPIError, SQLAlchemyError):
                 reset_denied = True
 
-            # If allowed, following query must still return no data
+            # If allowed, following query must still return no data and current_user is rag_app
             if not reset_denied:
+                curr_user = session_a.execute(text("SELECT current_user")).scalar()
+                assert curr_user == "rag_app"
                 post_reset_docs = session_a.execute(
                     text("SELECT id FROM documents WHERE id = :id"),
                     {"id": res_b.document_id},
@@ -678,8 +680,9 @@ def test_db_direct_runtime_connection_isolation() -> None:
             assert len(chunks) == 0
 
         # 3. Under tenant A context, inserting tenant B's document is rejected by RLS
-        with tenant_session(runtime_factory, company_a) as session_a:
-            with pytest.raises((DBAPIError, SQLAlchemyError)):
+        rejected = False
+        try:
+            with tenant_session(runtime_factory, company_a) as session_a:
                 session_a.execute(
                     text(
                         """
@@ -689,6 +692,27 @@ def test_db_direct_runtime_connection_isolation() -> None:
                     ),
                     {"id": uuid4(), "comp_id": company_b},
                 )
+        except (DBAPIError, SQLAlchemyError):
+            rejected = True
+        assert rejected is True, (
+            "Inserting foreign tenant document must be rejected by RLS"
+        )
+
+        # 4. Under tenant A context, execute RESET ROLE; current_user remains rag_app and cross-tenant reads return 0 rows
+        with tenant_session(runtime_factory, company_a) as session_a:
+            session_a.execute(text("RESET ROLE"))
+            curr_user = session_a.execute(text("SELECT current_user")).scalar()
+            assert curr_user == "rag_app"
+            b_docs = session_a.execute(
+                text("SELECT id FROM documents WHERE company_id = :cid"),
+                {"cid": company_b},
+            ).all()
+            b_chunks = session_a.execute(
+                text("SELECT id FROM chunks WHERE company_id = :cid"),
+                {"cid": company_b},
+            ).all()
+            assert len(b_docs) == 0
+            assert len(b_chunks) == 0
     finally:
         with admin_session(admin_factory) as s:
             for c_id in (company_a, company_b):

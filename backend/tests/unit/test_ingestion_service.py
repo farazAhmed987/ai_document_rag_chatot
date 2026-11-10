@@ -966,8 +966,11 @@ def test_status_persist_failure_emits_event_and_raises_typed_error(
 ) -> None:
     """When writing status=failed fails after rollback, service must emit status_persist_failed and raise typed error."""
     srv = _load_module()
+    sentinel_body = "SENTINEL_PERSIST_FAIL_BODY_12345"
+    sentinel_exc = "SENTINEL_PERSIST_FAIL_EXC_67890"
+
     doc_path = tmp_path / "persist_fail.txt"
-    doc_path.write_text("Persist fail test", encoding="utf-8")
+    doc_path.write_text(f"Persist fail test {sentinel_body}", encoding="utf-8")
 
     company_id = uuid4()
     actions: list[str] = []
@@ -978,7 +981,7 @@ def test_status_persist_failure_emits_event_and_raises_typed_error(
             if status == "failed":
                 actions.append("fail_status_persist_error")
                 raise RuntimeError(
-                    "Database connection dropped during status=failed persistence"
+                    f"Database connection dropped during status=failed persistence: {sentinel_exc}"
                 )
             super().update_status(doc_id, status, **kwargs)
 
@@ -1002,17 +1005,17 @@ def test_status_persist_failure_emits_event_and_raises_typed_error(
 
     monkeypatch.setattr(srv.logger, "error", _mock_error)
 
-    # Must raise typed error with code INGESTION_STATUS_PERSIST_FAILED
-    with pytest.raises(Exception) as exc_info:
+    from app.core.errors import StatusPersistFailedError
+
+    # Must raise exact typed error StatusPersistFailedError with code INGESTION_STATUS_PERSIST_FAILED
+    with pytest.raises(StatusPersistFailedError) as exc_info:
         service.ingest_file(company_id=company_id, file_path=doc_path)
 
     err = exc_info.value
-    err_code = getattr(err, "code", "")
-    assert (
-        err_code == "INGESTION_STATUS_PERSIST_FAILED"
-        or "status_persist_failed" in str(err).lower()
-    )
+    assert err.code == "INGESTION_STATUS_PERSIST_FAILED"
     assert "status_persist_failed" in logged_events
+    assert sentinel_body not in str(err)
+    assert sentinel_exc not in str(err)
 
 
 def test_reprocess_accepts_processing_status(
@@ -1094,3 +1097,77 @@ def test_document_id_identity_passed_without_type_error_fallback(
     assert len(created_ids) == 1
     assert created_ids[0] is not None
     assert created_ids[0] == result.document_id
+
+
+def test_unknown_failure_stores_safe_error_message_without_sentinels(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """When an unexpected failure occurs after document row creation, safe error message is stored without leaking sentinels."""
+    from typing import Any
+
+    import app.core.ingest_errors as ie_mod
+
+    srv = _load_module()
+    company_id = uuid4()
+    actions: list[str] = []
+    docs: dict[UUID, _TestDocRecord] = {}
+
+    sentinel_file = "SENTINEL_CONFIDENTIAL_FILENAME_8877"
+    sentinel_body = "SENTINEL_SECRET_DOCUMENT_BODY_6655"
+    sentinel_heading = "SENTINEL_SECRET_HEADING_4433"
+    sentinel_exc = "SENTINEL_RAW_UNEXPECTED_EXCEPTION_2211"
+
+    doc_file = tmp_path / f"{sentinel_file}.txt"
+    doc_file.write_text(f"# {sentinel_heading}\n{sentinel_body}\n", encoding="utf-8")
+
+    class _CrashEmbedder(_TestEmbedder):
+        def embed_documents(
+            self, texts: list[str], batch_size: int = 16
+        ) -> list[list[float]]:
+            del texts, batch_size
+            raise RuntimeError(f"Embedding raw crash: {sentinel_exc}")
+
+    service = _make_service(actions)
+    service.embedder = _CrashEmbedder()
+
+    monkeypatch.setattr(
+        srv,
+        "DocumentRepository",
+        lambda session, c_id: _TestDocRepo(c_id, docs, actions),
+    )
+    monkeypatch.setattr(
+        srv,
+        "ChunkRepository",
+        lambda session, c_id: _TestChunkRepo(c_id, {}, actions),
+    )
+    monkeypatch.setattr(srv, "tenant_session", _make_tenant_session(actions))
+
+    logged_entries: list[dict[str, Any]] = []
+
+    def _capture_log(event: str, **kwargs: Any) -> None:
+        logged_entries.append({"event": event, **kwargs})
+
+    monkeypatch.setattr(srv.logger, "error", _capture_log)
+    monkeypatch.setattr(ie_mod.logger, "error", _capture_log)
+
+    result = service.ingest_file(company_id=company_id, file_path=doc_file)
+
+    assert result.status == "failed"
+    assert result.document_id in docs
+    stored_doc = docs[result.document_id]
+    assert stored_doc.status == "failed"
+    assert stored_doc.error_message is not None
+    assert "[INGESTION_UNEXPECTED_ERROR]" in stored_doc.error_message
+
+    all_sentinels = (sentinel_file, sentinel_body, sentinel_heading, sentinel_exc)
+    for sentinel in all_sentinels:
+        assert sentinel not in stored_doc.error_message
+        if result.message:
+            assert sentinel not in result.message
+
+    assert len(logged_entries) >= 1
+    for entry in logged_entries:
+        for k, v in entry.items():
+            for sentinel in all_sentinels:
+                assert sentinel not in str(k)
+                assert sentinel not in str(v)

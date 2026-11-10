@@ -110,3 +110,10 @@ class StatusPersistFailedError(AppError):
 
     default_code = "INGESTION_STATUS_PERSIST_FAILED"
     status_code = 500
+
+
+class DatabaseConfigurationError(AppError):
+    """Database configuration is missing or invalid."""
+
+    default_code = "DATABASE_CONFIG_ERROR"
+    status_code = 500

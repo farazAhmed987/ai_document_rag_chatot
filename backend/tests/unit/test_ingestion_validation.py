@@ -110,15 +110,11 @@ def test_validation_rejects_corrupt_text(tmp_path: Path) -> None:
     """Text files containing un-decodable binary sequences must be rejected."""
     ing = _load_ingestion()
     corrupt = tmp_path / "corrupt.txt"
-    corrupt.write_bytes(b"\x80\x81\x82\xff\xfe\x00\x01Binary junk")
+    corrupt.write_bytes(b"\xff\xfe\x00a\x00b\x00c\x01")
 
-    with pytest.raises((CorruptFileError, UnsupportedFileTypeError)) as exc_info:
+    with pytest.raises(CorruptFileError) as exc_info:
         ing.validate_ingestion_file(corrupt)
-    assert exc_info.value.code in (
-        "CORRUPT_FILE",
-        "DECODE_FAILED",
-        "UNSUPPORTED_FILE_TYPE",
-    )
+    assert exc_info.value.code == "DECODE_FAILED"
 
 
 def test_validation_accepts_pdf_docx_txt_and_md(tmp_path: Path) -> None:
@@ -192,37 +188,61 @@ def test_validation_sentinels_never_leak_in_errors_and_codes_are_fixed(
 
     sentinel_body = "SENTINEL_SECRET_BODY_987654321"
     sentinel_name = "SENTINEL_LEAK_FILENAME_12345"
+    sentinel_heading = "SENTINEL_HEADING_TITLE_24680"
 
-    # 1. Unsupported extension with sentinel name
+    # 1. UNSUPPORTED_FILE_TYPE: unsupported extension with sentinel name, heading, and body
     bad_ext = tmp_path / f"{sentinel_name}.exe"
-    bad_ext.write_text(f"content with {sentinel_body}", encoding="utf-8")
+    bad_ext.write_text(
+        f"# {sentinel_heading}\ncontent with {sentinel_body}", encoding="utf-8"
+    )
     with pytest.raises(UnsupportedFileTypeError) as exc1:
         ing.validate_ingestion_file(bad_ext, original_filename=f"{sentinel_name}.exe")
     assert exc1.value.code == "UNSUPPORTED_FILE_TYPE"
     assert sentinel_body not in str(exc1.value)
+    assert sentinel_name not in str(exc1.value)
+    assert sentinel_heading not in str(exc1.value)
 
-    # 2. Corrupt PDF with sentinel
-    bad_pdf = tmp_path / f"{sentinel_name}.pdf"
-    bad_pdf.write_bytes(f"%PDF-1.4 corrupt body {sentinel_body}".encode())
-    with pytest.raises((CorruptFileError, UnsupportedFileTypeError)) as exc2:
-        ing.validate_ingestion_file(bad_pdf)
-    assert exc2.value.code in ("CORRUPT_FILE", "UNSUPPORTED_FILE_TYPE")
-    assert sentinel_body not in str(exc2.value)
+    # 2. CORRUPT_FILE: nonexistent file
+    with pytest.raises(CorruptFileError) as exc2:
+        ing.validate_ingestion_file(tmp_path / f"{sentinel_name}_nonexistent.pdf")
+    assert exc2.value.code == "CORRUPT_FILE"
+    assert sentinel_name not in str(exc2.value)
 
-    # 3. Empty file
-    empty_f = tmp_path / "empty_sentinel.txt"
+    # 2b. CORRUPT_FILE: text file with NUL byte
+    nul_txt = tmp_path / f"{sentinel_name}_nul.txt"
+    nul_txt.write_bytes(f"# {sentinel_heading}\n{sentinel_body}\x00trailing".encode())
+    with pytest.raises(CorruptFileError) as exc2b:
+        ing.validate_ingestion_file(nul_txt)
+    assert exc2b.value.code == "CORRUPT_FILE"
+    assert sentinel_body not in str(exc2b.value)
+    assert sentinel_heading not in str(exc2b.value)
+
+    # 3. EMPTY_FILE: empty 0-byte file
+    empty_f = tmp_path / f"{sentinel_name}_empty.txt"
     empty_f.write_bytes(b"")
     with pytest.raises(EmptyDocumentError) as exc3:
         ing.validate_ingestion_file(empty_f)
     assert exc3.value.code == "EMPTY_FILE"
-    assert sentinel_body not in str(exc3.value)
+    assert sentinel_name not in str(exc3.value)
 
-    # 4. Oversized file
-    big_f = tmp_path / "big_sentinel.txt"
+    # 4. FILE_TOO_LARGE: oversized file
+    big_f = tmp_path / f"{sentinel_name}_big.txt"
     big_f.write_bytes(b"x" * (2 * 1024 * 1024))
     with pytest.raises(FileTooLargeError) as exc4:
         ing.validate_ingestion_file(big_f, max_mb=1)
     assert exc4.value.code == "FILE_TOO_LARGE"
+    assert sentinel_name not in str(exc4.value)
+
+    # 5. DECODE_FAILED: corrupt text with invalid encoding bytes
+    decode_fail_f = tmp_path / f"{sentinel_name}_bad_encoding.txt"
+    decode_fail_f.write_bytes(
+        b"\xff\xfe\x00" + f"\n# {sentinel_heading}\n{sentinel_body}".encode()
+    )
+    with pytest.raises(CorruptFileError) as exc5:
+        ing.validate_ingestion_file(decode_fail_f)
+    assert exc5.value.code == "DECODE_FAILED"
+    assert sentinel_body not in str(exc5.value)
+    assert sentinel_heading not in str(exc5.value)
 
 
 def test_filetype_dependency_is_pinned_exact_1_2_0() -> None:

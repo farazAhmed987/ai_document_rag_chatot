@@ -128,6 +128,8 @@ def test_cli_parser_supports_all_phase6_commands(
     monkeypatch.setattr(cli, "tenant_session", lambda f, c: _MockAdminSession())
     monkeypatch.setattr(cli, "CompanyRepository", _MockCompanyRepo)
     monkeypatch.setattr(cli, "DocumentRepository", _MockDocRepo)
+    orig_get_session_factory = cli.get_session_factory
+    monkeypatch.setattr(cli, "get_session_factory", lambda *a, **k: object())
 
     assert cli.main(["create-company", "--name", "NewCo"]) == 0
     assert cli.main(["create-company", "--name", "Exists"]) == 0
@@ -136,10 +138,11 @@ def test_cli_parser_supports_all_phase6_commands(
     assert cli.main(["reprocess", "--company", "NewCo", "--document", doc_id]) == 0
 
     from app.core.config import Settings
+    from app.core.errors import DatabaseConfigurationError
 
     dummy_settings = Settings(_env_file=None, DATABASE_URL="sqlite:///:memory:")
-    fac = cli.get_session_factory(dummy_settings)
-    assert fac is not None
+    with pytest.raises(DatabaseConfigurationError):
+        orig_get_session_factory(dummy_settings)
 
     class _FailingRepo:
         def __init__(self, session: object, company_id: UUID) -> None:
@@ -389,8 +392,13 @@ def test_cli_sentinels_never_leak_in_stdout_stderr_or_logs_on_failure(
 
     sentinel_body = "SENTINEL_SECRET_CLI_BODY_112233"
     sentinel_name = "SENTINEL_CONFIDENTIAL_FILENAME_4455"
+    sentinel_heading = "SENTINEL_HEADING_TITLE_7788"
+    sentinel_exc = "SENTINEL_RAW_EXC_MESSAGE_9900"
+
     sample = tmp_path / f"{sentinel_name}.txt"
-    sample.write_text(f"Secret body {sentinel_body}", encoding="utf-8")
+    sample.write_text(
+        f"# {sentinel_heading}\nSecret body {sentinel_body}", encoding="utf-8"
+    )
 
     class _LeakingService:
         def resolve_company_name(self, name: str) -> UUID:
@@ -400,7 +408,7 @@ def test_cli_sentinels_never_leak_in_stdout_stderr_or_logs_on_failure(
         def ingest_file(self, *args: object, **kwargs: object) -> object:
             del args, kwargs
             raise RuntimeError(
-                f"Database leak with {sentinel_body} for {sentinel_name}"
+                f"Database leak with {sentinel_body} for {sentinel_name} in {sentinel_heading}: {sentinel_exc}"
             )
 
     monkeypatch.setattr(
@@ -416,8 +424,130 @@ def test_cli_sentinels_never_leak_in_stdout_stderr_or_logs_on_failure(
     captured = capsys.readouterr()
     combined_output = captured.out + captured.err
     assert sentinel_body not in combined_output, (
-        "Document/exception sentinel leaked in CLI output"
+        "Document body sentinel leaked in CLI output"
+    )
+    assert sentinel_name not in combined_output, (
+        "Filename sentinel leaked in CLI output"
+    )
+    assert sentinel_heading not in combined_output, (
+        "Heading sentinel leaked in CLI output"
+    )
+    assert sentinel_exc not in combined_output, (
+        "Raw exception message sentinel leaked in CLI output"
     )
     assert "Database leak with" not in combined_output, (
         "Raw exception message leaked in CLI output"
     )
+
+
+def test_cli_missing_runtime_url_fails_closed_without_sqlite(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """When RUNTIME_DATABASE_URL is unconfigured, CLI must fail closed without constructing SQLite."""
+    cli = _load_module()
+    sample = tmp_path / "valid.txt"
+    sample.write_text("Valid text body", encoding="utf-8")
+
+    from pydantic import SecretStr
+
+    from app.core.config import Settings
+
+    # Settings without RUNTIME_DATABASE_URL
+    no_runtime_settings = Settings(
+        _env_file=None,
+        DATABASE_URL=SecretStr("postgresql+psycopg://user:pass@localhost:5432/test_db"),
+        RUNTIME_DATABASE_URL=None,
+    )
+    monkeypatch.setattr(cli, "get_settings", lambda: no_runtime_settings)
+
+    # Rejection: create_engine must never receive a SQLite URL
+    orig_create_engine = cli.create_engine
+
+    def _guarded_create_engine(url: str, *args: object, **kwargs: object):
+        if "sqlite" in str(url) or ":memory:" in str(url):
+            raise AssertionError(f"SQLite engine construction forbidden: {url}")
+        return orig_create_engine(url, *args, **kwargs)
+
+    monkeypatch.setattr(cli, "create_engine", _guarded_create_engine)
+
+    exit_code = cli.main(["ingest", "--company", "Acme", str(sample)])
+    assert exit_code != 0
+
+    captured = capsys.readouterr()
+    combined = captured.out + captured.err
+    assert "DATABASE_CONFIG_ERROR" in combined
+    assert "sqlite" not in combined.lower()
+    assert ":memory:" not in combined.lower()
+    assert "pass@" not in combined
+    assert "localhost" not in combined
+
+
+def test_cli_status_persist_failure_is_nonzero_and_safe(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """When status persistence fails, CLI exits nonzero, reports safe error code, and logs safely."""
+    from typing import Any
+
+    from app.core.errors import StatusPersistFailedError
+
+    cli = _load_module()
+    sample = tmp_path / "doc.txt"
+    sample.write_text("Valid text content", encoding="utf-8")
+
+    raw_sentinel = "RAW_STATUS_PERSIST_SENTINEL_556677"
+
+    class _PersistFailingService:
+        def resolve_company_name(self, name: str) -> UUID:
+            del name
+            return uuid4()
+
+        def ingest_file(self, *args: object, **kwargs: object) -> object:
+            del args, kwargs
+            raise StatusPersistFailedError(
+                f"Failed to record failure status in DB: {raw_sentinel}",
+                code="INGESTION_STATUS_PERSIST_FAILED",
+            )
+
+    monkeypatch.setattr(
+        cli,
+        "get_ingestion_service",
+        lambda *args, **kwargs: _PersistFailingService(),
+        raising=False,
+    )
+
+    logged_events: list[dict[str, Any]] = []
+
+    class _CaptureLogger:
+        def error(self, event: str, **kwargs: Any) -> None:
+            logged_events.append({"event": event, **kwargs})
+
+        def info(self, event: str, **kwargs: Any) -> None:
+            logged_events.append({"event": event, **kwargs})
+
+        def warning(self, event: str, **kwargs: Any) -> None:
+            logged_events.append({"event": event, **kwargs})
+
+    monkeypatch.setattr(cli, "logger", _CaptureLogger(), raising=False)
+
+    exit_code = cli.main(["ingest", "--company", "Acme", str(sample)])
+    assert exit_code != 0
+
+    captured = capsys.readouterr()
+    combined_output = captured.out + captured.err
+    assert "[INGESTION_STATUS_PERSIST_FAILED]" in captured.err
+    assert raw_sentinel not in combined_output
+
+    assert len(logged_events) >= 1
+    for event_data in logged_events:
+        for k, v in event_data.items():
+            assert raw_sentinel not in str(k)
+            assert raw_sentinel not in str(v)
+
+    error_event = logged_events[-1]
+    assert error_event["event"] == "cli_command_failed"
+    assert error_event["command"] == "ingest"
+    assert error_event["error_type"] == "StatusPersistFailedError"

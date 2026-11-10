@@ -72,7 +72,12 @@ class Settings(BaseSettings):
     QA_RETENTION_DAYS: int = Field(default=365, gt=0)
     QA_SPILL_PATH: Path = REPO_ROOT / "data" / "qa_spill"
 
-    @field_validator("DATABASE_URL", "ANALYTICS_DATABASE_URL", mode="before")
+    @field_validator(
+        "DATABASE_URL",
+        "ANALYTICS_DATABASE_URL",
+        "RUNTIME_DATABASE_URL",
+        mode="before",
+    )
     @classmethod
     def normalize_database_url(cls, value: object) -> object:
         """Normalize supported PostgreSQL schemes to psycopg 3.
