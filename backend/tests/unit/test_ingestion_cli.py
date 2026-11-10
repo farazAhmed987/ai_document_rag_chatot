@@ -600,6 +600,7 @@ def test_create_company_supplies_generated_uuid_to_repository(
         admin_session_used.append(True)
         yield object()
 
+    monkeypatch.setattr(cli, "get_session_factory", lambda settings=None: object())
     monkeypatch.setattr(cli, "admin_session", _mock_admin_session)
 
     # Forbid runtime tenant session, ML, embedder, tokenizer
