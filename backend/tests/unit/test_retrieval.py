@@ -5,7 +5,7 @@ SRD Sections 8.2, 9; DM-3, IN-5, MT-1, MT-3; A-12.
 
 from __future__ import annotations
 
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 from uuid import UUID, uuid4
 
 import pytest
@@ -381,6 +381,7 @@ def test_settings_retrieval_validation() -> None:
     """Verifies bounds and deprecated RERANK_TOP_N matching logic in Settings."""
     # 1. Valid settings with deprecated RERANK_TOP_N matching RETRIEVAL_TOP_N
     s_valid = Settings(
+        _env_file=None,
         RETRIEVAL_TOP_N=5,
         RERANK_TOP_N=5,
         RETRIEVAL_MAX_TOP_N=10,
@@ -391,6 +392,7 @@ def test_settings_retrieval_validation() -> None:
     # 2. RERANK_TOP_N != RETRIEVAL_TOP_N raises ValueError
     with pytest.raises(ValueError, match="RERANK_TOP_N .* must match RETRIEVAL_TOP_N"):
         Settings(
+            _env_file=None,
             RETRIEVAL_TOP_N=5,
             RERANK_TOP_N=7,
         )
@@ -398,6 +400,7 @@ def test_settings_retrieval_validation() -> None:
     # 3. RETRIEVAL_TOP_N > RETRIEVAL_MAX_TOP_N raises ValueError
     with pytest.raises(ValueError, match="cannot exceed RETRIEVAL_MAX_TOP_N"):
         Settings(
+            _env_file=None,
             RETRIEVAL_TOP_N=15,
             RETRIEVAL_MAX_TOP_N=10,
         )
@@ -407,6 +410,7 @@ def test_settings_retrieval_validation() -> None:
         ValueError, match="RERANK_CANDIDATES .* cannot be less than RETRIEVAL_TOP_N"
     ):
         Settings(
+            _env_file=None,
             RETRIEVAL_TOP_N=5,
             RERANK_CANDIDATES=3,
         )
@@ -416,6 +420,7 @@ def test_settings_retrieval_validation() -> None:
         ValueError, match="RERANKER_MODEL_REVISION must be a 40-character SHA"
     ):
         Settings(
+            _env_file=None,
             RERANKER_BACKEND="bge-m3",
             RERANKER_MODEL_REVISION=None,
         )
@@ -424,6 +429,197 @@ def test_settings_retrieval_validation() -> None:
         ValueError, match="RERANKER_MODEL_REVISION must be a 40-character SHA"
     ):
         Settings(
+            _env_file=None,
             RERANKER_BACKEND="bge-m3",
             RERANKER_MODEL_REVISION="not_a_valid_40_char_hex_revision",
         )
+
+
+# ---------------------------------------------------------------------------
+# RetrievalService.search End-to-End Orchestration Tests
+# ---------------------------------------------------------------------------
+
+
+def test_service_search_all_modes() -> None:
+    """Verifies search orchestration across hybrid, dense, keyword, and hybrid+rerank."""
+    mock_session = MagicMock()
+    mock_factory = MagicMock()
+    mock_factory.return_value.__enter__.return_value = mock_session
+
+    doc_id = uuid4()
+    c1 = _make_chunk(doc_id, 1, "DocA.pdf", similarity=0.9, keyword_score=0.8)
+    c2 = _make_chunk(doc_id, 2, "DocA.pdf", similarity=0.7, keyword_score=0.6)
+
+    class _StubReranker:
+        model_name = "stub"
+        model_revision = "rev1"
+        max_length = 1024
+
+        def predict(
+            self, pairs: list[tuple[str, str]], batch_size: int = 32
+        ) -> list[float]:
+            del batch_size
+            return [2.5] * len(pairs)
+
+    service = RetrievalService(
+        session_factory=mock_factory,
+        embedder=_DummyEmbedder(),
+        reranker=_StubReranker(),
+        token_counter=_DummyTokenCounter(count_val=5),
+    )
+
+    cid = uuid4()
+
+    with (
+        patch("app.services.retrieval.tenant_session") as mock_tenant_ctx,
+        patch("app.services.retrieval.RetrievalRepository") as mock_repo_cls,
+    ):
+        mock_tenant_ctx.return_value.__enter__.return_value = mock_session
+        mock_repo = MagicMock()
+        mock_repo_cls.return_value = mock_repo
+        mock_repo.dense_search.return_value = [c1, c2]
+        mock_repo.keyword_search.return_value = [c1, c2]
+
+        # 1. Hybrid search
+        res_hybrid = service.search(
+            company_id=cid, query="deposit policy", mode="hybrid"
+        )
+        assert res_hybrid.mode == "hybrid"
+        assert len(res_hybrid.chunks) == 2
+        assert res_hybrid.embed_ms >= 0.0
+        assert res_hybrid.dense_ms >= 0.0
+        assert res_hybrid.keyword_ms >= 0.0
+        assert res_hybrid.fuse_ms >= 0.0
+        assert res_hybrid.rerank_ms == 0.0
+
+        # 2. Dense search
+        res_dense = service.search(company_id=cid, query="deposit policy", mode="dense")
+        assert res_dense.mode == "dense"
+        assert len(res_dense.chunks) == 2
+
+        # 3. Keyword search
+        res_kw = service.search(company_id=cid, query="deposit policy", mode="keyword")
+        assert res_kw.mode == "keyword"
+        assert len(res_kw.chunks) == 2
+
+        # 4. Hybrid+rerank search
+        res_rerank = service.search(
+            company_id=cid, query="deposit policy", mode="hybrid+rerank"
+        )
+        assert res_rerank.mode == "hybrid+rerank"
+        assert len(res_rerank.chunks) == 2
+        assert res_rerank.rerank_ms >= 0.0
+
+
+# ---------------------------------------------------------------------------
+# RetrievalRepository Unit Tests
+# ---------------------------------------------------------------------------
+
+
+def test_repository_contracts_with_mock_session() -> None:
+    """Verifies repository query construction and boundary conditions."""
+    from app.repositories.retrieval import RetrievalRepository
+
+    mock_session = MagicMock()
+    cid = uuid4()
+
+    # 1. Type validation
+    with pytest.raises(TypeError, match="company_id must be a uuid.UUID"):
+        RetrievalRepository(mock_session, "not-a-uuid")  # type: ignore[arg-type]
+
+    repo = RetrievalRepository(mock_session, cid)
+
+    # 2. Limit <= 0 returns empty immediately
+    assert repo.dense_search([1.0] * 1024, limit=0) == []
+    assert repo.keyword_search("query text", limit=0) == []
+
+    # 3. Noise query returns empty immediately
+    assert repo.keyword_search("!@#$%^&*()_+=-", limit=10) == []
+
+    # 4. Dense search executes query and formats RetrievedChunk
+    mock_row = MagicMock()
+    mock_row.id = uuid4()
+    mock_row.document_id = uuid4()
+    mock_row.document_name = "Sample.pdf"
+    mock_row.chunk_index = 0
+    mock_row.page = 1
+    mock_row.section = "Introduction"
+    mock_row.content = "Company: C\nDocument: D\nSection: S\n\nBody text"
+    mock_row.token_count = 25
+    mock_row.distance = 0.15
+
+    mock_session.execute.return_value.all.return_value = [mock_row]
+    dense_out = repo.dense_search([1.0] * 1024, limit=5)
+    assert len(dense_out) == 1
+    assert dense_out[0].document_name == "Sample.pdf"
+    assert pytest.approx(dense_out[0].dense_similarity, 1e-4) == 0.85
+    assert dense_out[0].body == "Body text"
+
+    # 5. Keyword search executes query and formats RetrievedChunk
+    mock_kw_row = MagicMock()
+    mock_kw_row.id = uuid4()
+    mock_kw_row.document_id = uuid4()
+    mock_kw_row.document_name = "Sample.pdf"
+    mock_kw_row.chunk_index = 0
+    mock_kw_row.page = 1
+    mock_kw_row.section = "Introduction"
+    mock_kw_row.content = "Company: C\nDocument: D\nSection: S\n\nBody text"
+    mock_kw_row.token_count = 25
+    mock_kw_row.rank_score = 0.42
+
+    mock_session.execute.return_value.all.return_value = [mock_kw_row]
+    kw_out = repo.keyword_search("sample text", limit=5)
+    assert len(kw_out) == 1
+    assert kw_out[0].document_name == "Sample.pdf"
+    assert kw_out[0].keyword_score == 0.42
+
+
+# ---------------------------------------------------------------------------
+# CLI Search Command Unit Tests
+# ---------------------------------------------------------------------------
+
+
+def test_cli_search_command_table_and_json(capsys: pytest.CaptureFixture[str]) -> None:
+    """Verifies CLI search subcommand dispatches, formats output, and exits cleanly."""
+    from app.cli import main as cli_main
+
+    cid = uuid4()
+    c1 = _make_chunk(cid, 1, "DocA.pdf", similarity=0.9)
+
+    mock_result = MagicMock()
+    mock_result.query = "deposit query"
+    mock_result.mode = "hybrid"
+    mock_result.chunks = [c1]
+    mock_result.embed_ms = 1.2
+    mock_result.dense_ms = 3.4
+    mock_result.keyword_ms = 2.1
+    mock_result.fuse_ms = 0.5
+    mock_result.rerank_ms = 0.0
+    mock_result.total_ms = 7.2
+
+    with (
+        patch("app.cli.get_session_factory"),
+        patch("app.cli.create_embedder"),
+        patch("app.cli.create_reranker"),
+        patch("app.cli.RetrievalService") as mock_service_cls,
+    ):
+        mock_service = MagicMock()
+        mock_service_cls.return_value = mock_service
+        mock_service.search.return_value = mock_result
+
+        # 1. Table format
+        code = cli_main(["search", "--company", str(cid), "deposit query"])
+        assert code == 0
+        captured = capsys.readouterr()
+        assert "Rank" in captured.out
+        assert "DocA.pdf" in captured.out
+        assert "Timings:" in captured.out
+
+        # 2. JSON format
+        code_json = cli_main(
+            ["search", "--company", str(cid), "deposit query", "--format", "json"]
+        )
+        assert code_json == 0
+        captured_json = capsys.readouterr()
+        assert '"query": "deposit query"' in captured_json.out
+        assert '"mode": "hybrid"' in captured_json.out

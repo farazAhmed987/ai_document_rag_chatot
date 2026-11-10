@@ -16,7 +16,7 @@ from app.models.document import Document
 from app.schemas.retrieval import RetrievedChunk
 from app.services.chunking import strip_context_header
 
-_TOKEN_PATTERN = re.compile(r"[\w]+", flags=re.UNICODE)
+_TOKEN_PATTERN = re.compile(r"[^\W_]+", flags=re.UNICODE)
 
 
 def extract_search_tokens(query: str) -> list[str]:

@@ -60,6 +60,13 @@ jobs:
           --module app/repositories/chunk.py
           --module app/core/ingest_errors.py
           --module app/cli.py
+          --module app/schemas/retrieval.py
+          --module app/adapters/rerankers/base.py
+          --module app/adapters/rerankers/fake.py
+          --module app/adapters/rerankers/factory.py
+          --module app/adapters/rerankers/bge_reranker.py
+          --module app/services/retrieval.py
+          --module app/repositories/retrieval.py
       - name: Pre-commit
         run: pre-commit run --all-files
       - name: Protected file integrity
