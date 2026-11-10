@@ -165,27 +165,21 @@ def main(argv: Sequence[str] | None = None) -> int:
         if args.command == "create-company":
             session_fac = get_session_factory(settings)
             with admin_session(session_fac) as session:
-                comp_repo = CompanyRepository(session)
+                company_id = uuid4()
+                company_repository = CompanyRepository(
+                    session,
+                    company_id=company_id,
+                )
                 existing = (
-                    comp_repo.find_by_name(args.name)
-                    if hasattr(comp_repo, "find_by_name")
-                    else comp_repo.get_by_name(args.name)
+                    company_repository.find_by_name(args.name)
+                    if hasattr(company_repository, "find_by_name")
+                    else company_repository.get_by_name(args.name)
                 )
                 if existing is not None:
                     print(
                         f"Company '{args.name}' already exists with ID: {existing.id}"
                     )
                     return 0
-                company_id = uuid4()
-                try:
-                    company_repository = CompanyRepository(
-                        session,
-                        company_id=company_id,
-                    )
-                except TypeError:
-                    company_repository = comp_repo
-                    if hasattr(company_repository, "company_id"):
-                        company_repository.company_id = company_id
                 created = company_repository.create(name=args.name)
                 print(f"Created company '{args.name}' with ID: {created.id}")
                 return 0

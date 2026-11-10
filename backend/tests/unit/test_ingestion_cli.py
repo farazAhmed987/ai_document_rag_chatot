@@ -85,8 +85,9 @@ def test_cli_parser_supports_all_phase6_commands(
             pass
 
     class _MockCompanyRepo:
-        def __init__(self, session: object) -> None:
-            pass
+        def __init__(self, session: object, company_id: UUID | None = None) -> None:
+            self.session = session
+            self.company_id = company_id
 
         def find_by_name(self, name: str) -> object:
             if name == "Exists":
@@ -361,8 +362,9 @@ def test_cli_create_company_never_initializes_ml_or_ingestion_service(
             pass
 
     class _MockCompanyRepo:
-        def __init__(self, session: object) -> None:
-            pass
+        def __init__(self, session: object, company_id: UUID | None = None) -> None:
+            self.session = session
+            self.company_id = company_id
 
         def find_by_name(self, name: str) -> object | None:
             return None
@@ -618,3 +620,128 @@ def test_create_company_supplies_generated_uuid_to_repository(
     assert len(creation_repos) >= 1, (
         "CompanyRepository was never constructed with the generated UUID"
     )
+
+
+def test_create_company_does_not_retry_repository_without_company_id(
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """create-company must directly construct CompanyRepository with company_id and never retry/fallback."""
+    from collections.abc import Iterator
+    from contextlib import contextmanager
+    from types import SimpleNamespace
+    from typing import Any
+
+    cli = _load_module()
+
+    raw_sentinel = "RAW_TYPE_ERROR_SENTINEL_NO_RETRY_88201"
+    calls: list[dict[str, Any]] = []
+    logged_events: list[dict[str, Any]] = []
+
+    class _CaptureLogger:
+        def error(self, event: str, **kwargs: Any) -> None:
+            logged_events.append({"event": event, **kwargs})
+
+        def info(self, event: str, **kwargs: Any) -> None:
+            logged_events.append({"event": event, **kwargs})
+
+        def warning(self, event: str, **kwargs: Any) -> None:
+            logged_events.append({"event": event, **kwargs})
+
+    monkeypatch.setattr(cli, "logger", _CaptureLogger(), raising=False)
+
+    class _RecordingCompanyRepo:
+        def __init__(
+            self,
+            session: object,
+            *args: Any,
+            company_id: UUID | None = None,
+            **kwargs: Any,
+        ) -> None:
+            calls.append(
+                {
+                    "session": session,
+                    "company_id": company_id,
+                    "args": args,
+                    "kwargs": kwargs,
+                }
+            )
+            if company_id is not None:
+                raise TypeError(f"Simulated type error {raw_sentinel}")
+
+        def find_by_name(self, name: str) -> object | None:
+            return None
+
+        def get_by_name(self, name: str) -> object | None:
+            return None
+
+        def create(self, *, name: str) -> object:
+            return SimpleNamespace(id=uuid4(), name=name)
+
+    monkeypatch.setattr(cli, "CompanyRepository", _RecordingCompanyRepo)
+
+    @contextmanager
+    def _mock_admin_session(fac: object) -> Iterator[object]:
+        yield object()
+
+    monkeypatch.setattr(cli, "get_session_factory", lambda settings=None: object())
+    monkeypatch.setattr(cli, "admin_session", _mock_admin_session)
+
+    forbidden_calls: list[str] = []
+
+    def _forbidden(name: str):
+        def _fn(*args: object, **kwargs: object) -> object:
+            forbidden_calls.append(name)
+            raise AssertionError(
+                f"Forbidden component constructed during create-company: {name}"
+            )
+
+        return _fn
+
+    monkeypatch.setattr(cli, "tenant_session", _forbidden("tenant_session"))
+    monkeypatch.setattr(
+        cli, "get_ingestion_service", _forbidden("get_ingestion_service")
+    )
+    monkeypatch.setattr(cli, "create_embedder", _forbidden("create_embedder"))
+
+    exit_code = cli.main(["create-company", "--name", "FallbackCo"])
+
+    # 3. Assert the constructor was called exactly once
+    assert len(calls) == 1, (
+        f"Expected constructor to be called exactly once, called {len(calls)} times: {calls}"
+    )
+
+    # 4. Assert that single call included a valid UUID through company_id=
+    assert isinstance(calls[0]["company_id"], UUID), (
+        f"Expected first call to supply valid UUID company_id, got: {calls[0]['company_id']}"
+    )
+
+    # 5. Assert there was no retry without company_id
+    assert not any(c["company_id"] is None for c in calls), (
+        f"Found constructor call without company_id: {calls}"
+    )
+
+    # 6. Assert CLI exits nonzero
+    assert exit_code != 0, (
+        f"Expected non-zero exit code on constructor failure, got {exit_code}"
+    )
+
+    # 7. Assert output contains only safe code/class representation
+    captured = capsys.readouterr()
+    combined_output = captured.out + captured.err
+    assert (
+        "Error executing create-company" in captured.err
+        or "[INGESTION_" in captured.err
+    )
+
+    # 8. Assert raw sentinel is absent from stdout, stderr, and captured logs
+    assert raw_sentinel not in combined_output, (
+        "Raw TypeError sentinel leaked in CLI output"
+    )
+    for ev in logged_events:
+        for k, v in ev.items():
+            assert raw_sentinel not in str(k)
+            assert raw_sentinel not in str(v)
+
+    # 9. Assert embedder, tokenizer and runtime tenant service were not constructed
+    assert not forbidden_calls, f"Forbidden components were called: {forbidden_calls}"
