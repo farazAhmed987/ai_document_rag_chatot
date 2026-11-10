@@ -26,6 +26,7 @@ Multi-company RAG chatbot dashboard for the DevSynt AI Internship (Task 5). Comp
 - Phase 6 merge SHA: `0ac88d0` (`0ac88d0194c15bf55f6163e2c40adbd8c232235b`).
 - `v0.6-ingestion` release tag target: `0ac88d0194c15bf55f6163e2c40adbd8c232235b`.
 - Authorization-record correction commit: `881ab922b5a50bd9c8b4fb314bae94ed403a611b`.
+- Ratification docs commit: `cbc02a7b28991f0c2fb02a407b942e2ecbda78d3`.
 - Phase 6 Main Merge CI URL: https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42796649207.
 - Tag Sequence: `v0.0-skeleton`, `v0.0-tooling`, `v0.1-sample-data`, `v0.2-database`, `v0.2.1-db-hardening` (`8c186d0`), `v0.3-extraction` (`65c4d8c`), `v0.3.1-extraction-hardening` (`92f4ad5`), `v0.4-chunking` (`c861425`), `v0.5-embedding` (`5e2bf49`), `v0.6-ingestion` (`0ac88d0`).
 
@@ -35,12 +36,20 @@ Multi-company RAG chatbot dashboard for the DevSynt AI Internship (Task 5). Comp
 - Locked decisions: A-3 (chunking budgets/segments), A-6 (cross-document evidence map v1.0.1, number boundaries), A-7 (CPU-only, normalized 1024-d BAAI/bge-m3 pinned to revision 5617a9f61b028005a4858fdac845db406aefb181, no prefix, max length 2048 with typed error on excess; fake embedder for core/CI without torch; benchmark under 10m), A-8 (default embedding batch size 16 selected from CPU benchmark), A-9 (Option A dependency alignment).
 
 ## Phase 6 Status & Ingestion Contract (A-11 / D1 Option A)
-- Snapshot: Phase 6 passed. Claude technical PASS: 2026-11-10. User ratification: verbatim “phase 6 passed”, dated 2026-11-10. Tag v0.6-ingestion still targets `0ac88d0194c15bf55f6163e2c40adbd8c232235b`. Tested code commit: `dcfc9d501323bfc9d45f7dfb931f19e30464d875`. Main merge CI: https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42796649207. Authorization-record correction: `881ab922b5a50bd9c8b4fb314bae94ed403a611b`. Current main HEAD will be the new ratification docs commit. Process deviation N8 remains recorded as a resolved process deviation following user ratification.
+- Snapshot: Phase 6 passed. Claude technical PASS: 2026-11-10. User ratification: verbatim “phase 6 passed”, dated 2026-11-10. Tag v0.6-ingestion targets `0ac88d0194c15bf55f6163e2c40adbd8c232235b`. Tested code commit: `dcfc9d501323bfc9d45f7dfb931f19e30464d875`. Main merge CI: https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42796649207. Authorization-record correction: `881ab922b5a50bd9c8b4fb314bae94ed403a611b`. Ratification docs commit: `cbc02a7b28991f0c2fb02a407b942e2ecbda78d3`. Process deviation N8 remains recorded as a resolved historical process deviation.
 - Commit references: Tested code commit: `dcfc9d501323bfc9d45f7dfb931f19e30464d875`; merge commit: `0ac88d0194c15bf55f6163e2c40adbd8c232235b`; release tag: `v0.6-ingestion` pointing to `0ac88d0194c15bf55f6163e2c40adbd8c232235b`.
 - Evidence: Fresh GitHub clone: 305 passed, 1 skipped, 89.18% cov. DB suite 27 passed through direct runtime rag_app login (A-11). Real ingestion: 5/5 indexed, 34 pages, 126 chunks, 588.56 s (ceiling 900 s). Main CI passed: https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42796649207. Smoke preview: informational any-expected-source Hit@5: 5/6; Q023 retrieved 1 of 2 expected documents.
-- Current step: Phase 6 passed and released as v0.6-ingestion. Phase 7 read-only preflight is authorized. Phase 7 implementation has not started and requires Claude’s prompt.
+
+## Phase 7 Status & Retrieval Specification
+- Current step: Phase 7 (retrieval + golden-set evaluation) authorized by Claude 2026-11-10; implementation not started.
+- Baseline: Phase 6 Passed (user ratification “phase 6 passed” 2026-11-10; Claude PASS 2026-11-10; process deviation N8 remains historical). Main before authorization commit `cbc02a7b28991f0c2fb02a407b942e2ecbda78d3`; tag `v0.6-ingestion` targets `0ac88d0194c15bf55f6163e2c40adbd8c232235b`.
+- Retrieval Architecture: Hybrid dense cosine plus keyword search: 20 dense candidates, 20 keyword candidates, RRF k=60 with equal weights, per-document cap 3 with backfill, default top_n 5 (maximum 10), deterministic tie-breaks. Raw dense, keyword, RRF and optional reranker scores exposed.
+- No DB Migration: Use existing `ix_chunks_embedding_hnsw`, existing `ix_chunks_tsv`, and existing unique document/chunk-index constraint. Zero schema or index mutations.
+- Optional Reranker: `BAAI/bge-reranker-v2-m3`; default backend `none`; revision must be resolved from Hugging Face at preparation time; Claude decides adoption after evaluation.
+- Evaluation Gate: Hybrid+cap on answerable types excluding follow_up must achieve Document Hit@5 >= 0.90, MRR >= dense-only MRR in same run, multi-document all-docs-hit >= dense-only value; no constant tuning on golden set.
+- Process: Single-stage code and tests; tests run only once during final gate; no fresh-clone gate until Phase 11; release STOP RULE remains unchanged.
+- Known issues: Q003 missed in Phase 6 smoke; Q023 retrieved only one of two expected documents; mentor deadline remains unconfirmed.
 - Data note: company "Himalaya Crest Realty (Pvt.) Ltd." and its 5 indexed documents / 126 chunks are kept in the ops DB for Phase 7. Do not delete or reprocess without Claude approval.
-- Known issues: Q003/Q023 retrieval misses (Phase 7); runtime variance on this CPU; deadline unconfirmed.
 - Direct `rag_app` connection: Service connects directly via `RUNTIME_DATABASE_URL` under `rag_app` (`rolsuper=false`, `rolbypassrls=false`). RLS is enforced continuously without `SET LOCAL ROLE` privilege-escalation risk. Administrative tasks use `admin_session` via `DATABASE_URL`.
 - ChunkDraft->chunks mapping (no migration): mapping was decided and implemented in Phase 6; persist `chunk_index`, `page`, `section`, `content` (header+body), `token_count`; `embedding` populated by embedder; `tsv` generated by PostgreSQL expression, never written; transient chunker metadata dropped.
 - Ingestion error handling: errors stored in `documents.error_message` formatted as `"[CODE] safe message"` (<=500 chars, no raw document content); failures emit structured logs and typed `StatusPersistFailedError` if failure recording fails.

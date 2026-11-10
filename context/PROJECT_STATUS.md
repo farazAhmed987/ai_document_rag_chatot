@@ -1,5 +1,5 @@
 # Project Status
-Last updated: 2026-11-10 | Updated by: Antigravity | Current phase: Phase 6 passed and v0.6-ingestion released. Tag target merge SHA: 0ac88d0194c15bf55f6163e2c40adbd8c232235b. Main CI: https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42796649207. Phase 7 read-only preflight authorized.
+Last updated: 2026-11-10 | Updated by: Antigravity | Current phase: Phase 7 (retrieval + golden-set evaluation) authorized by Claude 2026-11-10; implementation not started. Phase 6 Passed (user ratification “phase 6 passed” 2026-11-10; Claude PASS 2026-11-10; process deviation N8 remains historical). Main before authorization commit cbc02a7; tag v0.6-ingestion targets 0ac88d0.
 
 Rules for this file: no secrets or connection strings; keep it under about 150 lines; when the logs grow, move old entries to context/archive/status-YYYY-MM.md. Historical snapshots: context/archive/preflight-8735072/.
 
@@ -29,16 +29,16 @@ Rules for this file: no secrets or connection strings; keep it under about 150 l
 | 4 | Chunking | Passed | v0.4-chunking | 2026-11-07 | Primary 170/170; related evidence 176/176; evidence map v1.0.1; final tests and CI green. Include https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42385811834. |
 | 5 | Embedding module (BGE-M3) | Passed | v0.5-embedding | 2026-11-08 | Code tested at ff08c62; merge SHA 5e2bf49b32af8ba20b4692870eaf314ef0f644db; main CI https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42495781663; Claude PASS 2026-11-08; user “Phase 5 passed” 2026-11-08. Benchmark 272.23 s / 224.10 s (limit 600 s); 771.22 s outlier documented. Chunk fingerprint identical across transformers 4.57.6 / 5.22.2. Pins recorded under A-9. |
 | 6 | Ingestion service + CLI | Passed | v0.6-ingestion | 2026-11-10 | Code tested at dcfc9d5; merge SHA 0ac88d0194c15bf55f6163e2c40adbd8c232235b; tag v0.6-ingestion; Claude technical PASS 2026-11-10; user ratification, verbatim: “phase 6 passed” (2026-11-10); authorization-record correction: 881ab92. Fresh GitHub clone: 305 passed, 1 skipped, 89.18% cov. DB suite 27 passed through direct runtime rag_app (A-11). Real ingestion: 5/5 indexed, 34 pages, 126 chunks, 588.56 seconds. Main merge CI: 42796649207. Smoke preview: informational any-expected-source Hit@5 5/6; Q023 matched 1 of 2 expected documents. Process deviation N8 resolved with user ratification. |
-| 7 | Retrieval (dense, keyword, RRF, rerank) and golden-set evaluation | Not started | | | |
+| 7 | Retrieval (dense, keyword, RRF, rerank) and golden-set evaluation | Not started | | | Authorized by Claude 2026-11-10; implementation not started. Hybrid dense (20) + keyword (20), RRF k=60, per-doc cap 3 with backfill, top_n 5 (max 10), optional reranker BAAI/bge-reranker-v2-m3. Gate: Hit@5 >= 0.90, MRR >= dense-only, multi-doc all-docs-hit >= dense-only. No DB migration. |
 | 8 | LLM answer, threshold gate, citations, Q&A logging | Not started | | | |
 | 9 | FastAPI endpoints | Not started | | | |
 | 10 | Frontend | Not started | | | |
 | 11 | Hardening, README, diagram, demo video, LinkedIn post | Not started | | | |
 
 ## Current step
-Current step: Phase 6 passed and released as v0.6-ingestion. Phase 7 read-only preflight is authorized. Phase 7 implementation has NOT started and awaits Claude’s Phase 7 specification.
+Current step: Phase 7 (retrieval + golden-set evaluation) authorized by Claude 2026-11-10; implementation not started. Phase 6 Passed (user ratification “phase 6 passed” 2026-11-10; Claude PASS 2026-11-10; process deviation N8 remains historical). Main before this authorization commit cbc02a7; tag v0.6-ingestion targets 0ac88d0.
 Data note: company "Himalaya Crest Realty (Pvt.) Ltd." and its 5 indexed documents / 126 chunks are kept in the ops DB for Phase 7. Do not delete or reprocess without Claude approval.
-Known issues: Q003/Q023 retrieval misses (Phase 7); runtime variance on this CPU; deadline unconfirmed.
+Known issues: Q003 missed in Phase 6 smoke; Q023 retrieved only one of two expected documents; runtime variance on this CPU; mentor deadline remains unconfirmed.
 
 
 ## Phase 4 Chunking Contract & Governance
@@ -75,6 +75,11 @@ Known issues: Q003/Q023 retrieval misses (Phase 7); runtime variance on this CPU
 ## Decisions log (newest first)
 | Date | Decision | Reason |
 |---|---|---|
+| 2026-11-10 | Phase 7 hybrid retrieval architecture | Hybrid dense cosine plus keyword search: 20 dense candidates, 20 keyword candidates, RRF k=60 with equal weights, per-document cap 3 with backfill, default top_n 5 (max 10), deterministic tie-breaks. Raw dense, keyword, RRF and optional reranker scores exposed. |
+| 2026-11-10 | Phase 7 no database migration | Use existing ix_chunks_embedding_hnsw, existing ix_chunks_tsv, and existing unique document/chunk-index constraint. Zero schema or index mutations. |
+| 2026-11-10 | Phase 7 optional reranker specification | BAAI/bge-reranker-v2-m3; default backend none; revision must be resolved from Hugging Face at preparation time; Claude decides adoption after evaluation. |
+| 2026-11-10 | Phase 7 evaluation gate criteria | Required evaluation gate for hybrid+cap on answerable types excluding follow_up: Document Hit@5 >= 0.90; MRR >= dense-only MRR in same run; multi-document all-docs-hit >= dense-only value; no constant tuning on golden set. |
+| 2026-11-10 | Phase 7 process rules | Single-stage code and tests; tests run only once during final gate; no fresh-clone gate until Phase 11; release STOP RULE remains unchanged. |
 | 2026-11-10 | User ratified Phase 6 | User told ChatGPT verbatim “phase 6 passed” after Claude technical PASS dated 2026-11-10. Phase 6 status changed to Passed. Phase 7 read-only preflight authorized; implementation remains unauthorized pending Claude’s specification. |
 | 2026-11-10 | Premature Phase 6 merge/tag accepted | Merge 0ac88d0, tag v0.6-ingestion and history are preserved. The earlier statement that the user authorized the release was inaccurate and is corrected. Claude technical PASS: 2026-11-10. User ratification: PENDING. |
 | 2026-11-10 | Phase 6 real ingestion and informational smoke search complete | CLI create-company generates UUID and passes company_id to CompanyRepository; smoke_search constructs embedder via keyword arg create_embedder(settings=settings). Ingested 5 sample PDFs into Himalaya Crest Realty (Pvt.) Ltd. in 588.56s total; produced exactly 126 chunks matching Phase 4 fingerprint. Smoke search hit@5 achieved 5/6 (83.3%). Database verified under direct rag_app runtime connection with active RLS. |
@@ -143,6 +148,7 @@ Company name: Himalaya Crest Realty (Pvt.) Ltd.
 - Mentor deadline (12 September 2026 in brief) has passed; real deadline remains unconfirmed with mentor.
 
 ## Session log (one line per session, newest first)
+- 2026-11-10 | Phase 7 retrieval authorized by Claude, pre-coding audit initiated | Antigravity
 - 2026-11-10 | Phase 6 ratified by user (verbatim “phase 6 passed”), status changed to Passed, Phase 7 read-only preflight authorized | Antigravity
 - 2026-11-10 | Phase 6 premature merge/tag accepted by Claude (0ac88d0, v0.6-ingestion preserved); user ratification pending | Antigravity
 - 2026-11-10 | Phase 6 final fallback removed, valid GitHub fresh clone (305 passed, 89.18% cov), CI green (42792480132), Claude PASS verdict received | Antigravity
