@@ -21,6 +21,7 @@ from sqlalchemy.orm import Session, sessionmaker
 
 from app.adapters.embedders.factory import create_embedder
 from app.adapters.extractors.factory import extract_document
+from app.adapters.rerankers.factory import create_reranker
 from app.adapters.storage.local import LocalStorage
 from app.adapters.tokenizers.bge_m3 import BgeM3TokenCounter
 from app.core import logging as core_logging
@@ -31,6 +32,7 @@ from app.repositories.base import admin_session, tenant_session
 from app.repositories.company import CompanyRepository
 from app.repositories.document import DocumentRepository
 from app.services.ingestion import IngestionService
+from app.services.retrieval import RetrievalService
 
 logger = structlog.get_logger(__name__)
 
@@ -93,6 +95,39 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         default=False,
         help="Explicit confirmation required to execute deletion",
+    )
+
+    # 7. search
+    p_search = subparsers.add_parser(
+        "search", help="Execute hybrid search against indexed tenant documents"
+    )
+    p_search.add_argument(
+        "--company", required=True, help="Tenant company name or UUID"
+    )
+    p_search.add_argument("query", help="Search query text")
+    p_search.add_argument(
+        "--top-n",
+        type=int,
+        default=5,
+        help="Number of results to retrieve (default: 5, max: 10)",
+    )
+    p_search.add_argument(
+        "--mode",
+        choices=["hybrid", "hybrid+rerank", "dense", "keyword"],
+        default=None,
+        help="Retrieval mode (default: hybrid+rerank if reranker configured, else hybrid)",
+    )
+    p_search.add_argument(
+        "--rerank",
+        action="store_true",
+        default=False,
+        help="Force hybrid+rerank mode",
+    )
+    p_search.add_argument(
+        "--format",
+        choices=["table", "json"],
+        default="table",
+        help="Output format: table (default) or json",
     )
 
     return parser
@@ -288,6 +323,112 @@ def main(argv: Sequence[str] | None = None) -> int:
             print(
                 f"Reprocessed: {doc_uuid} (status={getattr(result, 'status', None)}, chunks={getattr(result, 'chunk_count', 0)})"
             )
+            return 0
+
+        if args.command == "search":
+            admin_factory = get_session_factory(settings, use_runtime=False)
+            runtime_factory = get_session_factory(settings, use_runtime=True)
+
+            target_company_id: UUID
+            try:
+                target_company_id = UUID(args.company)
+            except ValueError:
+                with admin_session(admin_factory) as admin_s:
+                    comp_repo = CompanyRepository(admin_s)
+                    comp = comp_repo.get_by_name(args.company)
+                    if comp is None:
+                        print(
+                            f"Company '{args.company}' not found in database",
+                            file=sys.stderr,
+                        )
+                        return 1
+                    target_company_id = comp.id
+
+            embedder = create_embedder(settings=settings)
+            reranker = create_reranker(settings=settings)
+            retrieval_service = RetrievalService(
+                session_factory=runtime_factory,
+                embedder=embedder,
+                reranker=reranker,
+                settings=settings,
+            )
+
+            search_mode: Any = "hybrid+rerank" if args.rerank else args.mode
+            result = retrieval_service.search(
+                company_id=target_company_id,
+                query=args.query,
+                top_n=args.top_n,
+                mode=search_mode,
+            )
+
+            if args.format == "json":
+                import json
+
+                output_data = {
+                    "query": result.query,
+                    "mode": result.mode,
+                    "timings": {
+                        "embed_ms": round(result.embed_ms, 2),
+                        "dense_ms": round(result.dense_ms, 2),
+                        "keyword_ms": round(result.keyword_ms, 2),
+                        "fuse_ms": round(result.fuse_ms, 2),
+                        "rerank_ms": round(result.rerank_ms, 2),
+                        "total_ms": round(result.total_ms, 2),
+                    },
+                    "chunks": [
+                        {
+                            "rank": c.rank,
+                            "chunk_id": str(c.chunk_id),
+                            "document_id": str(c.document_id),
+                            "document_name": c.document_name,
+                            "chunk_index": c.chunk_index,
+                            "page": c.page,
+                            "section": c.section,
+                            "score": round(c.score, 4),
+                            "dense_rank": c.dense_rank,
+                            "dense_similarity": round(c.dense_similarity, 4)
+                            if c.dense_similarity is not None
+                            else None,
+                            "keyword_rank": c.keyword_rank,
+                            "keyword_score": round(c.keyword_score, 4)
+                            if c.keyword_score is not None
+                            else None,
+                            "rrf_score": round(c.rrf_score, 4)
+                            if c.rrf_score is not None
+                            else None,
+                            "rerank_score": round(c.rerank_score, 4)
+                            if c.rerank_score is not None
+                            else None,
+                            "body": c.body,
+                        }
+                        for c in result.chunks
+                    ],
+                }
+                print(json.dumps(output_data, indent=2))
+            else:
+                if not result.chunks:
+                    print("No matching chunks found.")
+                else:
+                    header = f"{'Rank':<4} | {'Document':<25} | {'Page':<5} | {'Section':<25} | {'Score':<8} | {'Preview'}"
+                    print(header)
+                    print("-" * len(header))
+                    for c in result.chunks:
+                        doc_str = c.document_name[:25]
+                        page_str = str(c.page) if c.page is not None else "-"
+                        sec_str = (c.section or "-")[:25]
+                        score_str = f"{c.score:.4f}"
+                        body_preview = " ".join(c.body.split())[:50]
+                        if len(" ".join(c.body.split())) > 50:
+                            body_preview += "..."
+                        print(
+                            f"{c.rank:<4} | {doc_str:<25} | {page_str:<5} | {sec_str:<25} | {score_str:<8} | {body_preview}"
+                        )
+                    print("-" * len(header))
+                print(
+                    f"Timings: embed={result.embed_ms:.1f}ms, dense={result.dense_ms:.1f}ms, "
+                    f"keyword={result.keyword_ms:.1f}ms, fuse={result.fuse_ms:.1f}ms, "
+                    f"rerank={result.rerank_ms:.1f}ms, total={result.total_ms:.1f}ms (mode: {result.mode})"
+                )
             return 0
 
     except Exception as exc:
