@@ -551,3 +551,69 @@ def test_cli_status_persist_failure_is_nonzero_and_safe(
     assert error_event["event"] == "cli_command_failed"
     assert error_event["command"] == "ingest"
     assert error_event["error_type"] == "StatusPersistFailedError"
+
+
+def test_create_company_supplies_generated_uuid_to_repository(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """create-company must generate a company UUID and pass it to CompanyRepository constructor."""
+    from collections.abc import Iterator
+    from contextlib import contextmanager
+    from typing import Any
+
+    cli = _load_module()
+
+    fixed_uuid = UUID("11111111-2222-3333-4444-555555555555")
+    monkeypatch.setattr(cli, "uuid4", lambda: fixed_uuid, raising=False)
+
+    admin_session_used: list[bool] = []
+    repo_instances: list[Any] = []
+
+    class _MockCompany:
+        def __init__(self, cid: UUID, name: str) -> None:
+            self.id = cid
+            self.name = name
+
+    class _InterceptCompanyRepo:
+        def __init__(self, session: object, company_id: UUID | None = None) -> None:
+            self.session = session
+            self.company_id = company_id
+            repo_instances.append(self)
+
+        def find_by_name(self, name: str) -> object:
+            del name
+            return None
+
+        def get_by_name(self, name: str) -> object:
+            del name
+            return None
+
+        def create(self, *, name: str) -> object:
+            if self.company_id is None:
+                raise ValueError("company_id is required for company creation")
+            return _MockCompany(self.company_id, name)
+
+    monkeypatch.setattr(cli, "CompanyRepository", _InterceptCompanyRepo)
+
+    @contextmanager
+    def _mock_admin_session(fac: object) -> Iterator[object]:
+        admin_session_used.append(True)
+        yield object()
+
+    monkeypatch.setattr(cli, "admin_session", _mock_admin_session)
+
+    # Forbid runtime tenant session, ML, embedder, tokenizer
+    def _forbidden(*args: object, **kwargs: object) -> object:
+        raise AssertionError("Forbidden component constructed during create-company")
+
+    monkeypatch.setattr(cli, "tenant_session", _forbidden)
+    monkeypatch.setattr(cli, "get_ingestion_service", _forbidden)
+    monkeypatch.setattr(cli, "create_embedder", _forbidden)
+
+    exit_code = cli.main(["create-company", "--name", "TestCo"])
+    assert exit_code == 0
+    assert admin_session_used == [True]
+    creation_repos = [r for r in repo_instances if r.company_id == fixed_uuid]
+    assert len(creation_repos) >= 1, (
+        "CompanyRepository was never constructed with the generated UUID"
+    )

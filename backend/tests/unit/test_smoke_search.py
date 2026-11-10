@@ -208,3 +208,80 @@ def test_smoke_search_errors_mask_database_url_and_document_text(
     assert raw_password not in combined
     assert "dbhost" not in combined
     assert secret_body not in combined
+
+
+def test_smoke_search_constructs_embedder_with_settings_keyword(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """smoke_search must call create_embedder with settings= keyword argument."""
+    from typing import Any
+    from uuid import UUID
+
+    import app.adapters.embedders.factory as emb_factory
+    import app.repositories.company as comp_mod
+
+    mod = _load_smoke_module()
+
+    create_embedder_calls: list[dict[str, Any]] = []
+
+    class _FakeEmbedder:
+        def embed_documents(
+            self, texts: list[str], batch_size: int = 16
+        ) -> list[list[float]]:
+            del batch_size
+            return [[0.0] * 1024 for _ in texts]
+
+    def _mock_create_embedder(*args: Any, **kwargs: Any) -> Any:
+        create_embedder_calls.append({"args": args, "kwargs": kwargs})
+        if args:
+            raise TypeError(
+                "create_embedder() takes 0 positional arguments but 1 was given"
+            )
+        if "settings" not in kwargs:
+            raise TypeError("missing required keyword argument: 'settings'")
+        return _FakeEmbedder()
+
+    monkeypatch.setattr(emb_factory, "create_embedder", _mock_create_embedder)
+
+    mock_engine = MagicMock()
+    mock_session = MagicMock()
+    mock_session.execute.return_value.all.return_value = []
+    mock_engine.connect.return_value.__enter__.return_value = mock_session
+
+    class _MockCompany:
+        id = UUID("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee")
+        name = "Himalaya Crest Realty (Pvt.) Ltd."
+
+    class _MockCompRepo:
+        def __init__(self, *args: Any, **kwargs: Any) -> None:
+            pass
+
+        def find_by_name(self, name: str) -> Any:
+            del name
+            return _MockCompany()
+
+    monkeypatch.setattr(comp_mod, "CompanyRepository", _MockCompRepo)
+
+    from contextlib import contextmanager
+
+    @contextmanager
+    def _mock_tenant_session(*args: Any, **kwargs: Any) -> Any:
+        sess = MagicMock()
+        sess.execute.return_value.all.return_value = []
+        yield sess
+
+    import app.repositories.base as base_mod
+
+    monkeypatch.setattr(base_mod, "tenant_session", _mock_tenant_session)
+
+    # In committed form (create_embedder(settings)), this raises TypeError and triggers SystemExit(1)
+    mod.run_smoke_search(
+        company_name="Himalaya Crest Realty (Pvt.) Ltd.",
+        golden_path=GOLDEN_PATH,
+        engine_override=mock_engine,
+    )
+
+    assert len(create_embedder_calls) == 1
+    call = create_embedder_calls[0]
+    assert not call["args"], f"Expected 0 positional arguments, got: {call['args']}"
+    assert "settings" in call["kwargs"], "Expected 'settings' keyword argument"

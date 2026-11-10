@@ -263,7 +263,7 @@ def run_smoke_search(
             company_id = comp.id
 
         # 2. Embed queries using pinned BGE-M3 embedder
-        embedder = create_embedder(settings)
+        embedder = create_embedder(settings=settings)
         queries = [str(q["question"]) for q in questions]
         query_vectors = embedder.embed_documents(
             queries, batch_size=settings.EMBEDDING_BATCH_SIZE

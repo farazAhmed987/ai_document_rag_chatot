@@ -13,7 +13,7 @@ import time
 from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
-from uuid import UUID
+from uuid import UUID, uuid4
 
 import structlog
 from sqlalchemy import create_engine
@@ -176,7 +176,17 @@ def main(argv: Sequence[str] | None = None) -> int:
                         f"Company '{args.name}' already exists with ID: {existing.id}"
                     )
                     return 0
-                created = comp_repo.create(name=args.name)
+                company_id = uuid4()
+                try:
+                    company_repository = CompanyRepository(
+                        session,
+                        company_id=company_id,
+                    )
+                except TypeError:
+                    company_repository = comp_repo
+                    if hasattr(company_repository, "company_id"):
+                        company_repository.company_id = company_id
+                created = company_repository.create(name=args.name)
                 print(f"Created company '{args.name}' with ID: {created.id}")
                 return 0
 
