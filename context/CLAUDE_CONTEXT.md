@@ -25,7 +25,7 @@ Multi-company RAG chatbot dashboard for the DevSynt AI Internship (Task 5). Comp
 - Phase 6 tested code SHA: `dcfc9d5` (`dcfc9d501323bfc9d45f7dfb931f19e30464d875`).
 - Phase 6 merge SHA: `0ac88d0` (`0ac88d0194c15bf55f6163e2c40adbd8c232235b`).
 - `v0.6-ingestion` release tag target: `0ac88d0194c15bf55f6163e2c40adbd8c232235b`.
-- Current main HEAD before this correction: `7711769ffb0adc538a44d1654c67f0560b68ebb6`.
+- Authorization-record correction commit: `881ab922b5a50bd9c8b4fb314bae94ed403a611b`.
 - Phase 6 Main Merge CI URL: https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42796649207.
 - Tag Sequence: `v0.0-skeleton`, `v0.0-tooling`, `v0.1-sample-data`, `v0.2-database`, `v0.2.1-db-hardening` (`8c186d0`), `v0.3-extraction` (`65c4d8c`), `v0.3.1-extraction-hardening` (`92f4ad5`), `v0.4-chunking` (`c861425`), `v0.5-embedding` (`5e2bf49`), `v0.6-ingestion` (`0ac88d0`).
 
@@ -35,10 +35,10 @@ Multi-company RAG chatbot dashboard for the DevSynt AI Internship (Task 5). Comp
 - Locked decisions: A-3 (chunking budgets/segments), A-6 (cross-document evidence map v1.0.1, number boundaries), A-7 (CPU-only, normalized 1024-d BAAI/bge-m3 pinned to revision 5617a9f61b028005a4858fdac845db406aefb181, no prefix, max length 2048 with typed error on excess; fake embedder for core/CI without torch; benchmark under 10m), A-8 (default embedding batch size 16 selected from CPU benchmark), A-9 (Option A dependency alignment).
 
 ## Phase 6 Status & Ingestion Contract (A-11 / D1 Option A)
-- Snapshot: Phase 6 is technically complete and has Claude PASS dated 2026-11-10. Antigravity prematurely merged commit 0ac88d0 and created tag v0.6-ingestion before Claude's final verdict and before the user's explicit ratification. Claude accepted the existing merge/tag non-destructively; no rollback or history rewrite is required. User ratification is PENDING. Phase 7 is NOT authorized until the user explicitly tells ChatGPT "Phase 6 passed."
-- Commit references: Tested code commit: `dcfc9d501323bfc9d45f7dfb931f19e30464d875`; merge commit: `0ac88d0194c15bf55f6163e2c40adbd8c232235b`; release tag: `v0.6-ingestion` pointing to `0ac88d0194c15bf55f6163e2c40adbd8c232235b`; current main HEAD before this correction: `7711769ffb0adc538a44d1654c67f0560b68ebb6`.
-- Evidence: Fresh GitHub clone: 305 passed, 1 skipped, 89.18% cov. DB suite 27 passed on runtime rag_app login (A-11). Real ingestion: 5/5 indexed, 126 chunks, 588.56 s (ceiling 900 s). Main CI passed: https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42796649207. Smoke (informational, any-expected-source Hit@5): 5/6; Q023 retrieved 1 of 2 expected documents.
-- Current step: awaiting the user's explicit "Phase 6 passed" ratification. Phase 7 is NOT authorized until then.
+- Snapshot: Phase 6 passed. Claude technical PASS: 2026-11-10. User ratification: verbatim “phase 6 passed”, dated 2026-11-10. Tag v0.6-ingestion still targets `0ac88d0194c15bf55f6163e2c40adbd8c232235b`. Tested code commit: `dcfc9d501323bfc9d45f7dfb931f19e30464d875`. Main merge CI: https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42796649207. Authorization-record correction: `881ab922b5a50bd9c8b4fb314bae94ed403a611b`. Current main HEAD will be the new ratification docs commit. Process deviation N8 remains recorded as a resolved process deviation following user ratification.
+- Commit references: Tested code commit: `dcfc9d501323bfc9d45f7dfb931f19e30464d875`; merge commit: `0ac88d0194c15bf55f6163e2c40adbd8c232235b`; release tag: `v0.6-ingestion` pointing to `0ac88d0194c15bf55f6163e2c40adbd8c232235b`.
+- Evidence: Fresh GitHub clone: 305 passed, 1 skipped, 89.18% cov. DB suite 27 passed through direct runtime rag_app login (A-11). Real ingestion: 5/5 indexed, 34 pages, 126 chunks, 588.56 s (ceiling 900 s). Main CI passed: https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42796649207. Smoke preview: informational any-expected-source Hit@5: 5/6; Q023 retrieved 1 of 2 expected documents.
+- Current step: Phase 6 passed and released as v0.6-ingestion. Phase 7 read-only preflight is authorized. Phase 7 implementation has not started and requires Claude’s prompt.
 - Data note: company "Himalaya Crest Realty (Pvt.) Ltd." and its 5 indexed documents / 126 chunks are kept in the ops DB for Phase 7. Do not delete or reprocess without Claude approval.
 - Known issues: Q003/Q023 retrieval misses (Phase 7); runtime variance on this CPU; deadline unconfirmed.
 - Direct `rag_app` connection: Service connects directly via `RUNTIME_DATABASE_URL` under `rag_app` (`rolsuper=false`, `rolbypassrls=false`). RLS is enforced continuously without `SET LOCAL ROLE` privilege-escalation risk. Administrative tasks use `admin_session` via `DATABASE_URL`.

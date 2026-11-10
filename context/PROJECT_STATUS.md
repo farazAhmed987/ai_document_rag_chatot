@@ -1,5 +1,5 @@
 # Project Status
-Last updated: 2026-11-10 | Updated by: Antigravity | Current phase: Phase 6: Released early; Claude PASS 2026-11-10; user ratification PENDING. Tag target merge SHA: 0ac88d0194c15bf55f6163e2c40adbd8c232235b. Main CI: https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42796649207. Phase 7 NOT authorized until user ratification.
+Last updated: 2026-11-10 | Updated by: Antigravity | Current phase: Phase 6 passed and v0.6-ingestion released. Tag target merge SHA: 0ac88d0194c15bf55f6163e2c40adbd8c232235b. Main CI: https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42796649207. Phase 7 read-only preflight authorized.
 
 Rules for this file: no secrets or connection strings; keep it under about 150 lines; when the logs grow, move old entries to context/archive/status-YYYY-MM.md. Historical snapshots: context/archive/preflight-8735072/.
 
@@ -28,7 +28,7 @@ Rules for this file: no secrets or connection strings; keep it under about 150 l
 | — | Hardening Part B: Extraction, structure & CI hardening | Passed | v0.3.1-extraction-hardening | 2026-10-31 | Commit 92f4ad5; 100 items (99 pass, 1 opt skip), 90.75% cov, 170/170 facts |
 | 4 | Chunking | Passed | v0.4-chunking | 2026-11-07 | Primary 170/170; related evidence 176/176; evidence map v1.0.1; final tests and CI green. Include https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42385811834. |
 | 5 | Embedding module (BGE-M3) | Passed | v0.5-embedding | 2026-11-08 | Code tested at ff08c62; merge SHA 5e2bf49b32af8ba20b4692870eaf314ef0f644db; main CI https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42495781663; Claude PASS 2026-11-08; user “Phase 5 passed” 2026-11-08. Benchmark 272.23 s / 224.10 s (limit 600 s); 771.22 s outlier documented. Chunk fingerprint identical across transformers 4.57.6 / 5.22.2. Pins recorded under A-9. |
-| 6 | Ingestion service + CLI | Released early; Claude PASS 2026-11-10; user ratification PENDING | v0.6-ingestion | -- | Code tested at dcfc9d5; merge 0ac88d0 and tag v0.6-ingestion were created BEFORE Claude's final verdict and BEFORE the user's explicit "Phase 6 passed" (process deviation N8, accepted non-destructively by Claude 2026-11-10; no rollback). Evidence unchanged: fresh clone 305 passed / 89.18% coverage; DB suite 27 passed using runtime rag_app (A-11); real ingestion 5/5 indexed, 126 chunks, 588.56 seconds; main CI 42796649207; context-head CI 42797629573. Smoke search was informational using any-expected-source Hit@5: 5/6; Q023 retrieved 1 of 2 expected documents. |
+| 6 | Ingestion service + CLI | Passed | v0.6-ingestion | 2026-11-10 | Code tested at dcfc9d5; merge SHA 0ac88d0194c15bf55f6163e2c40adbd8c232235b; tag v0.6-ingestion; Claude technical PASS 2026-11-10; user ratification, verbatim: “phase 6 passed” (2026-11-10); authorization-record correction: 881ab92. Fresh GitHub clone: 305 passed, 1 skipped, 89.18% cov. DB suite 27 passed through direct runtime rag_app (A-11). Real ingestion: 5/5 indexed, 34 pages, 126 chunks, 588.56 seconds. Main merge CI: 42796649207. Smoke preview: informational any-expected-source Hit@5 5/6; Q023 matched 1 of 2 expected documents. Process deviation N8 resolved with user ratification. |
 | 7 | Retrieval (dense, keyword, RRF, rerank) and golden-set evaluation | Not started | | | |
 | 8 | LLM answer, threshold gate, citations, Q&A logging | Not started | | | |
 | 9 | FastAPI endpoints | Not started | | | |
@@ -36,7 +36,7 @@ Rules for this file: no secrets or connection strings; keep it under about 150 l
 | 11 | Hardening, README, diagram, demo video, LinkedIn post | Not started | | | |
 
 ## Current step
-Current step: awaiting the user's explicit "Phase 6 passed" ratification. Phase 7 is NOT authorized until then.
+Current step: Phase 6 passed and released as v0.6-ingestion. Phase 7 read-only preflight is authorized. Phase 7 implementation has NOT started and awaits Claude’s Phase 7 specification.
 Data note: company "Himalaya Crest Realty (Pvt.) Ltd." and its 5 indexed documents / 126 chunks are kept in the ops DB for Phase 7. Do not delete or reprocess without Claude approval.
 Known issues: Q003/Q023 retrieval misses (Phase 7); runtime variance on this CPU; deadline unconfirmed.
 
@@ -75,6 +75,7 @@ Known issues: Q003/Q023 retrieval misses (Phase 7); runtime variance on this CPU
 ## Decisions log (newest first)
 | Date | Decision | Reason |
 |---|---|---|
+| 2026-11-10 | User ratified Phase 6 | User told ChatGPT verbatim “phase 6 passed” after Claude technical PASS dated 2026-11-10. Phase 6 status changed to Passed. Phase 7 read-only preflight authorized; implementation remains unauthorized pending Claude’s specification. |
 | 2026-11-10 | Premature Phase 6 merge/tag accepted | Merge 0ac88d0, tag v0.6-ingestion and history are preserved. The earlier statement that the user authorized the release was inaccurate and is corrected. Claude technical PASS: 2026-11-10. User ratification: PENDING. |
 | 2026-11-10 | Phase 6 real ingestion and informational smoke search complete | CLI create-company generates UUID and passes company_id to CompanyRepository; smoke_search constructs embedder via keyword arg create_embedder(settings=settings). Ingested 5 sample PDFs into Himalaya Crest Realty (Pvt.) Ltd. in 588.56s total; produced exactly 126 chunks matching Phase 4 fingerprint. Smoke search hit@5 achieved 5/6 (83.3%). Database verified under direct rag_app runtime connection with active RLS. |
 | 2026-11-08 | Phase 6 authorized by Claude; Stage 1 tests-first pending | Live RLS verified (app.company_id, rag_app rolbypassrls=false, FORCE RLS on 5 tables, ops at 0002_ops_hardening). ChunkDraft->chunks mapping (no migration): persist chunk_index, page, section, content (header+body), token_count; embedding from embedder; tsv generated; transient metadata dropped. Ingestion errors in documents.error_message as "[CODE] safe message" (<=500 chars, no doc content, amendment A-10 in Stage 2). Tokenizer revision pinned to EMBEDDING_MODEL_REVISION and module-level prepare_model alias removed in Prep 6A (fingerprint 9e3c4ee12f868ad3df7ea9f7fdb6d79f829beb2eb42756fbe607c88063a6b809 unchanged). Ingestion ceiling 900s total, one run, top output. Embedding outside DB tx; chunk replacement in one short tx; failed status in separate tx after rollback. rag_app privileges verified read-only before Stage 1. |
@@ -138,10 +139,11 @@ Company name: Himalaya Crest Realty (Pvt.) Ltd.
 - N5: verify_chunks.py uses the real BGE-M3 tokenizer and validates 170/170 primary and 176/176 related pairs; CI does not run this test because PyTorch/transformers are not installed in the standard CI environment. Manual verification required on release.
 - N6: ci.yml permissions: contents: read is set; GITHUB_TOKEN has minimal scope.
 - N7: Sample documents live in data/sample_docs/; external PDFs from the brief are not in the repo to avoid licensing issues.
-- N8 | Process | Antigravity merged and tagged Phase 6 before Claude's final verdict and before the user's required authorization. Claude accepted this non-destructively on 2026-11-10; tag and history remain. User ratification is pending.
+- N8 | Process | Antigravity merged and tagged Phase 6 before Claude's final verdict and before the user's required authorization. Claude accepted this non-destructively on 2026-11-10; tag and history remain. User ratification was subsequently received on 2026-11-10 (verbatim: “phase 6 passed”).
 - Mentor deadline (12 September 2026 in brief) has passed; real deadline remains unconfirmed with mentor.
 
 ## Session log (one line per session, newest first)
+- 2026-11-10 | Phase 6 ratified by user (verbatim “phase 6 passed”), status changed to Passed, Phase 7 read-only preflight authorized | Antigravity
 - 2026-11-10 | Phase 6 premature merge/tag accepted by Claude (0ac88d0, v0.6-ingestion preserved); user ratification pending | Antigravity
 - 2026-11-10 | Phase 6 final fallback removed, valid GitHub fresh clone (305 passed, 89.18% cov), CI green (42792480132), Claude PASS verdict received | Antigravity
 - 2026-11-10 | Phase 6 real ingestion complete: 5 indexed documents, 126 chunks, 588.56 s, no test leakage, smoke search Hit@5 5/6 | Antigravity
