@@ -1,6 +1,6 @@
 """A-6 primary and source-specific related evidence verification (IN-4, IN-5).
 
-Prepare tokenizer once with --prepare-tokenizer. Normal verification is offline.
+Tokenizer prepared via scripts/embed_benchmark.py --prepare-model. Normal verification is offline.
 Never rewrites canonical facts/page maps. JSON output requires --report explicitly.
 """
 
@@ -737,16 +737,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--golden-set", type=Path, default=DEFAULT_GOLDEN)
     parser.add_argument("--expected-map-sha256")
     parser.add_argument("--report", type=Path)
-    parser.add_argument("--prepare-tokenizer", action="store_true")
     args = parser.parse_args(argv)
-    if args.prepare_tokenizer:
-        try:
-            BgeM3TokenCounter.prepare_cache()
-        except Exception as exc:  # noqa: BLE001 -- redact CLI failure details
-            print(f"Tokenizer preparation failed: {type(exc).__name__}")
-            return 1
-        print("BGE-M3 tokenizer cached; no model weights requested")
-        return 0
     try:
         return (
             0

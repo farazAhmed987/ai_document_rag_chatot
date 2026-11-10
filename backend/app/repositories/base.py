@@ -48,18 +48,85 @@ def _safe_role_name(role: str) -> str:
 def tenant_session(
     factory: sessionmaker[Session], company_id: UUID
 ) -> Iterator[Session]:
-    """Open a tenant transaction using a mandatory restricted DB role.
+    """Open a tenant transaction using a direct connection under the restricted runtime role.
+
+    SRD Section 7, 8.1; MT-1, MT-3, MT-5; A-11.
+    Direct runtime connections must already be authenticated as the configured runtime role
+    (e.g. rag_app) without superuser or BYPASSRLS privileges. SET ROLE is not executed.
 
     Args:
-        factory: Session factory bound to the operational database.
+        factory: Session factory bound directly to the runtime database role.
         company_id: Tenant UUID validated before opening a transaction.
 
     Yields:
-        Session under the restricted role with app.company_id set.
+        Session under the restricted role with app.company_id set via set_config.
 
     Raises:
         TypeError: If the tenant ID is not a UUID.
-        TenantRoleError: If the runtime role cannot be assumed.
+        TenantRoleError: If the role is unsafe, the session is not under the runtime role,
+            or the active role possesses superuser or BYPASSRLS privileges.
+    """
+    if not isinstance(company_id, UUID):
+        raise TypeError("company_id must be a uuid.UUID")
+
+    _safe_role_name(get_settings().DB_RUNTIME_ROLE)
+    expected_role = get_settings().DB_RUNTIME_ROLE
+
+    with factory.begin() as session:
+        # Verify active and session roles match the configured restricted runtime role
+        try:
+            row = session.execute(
+                text(
+                    """
+                    SELECT
+                        session_user,
+                        current_user,
+                        (SELECT rolbypassrls FROM pg_roles WHERE rolname = current_user) AS rolbypassrls,
+                        (SELECT rolsuper FROM pg_roles WHERE rolname = current_user) AS rolsuper
+                    """
+                )
+            ).one()
+        except SQLAlchemyError as exc:
+            raise TenantRoleError("Failed to query database role privileges") from exc
+
+        if row.session_user != expected_role or row.current_user != expected_role:
+            raise TenantRoleError(
+                f"tenant_session requires connection role '{expected_role}', "
+                f"found session_user='{row.session_user}' current_user='{row.current_user}'"
+            )
+
+        if row.rolbypassrls or row.rolsuper:
+            raise TenantRoleError(
+                "tenant_session cannot run with superuser or BYPASSRLS privileges"
+            )
+
+        # Set transaction-local tenant context without SET ROLE
+        session.execute(
+            text("SELECT set_config('app.company_id', :company_id, true)"),
+            {"company_id": str(company_id)},
+        )
+        session.info[_TENANT_MARKER] = company_id
+        try:
+            yield session
+        finally:
+            session.info.pop(_TENANT_MARKER, None)
+
+
+@contextmanager
+def admin_assumed_tenant_session(
+    factory: sessionmaker[Session], company_id: UUID
+) -> Iterator[Session]:
+    """Open an administrative maintenance transaction that assumes a tenant role via SET LOCAL ROLE.
+
+    Note: This is reserved exclusively for Hardening Part A regression tests and trusted
+    administrative maintenance. No production ingestion, CLI, or service path may call this helper.
+
+    Args:
+        factory: Session factory bound to an administrative database connection.
+        company_id: Tenant UUID.
+
+    Yields:
+        Session under assumed restricted role with app.company_id set.
     """
     if not isinstance(company_id, UUID):
         raise TypeError("company_id must be a uuid.UUID")
@@ -86,8 +153,6 @@ def tenant_session(
             if role_assumed:
                 failed_body = sys.exc_info()[0] is not None
                 try:
-                    # A failed SQL statement can abort the transaction; in that
-                    # case factory.begin() rolls back both local settings.
                     session.execute(text("RESET ROLE"))
                     session.execute(
                         text("SELECT set_config('app.company_id', '', true)")

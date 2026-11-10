@@ -54,6 +54,12 @@ jobs:
           --module app/adapters/embedders/fake.py
           --module app/adapters/embedders/factory.py
           --module app/adapters/embedders/bge_m3.py
+          --module app/services/ingestion.py
+          --module app/adapters/storage/base.py
+          --module app/adapters/storage/local.py
+          --module app/repositories/chunk.py
+          --module app/core/ingest_errors.py
+          --module app/cli.py
       - name: Pre-commit
         run: pre-commit run --all-files
       - name: Protected file integrity

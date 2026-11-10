@@ -142,6 +142,11 @@ def smoke_search(
 
 def prepare(settings: Settings) -> None:
     """Explicitly download the pinned model and validate its dimension."""
+    token_counter = BgeM3TokenCounter(
+        model_name=settings.EMBEDDING_MODEL_NAME,
+        model_revision=settings.EMBEDDING_MODEL_REVISION,
+    )
+    token_counter.prepare_cache()
     BgeM3Embedder.prepare_model(
         model_name=settings.EMBEDDING_MODEL_NAME,
         model_revision=settings.EMBEDDING_MODEL_REVISION,

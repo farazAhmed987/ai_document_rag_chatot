@@ -103,3 +103,17 @@ class EmbeddingInputError(AppError):
 
     default_code = "embedding_input_too_long"
     status_code = 422
+
+
+class StatusPersistFailedError(AppError):
+    """Failure while recording document failure status in database."""
+
+    default_code = "INGESTION_STATUS_PERSIST_FAILED"
+    status_code = 500
+
+
+class DatabaseConfigurationError(AppError):
+    """Database configuration is missing or invalid."""
+
+    default_code = "DATABASE_CONFIG_ERROR"
+    status_code = 500

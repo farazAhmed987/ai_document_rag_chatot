@@ -35,6 +35,7 @@ class DocumentRepository:
     def create(
         self,
         *,
+        document_id: UUID | None = None,
         filename: str,
         file_type: str,
         file_path: str,
@@ -42,15 +43,18 @@ class DocumentRepository:
         size_bytes: int | None = None,
     ) -> Document:
         """Insert a validated document with initial uploaded status."""
-        document = Document(
-            company_id=self.company_id,
-            filename=filename,
-            file_type=file_type,
-            file_path=file_path,
-            sha256=sha256,
-            size_bytes=size_bytes,
-            status="uploaded",
-        )
+        doc_kwargs: dict[str, object] = {
+            "company_id": self.company_id,
+            "filename": filename,
+            "file_type": file_type,
+            "file_path": file_path,
+            "sha256": sha256,
+            "size_bytes": size_bytes,
+            "status": "uploaded",
+        }
+        if document_id is not None:
+            doc_kwargs["id"] = document_id
+        document = Document(**doc_kwargs)
         self.session.add(document)
         self.session.flush()
         return document

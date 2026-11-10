@@ -127,3 +127,16 @@ source-specific evidence map. Original facts and sample documents are unchanged.
   - Identical chunk counts across all 5 PDFs: Company_Overview.pdf (32), FAQs.pdf (16), Policies_and_Terms.pdf (24), Property_Listings.pdf (19), Services_and_Fees.pdf (35); Total = 126.
   - Both verification runs confirmed Primary: 170/170 and Related: 176/176 (`verify_chunks.py` stable diff empty, PASS).
 - **Scope:** No chunk content, order, indices, pages, sections or counts changed. No schema migration was created. Database pgvector column remains `vector(1024)`.
+
+## A-11 — Direct `rag_app` runtime connection and safe failure lifecycle (D1 Option A) (2026-11-09)
+
+- **Title:** Direct `rag_app` runtime connection and safe failure lifecycle
+- **Decision:**
+  - Runtime service operations connect directly to the database as the unprivileged `rag_app` user via `RUNTIME_DATABASE_URL`, rather than assuming the role dynamically from a superuser connection via `SET LOCAL ROLE`.
+  - The direct `rag_app` connection enforces multi-tenant row-level security (RLS) continuously without risk of privilege escalation. `RESET ROLE` inside tenant sessions cannot bypass RLS because the underlying session user is `rag_app` with `rolsuper=false` and `rolbypassrls=false`.
+  - Administrative operations (such as initial tenant creation via `create-company`) execute via privileged `admin_session` using `DATABASE_URL`.
+  - Strict file validation (`validate_ingestion_file`) enforces uppercase typed error codes (`UNSUPPORTED_FILE_TYPE`, `CORRUPT_FILE`, `EMPTY_FILE`, `FILE_TOO_LARGE`, `DECODE_FAILED`) and exact dependency pin `filetype==1.2.0`.
+  - Ingestion failures emit structured logs and persist sanitized error codes to the database without exposing raw exception text, document contents, or internal secrets. If persisting status to the database fails after rollback, typed `StatusPersistFailedError` is raised.
+  - Document reprocessing idempotently accepts documents in `indexed`, `failed`, or `processing` states.
+- **Proof:** All 46 unit tests and 10 live database integration tests pass under direct `rag_app` connection isolation (`test_db_direct_runtime_connection_isolation`).
+- **Scope:** No schema migration created. Strict RLS policy enforcement preserved.
