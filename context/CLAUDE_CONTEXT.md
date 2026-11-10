@@ -21,24 +21,25 @@ Multi-company RAG chatbot dashboard for the DevSynt AI Internship (Task 5). Comp
 
 ## Git Baseline & Release Tags
 - Phase 4 `main` and `v0.4-chunking` target are `c861425` (`c8614259002399f165e4bf3f183ec37d25deeb18`).
-- Phase 5 tested code SHA: `ff08c62` (`ff08c62a04568f2ddda9cdf1dd6a50c239d01c8d`).
-- Phase 5 merge SHA: `5e2bf49` (`5e2bf49b32af8ba20b4692870eaf314ef0f644db`).
-- `v0.5-embedding` release tag target: `5e2bf49b32af8ba20b4692870eaf314ef0f644db`.
-- Phase 5 Main Merge CI URL: https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42495781663.
-- Tag Sequence: `v0.0-skeleton`, `v0.0-tooling`, `v0.1-sample-data`, `v0.2-database`, `v0.2.1-db-hardening` (`8c186d0`), `v0.3-extraction` (`65c4d8c`), `v0.3.1-extraction-hardening` (`92f4ad5`), `v0.4-chunking` (`c861425`), `v0.5-embedding` (`5e2bf49`).
+- Phase 5 merge SHA: `5e2bf49` (`5e2bf49b32af8ba20b4692870eaf314ef0f644db`); tagged `v0.5-embedding`.
+- Phase 6 tested code SHA: `dcfc9d5` (`dcfc9d501323bfc9d45f7dfb931f19e30464d875`).
+- Phase 6 merge SHA: `0ac88d0` (`0ac88d0194c15bf55f6163e2c40adbd8c232235b`).
+- `v0.6-ingestion` release tag target: `0ac88d0194c15bf55f6163e2c40adbd8c232235b`.
+- Phase 6 Main Merge CI URL: https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42796649207.
+- Tag Sequence: `v0.0-skeleton`, `v0.0-tooling`, `v0.1-sample-data`, `v0.2-database`, `v0.2.1-db-hardening` (`8c186d0`), `v0.3-extraction` (`65c4d8c`), `v0.3.1-extraction-hardening` (`92f4ad5`), `v0.4-chunking` (`c861425`), `v0.5-embedding` (`5e2bf49`), `v0.6-ingestion` (`0ac88d0`).
 
 ## Phase 5 Status & Embedding Contract
-- Snapshot: Phase 5 passed. User authorized release on 2026-11-08 ("Phase 5 passed") following Claude PASS. Merged into main at `5e2bf49b32af8ba20b4692870eaf314ef0f644db` (`5e2bf49`) and tagged `v0.5-embedding`. Tested code commit: `ff08c62a04568f2ddda9cdf1dd6a50c239d01c8d`. Main CI passed: https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42495781663. Controlled benchmarks passed at 272.23 s and 224.10 s (limit 600 s; 771.22 s outlier retained as documented limitation). Chunk fingerprints identical across transformers 4.57.6 and 5.22.2 (`9e3c4ee12f868ad3df7ea9f7fdb6d79f829beb2eb42756fbe607c88063a6b809`; primary 170/170, related 176/176).
-- Model cache & validation fixes: `prepare_model()` raises `EmbeddingConfigurationError` when offline flags are present; `bge_m3.py` exports module-level `prepare_model` (non-blocking deviation to be removed in next authorized code commit); model dimension is validated under `_MODEL_LOCK` before caching so dimension mismatch never poisons `_MODEL_CACHE`; `max_seq_length` is explicitly assigned configured `max_length` before caching or encoding; missing-cache error directs user to `python scripts/embed_benchmark.py --prepare-model`.
+- Snapshot: Phase 5 passed. Merged into main at `5e2bf49b32af8ba20b4692870eaf314ef0f644db` (`5e2bf49`) and tagged `v0.5-embedding`.
 - Option A dependency alignment (A-9): `torch==2.15.0+cpu`, `sentence-transformers==6.2.0`, `transformers==5.22.2`, `tokenizers==0.23.3`, `huggingface-hub==2.4.0`.
-- Two-layer offline enforcement: `local_files_only=True` plus `HF_HUB_OFFLINE="1"` and `TRANSFORMERS_OFFLINE="1"` set before heavy imports; thread-safe process cache with double-checked lock. Factory validates dimension matches `CHUNK_EMBEDDING_DIMENSION = 1024` and rejects unknown backends before model import.
 - Locked decisions: A-3 (chunking budgets/segments), A-6 (cross-document evidence map v1.0.1, number boundaries), A-7 (CPU-only, normalized 1024-d BAAI/bge-m3 pinned to revision 5617a9f61b028005a4858fdac845db406aefb181, no prefix, max length 2048 with typed error on excess; fake embedder for core/CI without torch; benchmark under 10m), A-8 (default embedding batch size 16 selected from CPU benchmark), A-9 (Option A dependency alignment).
-- Status & Governance: Phase 5 is PASSED, MERGED and TAGGED (`v0.5-embedding`). Phase 6 authorized by Claude 2026-11-08, Stage 1 (tests only) pending. Phase 6 is NOT passed; no implementation exists. No schema migration authorized.
 
-## Phase 6 Authorization & Ingestion Contract (A-11 / D1 Option A)
-- Current step: Phase 6 implementation gates and real ingestion completed successfully. Tested code SHA: `dcfc9d501323bfc9d45f7dfb931f19e30464d875`. Branch: `phase-6-ingestion`. GitHub Actions CI run 42792480132 succeeded (https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42792480132). Real 5-PDF ingestion indexed 5 documents (34 pages, 126 chunks) in 588.56s. Informational smoke search achieved any-expected-source Hit@5 = 5/6 (Q023 partial: Services_and_Fees matched, Property_Listings missed). Phase 6 awaits Claude's verdict. Phase 6 is NOT passed, NOT merged, and NOT tagged. Phase 7 is NOT authorized.
+## Phase 6 Status & Ingestion Contract (A-11 / D1 Option A)
+- Snapshot: Phase 6 passed. User authorized release on 2026-11-10 ("Phase 6 passed") following Claude PASS. Merged into main at `0ac88d0194c15bf55f6163e2c40adbd8c232235b` (`0ac88d0`) and tagged `v0.6-ingestion`. Tested code commit: `dcfc9d501323bfc9d45f7dfb931f19e30464d875`. Main CI passed: https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42796649207. Fresh GitHub clone: 305 passed, 1 skipped, 89.18% cov. DB suite 27 passed on runtime rag_app login (A-11). Real ingestion: 5/5 indexed, 126 chunks, 588.56 s (ceiling 900 s). Smoke (informational, any-expected-source Hit@5): 5/6; Q023 retrieved 1 of 2 expected documents.
+- Current step: Phase 7 pre-flight. Phase 7 NOT yet authorized. New process from Phase 7: single-stage implementation with tests, full gate once per phase.
+- Data note: company "Himalaya Crest Realty (Pvt.) Ltd." and its 5 indexed documents / 126 chunks are kept in the ops DB for Phase 7. Do not delete or reprocess without Claude approval.
+- Known issues: Q003/Q023 retrieval misses (Phase 7); runtime variance on this CPU; deadline unconfirmed.
 - Direct `rag_app` connection: Service connects directly via `RUNTIME_DATABASE_URL` under `rag_app` (`rolsuper=false`, `rolbypassrls=false`). RLS is enforced continuously without `SET LOCAL ROLE` privilege-escalation risk. Administrative tasks use `admin_session` via `DATABASE_URL`.
-- ChunkDraft->chunks mapping (no migration): persist `chunk_index`, `page`, `section`, `content` (header+body), `token_count`; `embedding` populated by embedder; `tsv` generated by PostgreSQL expression, never written; `header`/`body`/`is_table`/`table_part`/`segment_key`/`sub_min_reason` are transient chunker metadata not persisted to database.
+- ChunkDraft->chunks mapping (no migration): persist `chunk_index`, `page`, `section`, `content` (header+body), `token_count`; `embedding` populated by embedder; `tsv` generated by PostgreSQL expression, never written; transient chunker metadata dropped.
 - Ingestion error handling: errors stored in `documents.error_message` formatted as `"[CODE] safe message"` (<=500 chars, no raw document content); failures emit structured logs and typed `StatusPersistFailedError` if failure recording fails.
 - Tokenizer & embedder hardening (Prep 6A): tokenizer revision pinned to `EMBEDDING_MODEL_REVISION` and module-level `prepare_model` alias removed; chunk fingerprint `9e3c4ee12f868ad3df7ea9f7fdb6d79f829beb2eb42756fbe607c88063a6b809` remains unchanged.
 - Reprocess lifecycle: idempotent chunk replacement accepting `indexed`, `failed`, or `processing` status.

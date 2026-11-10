@@ -1,19 +1,17 @@
 # Project Status
-Last updated: 2026-11-10 | Updated by: Antigravity | Current phase: Phase 6 Ingestion service end to end. Implementation gates and real ingestion completed successfully. Tested code SHA: dcfc9d501323bfc9d45f7dfb931f19e30464d875. CI run 42792480132 (success: https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42792480132). Phase 6 is NOT passed, NOT merged, and NOT tagged; awaiting Claude review. Phase 7 is NOT authorized.
+Last updated: 2026-11-10 | Updated by: Antigravity | Current phase: Phase 6 passed and v0.6-ingestion released. Tag target merge SHA: 0ac88d0194c15bf55f6163e2c40adbd8c232235b. Main CI: https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42796649207. Phase 7 pre-flight pending Claude prompt.
 
 Rules for this file: no secrets or connection strings; keep it under about 150 lines; when the logs grow, move old entries to context/archive/status-YYYY-MM.md. Historical snapshots: context/archive/preflight-8735072/.
 
 ## Environment
 - OS: Fedora Linux 44 | Python: 3.12.16 | venv: .venv at repo root | IDE: Antigravity
 - Repo: https://github.com/farazAhmed987/ai_document_rag_chatot
-- Current origin/main after Phase 4 release: c8614259002399f165e4bf3f183ec37d25deeb18
-- Phase 5 code tested: ff08c62a04568f2ddda9cdf1dd6a50c239d01c8d
-- Phase 5 code merge: 5e2bf49b32af8ba20b4692870eaf314ef0f644db
-- v0.5-embedding tag target: 5e2bf49b32af8ba20b4692870eaf314ef0f644db
-- Phase 5 Main Merge CI: https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42495781663
-- Branch State: phase-6-ingestion (code tested at dcfc9d501323bfc9d45f7dfb931f19e30464d875)
+- Current origin/main after Phase 6 release: 0ac88d0194c15bf55f6163e2c40adbd8c232235b
+- Phase 6 code tested: dcfc9d501323bfc9d45f7dfb931f19e30464d875
+- Phase 6 code merge: 0ac88d0194c15bf55f6163e2c40adbd8c232235b
+- v0.6-ingestion tag target: 0ac88d0194c15bf55f6163e2c40adbd8c232235b
+- Phase 6 Main Merge CI: https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42796649207
 - Pinned Model Revision: BAAI/bge-m3 at 5617a9f61b028005a4858fdac845db406aefb181
-- Release Tag Target: v0.5-embedding (Phase 5 released at 5e2bf49b32af8ba20b4692870eaf314ef0f644db)
 - Operational database: PostgreSQL 17.11 on Supabase (pgvector 0.8.2, session pooler, RLS forced, rag_app role restricted)
 - Analytics database: PostgreSQL 17.11 on Supabase (session pooler, independent migrations)
 - RLS Live Verification: VERIFIED (pg_policies uses app.company_id on all 5 tables; rag_app has rolbypassrls=False, rolinherit=True; role-membership inheritance not audited in this preflight)
@@ -30,7 +28,7 @@ Rules for this file: no secrets or connection strings; keep it under about 150 l
 | — | Hardening Part B: Extraction, structure & CI hardening | Passed | v0.3.1-extraction-hardening | 2026-10-31 | Commit 92f4ad5; 100 items (99 pass, 1 opt skip), 90.75% cov, 170/170 facts |
 | 4 | Chunking | Passed | v0.4-chunking | 2026-11-07 | Primary 170/170; related evidence 176/176; evidence map v1.0.1; final tests and CI green. Include https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42385811834. |
 | 5 | Embedding module (BGE-M3) | Passed | v0.5-embedding | 2026-11-08 | Code tested at ff08c62; merge SHA 5e2bf49b32af8ba20b4692870eaf314ef0f644db; main CI https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42495781663; Claude PASS 2026-11-08; user “Phase 5 passed” 2026-11-08. Benchmark 272.23 s / 224.10 s (limit 600 s); 771.22 s outlier documented. Chunk fingerprint identical across transformers 4.57.6 / 5.22.2. Pins recorded under A-9. |
-| 6 | Ingestion service end to end (CLI) | Implementation & gates complete; real ingestion verified; smoke search evaluated; awaiting Claude verdict | | | Code tested at dcfc9d5; CI run 42792480132 (success); real 5-PDF ingestion: 126 chunks, 34 pages, 588.56s; smoke search any-expected-source Hit@5: 5/6 (Q023 partial: Services_and_Fees matched, Property_Listings missed); 305 unit pass, 1 skipped, 89.18% cov. Phase 6 is NOT passed, NOT merged, and NOT tagged. Phase 7 is NOT authorized. |
+| 6 | Ingestion service + CLI | Passed | v0.6-ingestion | 2026-11-10 | Code tested at dcfc9d5; merge SHA 0ac88d0194c15bf55f6163e2c40adbd8c232235b; main CI https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42796649207; Claude PASS 2026-11-10; user "Phase 6 passed" 2026-11-10. Fresh GitHub clone: 305 passed, 1 skipped, 89.18% cov. DB suite 27 passed on runtime rag_app login (A-11). Real ingestion: 5/5 indexed, 126 chunks, 588.56 s (ceiling 900 s). Smoke (informational, any-expected-source Hit@5): 5/6; Q023 retrieved 1 of 2 expected documents. |
 | 7 | Retrieval (dense, keyword, RRF, rerank) and golden-set evaluation | Not started | | | |
 | 8 | LLM answer, threshold gate, citations, Q&A logging | Not started | | | |
 | 9 | FastAPI endpoints | Not started | | | |
@@ -38,7 +36,9 @@ Rules for this file: no secrets or connection strings; keep it under about 150 l
 | 11 | Hardening, README, diagram, demo video, LinkedIn post | Not started | | | |
 
 ## Current step
-Current step: Phase 6 implementation gates and real ingestion completed successfully. Tested code SHA: dcfc9d501323bfc9d45f7dfb931f19e30464d875. GitHub Actions CI run 42792480132 succeeded (https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42792480132). Real 5-PDF ingestion indexed 5 documents (Company_Overview: 7p/32c, FAQs: 5p/16c, Policies_and_Terms: 7p/24c, Property_Listings: 7p/19c, Services_and_Fees: 8p/35c; total 34 pages, 126 chunks) in 588.56s. Informational smoke search achieved any-expected-source Hit@5 = 5/6 (83.3%); Q023 had partial multi-document coverage (Services_and_Fees matched ranks 4-5, Property_Listings not in top-5). Phase 6 awaits Claude's verdict. Phase 6 is NOT passed, NOT merged, and NOT tagged. Phase 7 is NOT authorized.
+Current step: Phase 7 pre-flight. Phase 7 NOT yet authorized. New process from Phase 7: single-stage implementation with tests, full gate once per phase.
+Data note: company "Himalaya Crest Realty (Pvt.) Ltd." and its 5 indexed documents / 126 chunks are kept in the ops DB for Phase 7. Do not delete or reprocess without Claude approval.
+Known issues: Q003/Q023 retrieval misses (Phase 7); runtime variance on this CPU; deadline unconfirmed.
 
 
 ## Phase 4 Chunking Contract & Governance
@@ -55,6 +55,7 @@ Current step: Phase 6 implementation gates and real ingestion completed successf
 ## Gate log (newest first, append only)
 | Date | Phase | Commands run | Result | Commit or tag |
 |---|---|---|---|---|
+| 2026-11-10 | 6 Release & Merge | merge --no-ff, ruff, format, mypy, pytest core + cov (89.18%), check_phase_coverage, 27 DB tests (rag_app), verify_chunks (170/170, 176/176), chunk_fingerprint (126, PASS), 6 model tests, alembic current, main CI 42796649207 | PASS | 0ac88d0194c15bf55f6163e2c40adbd8c232235b / tag v0.6-ingestion |
 | 2026-11-10 | 6 Fallback Removal & Final Gate | ruff, format, mypy, pytest unit + cov (89.18%), check_phase_coverage (all >=85%), 27 db tests, 6 model tests, GitHub-origin fresh clone, CI 42792480132, real 5-PDF ingestion (5 docs, 34 pages, 126 chunks, 588.56s), smoke_search (any-expected Hit@5: 5/6; Q023 partial), post-run DB checks (5 docs, 126 chunks, 0 dup, 0 test companies, rag_app verified) | PASS | dcfc9d501323bfc9d45f7dfb931f19e30464d875 (awaiting Claude review) |
 | 2026-11-09 | 6 Corrective Implementation (A-11) | ruff, mypy, pytest --cov (88.71%), check_phase_coverage (all >=85%), 27 db tests, chunk_fingerprint (126, PASS), verify_chunks (170/170, 176/176), 6 model tests, fresh-clone gate, CI 42656517317 | PASS | 246a7e5f8831caf1a2e106cbafb456dff90c13d4 (awaiting Claude review) |
 | 2026-11-08 | 5 Release & Merge | merge --no-ff, ruff, format, mypy, pytest --cov (89.57%), verify_chunks (170/170, 176/176), 6 model tests, main CI 42495781663 | PASS | 5e2bf49b32af8ba20b4692870eaf314ef0f644db / tag v0.5-embedding |
@@ -74,6 +75,7 @@ Current step: Phase 6 implementation gates and real ingestion completed successf
 ## Decisions log (newest first)
 | Date | Decision | Reason |
 |---|---|---|
+| 2026-11-10 | Phase 6 passed and tagged v0.6-ingestion | User authorized release following Claude PASS 2026-11-10. Merged to main at 0ac88d0194c15bf55f6163e2c40adbd8c232235b; main CI 42796649207 passed; tagged v0.6-ingestion. Real company data (5 docs, 126 chunks) retained in ops DB for Phase 7. |
 | 2026-11-10 | Phase 6 real ingestion and informational smoke search complete | CLI create-company generates UUID and passes company_id to CompanyRepository; smoke_search constructs embedder via keyword arg create_embedder(settings=settings). Ingested 5 sample PDFs into Himalaya Crest Realty (Pvt.) Ltd. in 588.56s total; produced exactly 126 chunks matching Phase 4 fingerprint. Smoke search hit@5 achieved 5/6 (83.3%). Database verified under direct rag_app runtime connection with active RLS. |
 | 2026-11-08 | Phase 6 authorized by Claude; Stage 1 tests-first pending | Live RLS verified (app.company_id, rag_app rolbypassrls=false, FORCE RLS on 5 tables, ops at 0002_ops_hardening). ChunkDraft->chunks mapping (no migration): persist chunk_index, page, section, content (header+body), token_count; embedding from embedder; tsv generated; transient metadata dropped. Ingestion errors in documents.error_message as "[CODE] safe message" (<=500 chars, no doc content, amendment A-10 in Stage 2). Tokenizer revision pinned to EMBEDDING_MODEL_REVISION and module-level prepare_model alias removed in Prep 6A (fingerprint 9e3c4ee12f868ad3df7ea9f7fdb6d79f829beb2eb42756fbe607c88063a6b809 unchanged). Ingestion ceiling 900s total, one run, top output. Embedding outside DB tx; chunk replacement in one short tx; failed status in separate tx after rollback. rag_app privileges verified read-only before Stage 1. |
 | 2026-11-08 | Phase 5 passed and tagged v0.5-embedding | User authorized release; controlled rerun passed (272.23 s and 224.10 s, limit 600 s); main merge CI 42495781663 passed; tagged at 5e2bf49b32af8ba20b4692870eaf314ef0f644db |
