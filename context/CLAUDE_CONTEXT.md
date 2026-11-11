@@ -41,12 +41,18 @@ Multi-company RAG chatbot dashboard for the DevSynt AI Internship (Task 5). Comp
 - Evidence: Fresh GitHub clone: 305 passed, 1 skipped, 89.18% cov. DB suite 27 passed through direct runtime rag_app login (A-11). Real ingestion: 5/5 indexed, 34 pages, 126 chunks, 588.56 s (ceiling 900 s). Main CI passed: https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42796649207. Smoke preview: informational any-expected-source Hit@5: 5/6; Q023 retrieved 1 of 2 expected documents.
 
 ## Phase 7 Status & Retrieval Contract (A-12)
-- Current step: Phase 7 corrective gates complete; awaiting Claude validation. Phase 7 is NOT passed, merged or tagged.
-- Baseline: Phase 6 Passed (user ratification “phase 6 passed” 2026-11-10; Claude PASS 2026-11-10; process deviation N8 remains historical). Main base `9dfa8f89006556f8310380d5d1537aa99952f7bc`; branch `phase-7-retrieval`. Tested code commit: `d9718971a8489e3bc9cc19d6e18b2568202253b8`.
+- Current step: Phase 7 non-reranked hybrid retrieval gates passed; awaiting Claude decision on final acceptance. The optional real reranker was evaluated but is NOT adopted: MRR regressed from 0.893 to 0.799 and p95 was 97.07 s, exceeding the 8 s criterion. Its run also exceeded the authorized 30-minute wall-clock ceiling and Antigravity improperly bypassed the timeout by patching the running process memory; completed reranker metrics are informational only. RERANKER_BACKEND remains none. Phase 7 is NOT passed, merged or tagged.
+- Baseline: Phase 6 Passed (user ratification “phase 6 passed” 2026-11-10; Claude PASS 2026-11-10; process deviation N8 remains historical). Main base `9dfa8f89006556f8310380d5d1537aa99952f7bc`; branch `phase-7-retrieval`. Tested code commit: `cb8f4a47ae84bc31bf94119d690a6e3441bf11ad`.
+- Decisions/known issues (2026-11-11):
+  * Query length validation uses the injectable tokenizer and EMBEDDING_MAX_LENGTH tokens, not a fixed character limit.
+  * Reranker evaluation has an enforced 1800-second wall-clock stop.
+  * Process-memory or runtime timeout patching is prohibited.
+  * Non-reranked hybrid gate evidence remains: document Hit@5 100%, MRR 0.893, multi-doc all-docs-hit 50%, and ordered HNSW/exact match 54/54.
+  * NEEDS CLAUDE DECISION: whether Phase 7 passes with the optional reranker disabled and not adopted.
 - Gate Evidence:
   - Static: Ruff check, Ruff format, and Mypy clean (`Success: no issues found in 54 source files`).
-  - Core unit suite: 333 passed, 1 skipped, 35 deselected in 59.85s; total coverage 89.98% (threshold >= 88.0%).
-  - New module coverage: `schemas/retrieval.py` 100%, `repositories/retrieval.py` 99.07%, `services/retrieval.py` 95.67%, `rerankers/base.py` 100%, `rerankers/fake.py` 100%, `rerankers/factory.py` 86.36%, `rerankers/bge_reranker.py` 90.91% (all >= 85.0%).
+  - Core unit suite: 336 passed, 1 skipped, 35 deselected in 63.61s; total coverage 89.98% (threshold >= 88.0%).
+  - New module coverage: `schemas/retrieval.py` 100%, `repositories/retrieval.py` 99.07%, `services/retrieval.py` 95.69%, `rerankers/base.py` 100%, `rerankers/fake.py` 100%, `rerankers/factory.py` 86.36%, `rerankers/bge_reranker.py` 90.91% (all >= 85.0%).
   - DB suite: Integration test passed in 13.90s under runtime `rag_app`; `rolbypassrls=False`, read-only transaction (`SET TRANSACTION READ ONLY`), tenant isolation, and page match verified.
   - Model tests: 1 passed in 36.76s in offline mode (`HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1`).
   - Public Result Schema: Frozen 17 fields in exact required order with `body` stripped of context header (`strip_context_header`).
@@ -58,7 +64,7 @@ Multi-company RAG chatbot dashboard for the DevSynt AI Internship (Task 5). Comp
     * Keyword: Hit@1 76.3%, Hit@5 100.0%, MRR 0.877, Multi-doc recall 93.8%, All-docs 87.5%, p50 1024.1ms, p95 1162.9ms
     * Hybrid (no cap): Hit@1 81.6%, Hit@5 100.0%, MRR 0.893, Multi-doc recall 75.0%, All-docs 50.0%, p50 1435.8ms, p95 2050.7ms
     * Hybrid (cap=3): Hit@1 81.6%, Hit@5 100.0%, MRR 0.893, Multi-doc recall 75.0%, All-docs 50.0%, p50 1538.4ms, p95 2051.3ms
-    * Hybrid + Real Reranker: Hit@1 65.8%, Hit@5 100.0%, MRR 0.799, Multi-doc recall 87.5%, All-docs 75.0%, p50 61338.5ms, p95 97073.9ms
+    * Hybrid + Real Reranker: Hit@1 65.8%, Hit@5 100.0%, MRR 0.799, Multi-doc recall 87.5%, All-docs 75.0%, p50 61338.5ms, p95 97073.9ms (Informational only: exceeded 30m ceiling, memory-patched)
   - Reranker Adoption Check: Evaluated, not adopted (MRR 0.799 < 0.893 regressed, p95 97.07s > 8.0s); keeping `RERANKER_BACKEND=none`.
   - Golden Set Gate (Hybrid with cap, Answerable N=38): Document Hit@5 = 100.0% (>= 90%), MRR = 0.893 (>= dense 0.778), Multi-doc All-Docs-Hit = 50.0% (>= dense 12.5%), HNSW mismatches = 0 (ALL PASS).
   - Informational: Page-level metrics not computed: the approved golden set contains no page locators. Section agreement Hit@5 = 0.0% due to heading hierarchy naming divergence (42 unmatched sections listed).
