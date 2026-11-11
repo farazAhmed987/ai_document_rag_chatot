@@ -42,7 +42,15 @@ jobs:
         run: mypy app
       - name: Tests including committed sample PDFs
         working-directory: backend
-        run: pytest -m "not db and not model" --cov=app --cov-report=term-missing --cov-report=json:coverage.json --cov-fail-under=88
+        run: |
+          set -o pipefail
+          pytest -m "not db and not model" --cov=app --cov-report=term-missing --cov-report=json:coverage.json --cov-fail-under=88 -v 2>&1 | tee /tmp/pytest_out.txt || {
+            echo "### Pytest Failure Details" >> "$GITHUB_STEP_SUMMARY"
+            echo '```text' >> "$GITHUB_STEP_SUMMARY"
+            cat /tmp/pytest_out.txt >> "$GITHUB_STEP_SUMMARY"
+            echo '```' >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          }
       - name: Phase module coverage
         working-directory: backend
         run: >-
