@@ -23,7 +23,7 @@ import statistics
 import sys
 import time
 from collections import Counter
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from pathlib import Path
 from typing import Any
 from uuid import UUID
@@ -50,6 +50,7 @@ ANSWERABLE_TYPES = frozenset(
     {"direct", "table", "multi_part", "multi_doc", "roman_urdu"}
 )
 PINNED_RERANKER_REVISION = "953dc6f6f85a1b2dbfca4c34a2796e7dde08d41e"
+RERANKER_EVAL_MAX_SECONDS: float = 1800.0
 
 
 def normalize_doc_stem(doc_name: str) -> str:
@@ -280,11 +281,67 @@ def find_unmatched_golden_sections(
     return unmatched
 
 
+def evaluate_questions_for_mode(
+    service: RetrievalService,
+    company_id: UUID,
+    questions: list[dict[str, Any]],
+    mode: str,
+    *,
+    is_reranker_mode: bool = False,
+    clock: Callable[[], float] | None = None,
+    max_seconds: float = RERANKER_EVAL_MAX_SECONDS,
+    special_queries_results: dict[str, dict[str, list[str]]] | None = None,
+    mode_key: str = "",
+) -> tuple[bool, list[dict[str, Any]], list[float]]:
+    """Evaluate questions for a retrieval mode, enforcing wall-clock timeout on reranker."""
+    time_func = clock or time.perf_counter
+    q_evals: list[dict[str, Any]] = []
+    total_latencies: list[float] = []
+
+    t_start = time_func()
+
+    for q_idx, q in enumerate(questions, start=1):
+        t_q0 = time_func()
+        res = service.search(
+            company_id=company_id,
+            query=q["question"],
+            top_n=5,
+            mode=mode,  # type: ignore[arg-type]
+        )
+        q_latency = (time_func() - t_q0) * 1000.0
+        total_latencies.append(q_latency)
+        eval_data = evaluate_question(q, res.chunks)
+        q_evals.append(eval_data)
+
+        # Record special queries Q003 and Q023
+        if special_queries_results is not None:
+            qid = q.get("id")
+            if qid in special_queries_results:
+                special_queries_results[qid][mode_key] = [
+                    c.document_name for c in res.chunks[:5]
+                ]
+
+        if is_reranker_mode:
+            elapsed = time_func() - t_start
+            if elapsed > max_seconds:
+                print(
+                    f"\nERROR: Reranker evaluation exceeded {max_seconds:.1f}s wall-clock limit!"
+                )
+                print(f"Completed questions: {q_idx}/{len(questions)}")
+                print(f"Elapsed wall time: {elapsed:.2f}s")
+                print("NEEDS CLAUDE DECISION")
+                return False, q_evals, total_latencies
+
+    return True, q_evals, total_latencies
+
+
 def run_evaluation(
     golden_path: Path,
     company_name: str = DEFAULT_COMPANY,
     settings: Settings | None = None,
     output_path: Path | None = None,
+    *,
+    clock: Callable[[], float] | None = None,
 ) -> bool:
     """Run full Phase 7 evaluation across all 54 questions and 5 retrieval modes."""
     cfg = settings or get_settings()
@@ -392,28 +449,22 @@ def run_evaluation(
         service.reranker = reranker_instance
         service.settings.RETRIEVAL_MAX_PER_DOC = per_doc_cap
 
-        q_evals: list[dict[str, Any]] = []
-        total_latencies: list[float] = []
-
-        for q in questions:
-            t_q0 = time.perf_counter()
-            res = service.search(
-                company_id=company_id,
-                query=q["question"],
-                top_n=5,
-                mode=s_mode,
-            )
-            q_latency = (time.perf_counter() - t_q0) * 1000.0
-            total_latencies.append(q_latency)
-            eval_data = evaluate_question(q, res.chunks)
-            q_evals.append(eval_data)
-
-            # Record special queries Q003 and Q023
-            qid = q.get("id")
-            if qid in special_queries_results:
-                special_queries_results[qid][mode_key] = [
-                    c.document_name for c in res.chunks[:5]
-                ]
+        is_reranker = mode_key == "hybrid_rerank"
+        completed, q_evals, total_latencies = evaluate_questions_for_mode(
+            service=service,
+            company_id=company_id,
+            questions=questions,
+            mode=s_mode,
+            is_reranker_mode=is_reranker,
+            clock=clock,
+            max_seconds=RERANKER_EVAL_MAX_SECONDS,
+            special_queries_results=special_queries_results,
+            mode_key=mode_key,
+        )
+        if not completed:
+            admin_engine.dispose()
+            runtime_engine.dispose()
+            return False
 
         # Metrics computation
         answerable_evals = [e for e in q_evals if e["type"] in ANSWERABLE_TYPES]

@@ -10,7 +10,7 @@ from uuid import UUID, uuid4
 
 import pytest
 
-from app.core.config import Settings
+from app.core.config import Settings, get_settings
 from app.core.errors import (
     RerankerConfigurationError,
     RetrievalInputError,
@@ -103,21 +103,19 @@ def test_normalize_query_collapses_whitespace_and_nfkc() -> None:
     assert cleaned_ligature == "What is the specific fee?"
 
 
-def test_normalize_query_rejects_empty_and_whitespace() -> None:
-    """Empty or whitespace-only query raises RetrievalInputError."""
+def test_empty_query_uses_retrieval_input_error() -> None:
+    """Empty or whitespace-only query raises RetrievalInputError with code RETRIEVAL_INPUT_ERROR."""
     service = RetrievalService(
         session_factory=MagicMock(),
         embedder=_DummyEmbedder(),
         token_counter=_DummyTokenCounter(count_val=0),
     )
 
-    with pytest.raises(RetrievalInputError) as exc_info:
-        service.normalize_query("   \n\t  ")
-    assert exc_info.value.code == "RETRIEVAL_INPUT_ERROR"
-
-    with pytest.raises(RetrievalInputError) as exc_info:
-        service.normalize_query("")
-    assert exc_info.value.code == "RETRIEVAL_INPUT_ERROR"
+    for empty_input in ["", "   ", "\t\n\r  ", "      "]:
+        with pytest.raises(RetrievalInputError) as exc_info:
+            service.normalize_query(empty_input)
+        assert exc_info.value.code == "RETRIEVAL_INPUT_ERROR"
+        assert "Query cannot be empty" in str(exc_info.value)
 
 
 def test_normalize_query_rejects_non_string() -> None:
@@ -131,19 +129,56 @@ def test_normalize_query_rejects_non_string() -> None:
         service.normalize_query(None)  # type: ignore[arg-type]
 
 
-def test_normalize_query_enforces_token_limit() -> None:
-    """Overlong query exceeding maximum allowed tokens raises RetrievalInputError."""
+def test_query_at_embedding_token_limit_is_accepted() -> None:
+    """Exactly 2048 fake tokens is accepted without error."""
+    mock_factory = MagicMock()
     service = RetrievalService(
-        session_factory=MagicMock(),
+        session_factory=mock_factory,
         embedder=_DummyEmbedder(),
-        token_counter=_DummyTokenCounter(count_val=600),
-        max_query_tokens=512,
+        token_counter=_DummyTokenCounter(count_val=2048),
+        settings=get_settings(),
     )
+    # 2048 tokens matches EMBEDDING_MAX_LENGTH (2048)
+    cleaned = service.normalize_query("Valid query within embedding token limit")
+    assert cleaned == "Valid query within embedding token limit"
 
+
+def test_query_over_embedding_token_limit_is_rejected() -> None:
+    """Exactly 2049 fake tokens is rejected with RETRIEVAL_INPUT_ERROR and no query in error."""
+    mock_factory = MagicMock()
+    service = RetrievalService(
+        session_factory=mock_factory,
+        embedder=_DummyEmbedder(),
+        token_counter=_DummyTokenCounter(count_val=2049),
+        settings=get_settings(),
+    )
+    secret_text = "CONFIDENTIAL_SEARCH_QUERY_SECRET_ABC123"
     with pytest.raises(RetrievalInputError) as exc_info:
-        service.normalize_query("A long query exceeding token budget")
+        service.normalize_query(secret_text)
+
     assert exc_info.value.code == "RETRIEVAL_INPUT_ERROR"
-    assert "exceeds maximum token length" in str(exc_info.value)
+    assert "Query exceeds maximum token length (2049 > 2048)" in str(exc_info.value)
+    # Error message and repr contain no query text
+    assert secret_text not in str(exc_info.value)
+    assert secret_text not in repr(exc_info.value)
+
+
+def test_long_character_query_below_token_limit_is_accepted() -> None:
+    """A string longer than 1000 characters but counted below the token limit is accepted."""
+    mock_factory = MagicMock()
+    service = RetrievalService(
+        session_factory=mock_factory,
+        embedder=_DummyEmbedder(),
+        token_counter=_DummyTokenCounter(count_val=300),
+        settings=get_settings(),
+    )
+    # Create string with > 1000 characters
+    long_char_query = "real estate property details " * 45  # 1305 characters
+    assert len(long_char_query) > 1000
+
+    cleaned = service.normalize_query(long_char_query)
+    assert len(cleaned) > 1000
+    assert cleaned == " ".join(long_char_query.split())
 
 
 def test_extract_search_tokens_and_build_tsquery() -> None:
@@ -842,3 +877,98 @@ def test_section_matching_exact_and_suffix() -> None:
     assert eval_mod.match_section("FAQs", "About Us") is False
     assert eval_mod.match_section(None, "Overview") is False
     assert eval_mod.match_section("Overview", None) is False
+
+
+def test_reranker_evaluation_stops_at_wall_clock_limit(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Verifies reranker evaluation enforces the 1800s wall-clock limit, stops, and reports NEEDS CLAUDE DECISION."""
+    eval_mod = _load_eval_retrieval()
+
+    mock_service = MagicMock()
+    dummy_chunk = RetrievedChunk(
+        rank=1,
+        chunk_id=uuid4(),
+        document_id=uuid4(),
+        document_name="Property_Listings.pdf",
+        chunk_index=0,
+        page=1,
+        section="Overview",
+        content="Overview content",
+        body="Overview content",
+        token_count=100,
+        dense_rank=1,
+        dense_similarity=0.9,
+        keyword_rank=1,
+        keyword_score=1.0,
+        rrf_score=0.03,
+        rerank_score=2.5,
+        score=2.5,
+    )
+    mock_search_res = MagicMock(chunks=[dummy_chunk])
+    mock_service.search.return_value = mock_search_res
+
+    mock_questions = [
+        {
+            "id": f"Q{i:03d}",
+            "question": f"Question {i}?",
+            "type": "direct",
+            "expected_sources": [{"document": "Property_Listings.pdf"}],
+        }
+        for i in range(1, 55)
+    ]
+    cid = uuid4()
+
+    # Case A: Fake clock below 1800.0s -> completes all questions
+    clock_below = MagicMock(side_effect=[0.0] + [float(i * 10) for i in range(1, 200)])
+    completed, q_evals, _ = eval_mod.evaluate_questions_for_mode(
+        service=mock_service,
+        company_id=cid,
+        questions=mock_questions[:5],
+        mode="hybrid+rerank",
+        is_reranker_mode=True,
+        clock=clock_below,
+        max_seconds=1800.0,
+    )
+    assert completed is True
+    assert len(q_evals) == 5
+
+    # Case B: Fake clock exceeds 1800.0s on question 4
+    # Starts at 0.0, question 1: 50..100s, question 2: 300..500s, question 3: 800..1200s, question 4: 1500..1850s (> 1800.0s)
+    clock_values = [
+        0.0,
+        50.0,
+        100.0,
+        300.0,
+        500.0,
+        800.0,
+        1200.0,
+        1500.0,
+        1850.0,
+        2000.0,
+    ]
+    clock_over = MagicMock(side_effect=clock_values)
+    mock_service.search.reset_mock()
+
+    completed_over, q_evals_over, _ = eval_mod.evaluate_questions_for_mode(
+        service=mock_service,
+        company_id=cid,
+        questions=mock_questions,
+        mode="hybrid+rerank",
+        is_reranker_mode=True,
+        clock=clock_over,
+        max_seconds=1800.0,
+    )
+
+    # 1. Stopped early
+    assert completed_over is False
+    # 2. Did not evaluate all 54 questions
+    assert mock_service.search.call_count < 54
+    assert mock_service.search.call_count == 3
+
+    # 3. Captured output assertions
+    captured = capsys.readouterr().out
+    assert "Completed questions: 3/54" in captured
+    assert "Elapsed wall time:" in captured
+    assert "NEEDS CLAUDE DECISION" in captured
+    assert "ERROR: Reranker evaluation exceeded 1800.0s wall-clock limit!" in captured

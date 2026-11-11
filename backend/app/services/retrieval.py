@@ -46,7 +46,7 @@ class RetrievalService:
         reranker: Reranker | None = None,
         settings: Settings | None = None,
         token_counter: TokenCounter | None = None,
-        max_query_tokens: int = 512,
+        max_query_tokens: int | None = None,
     ) -> None:
         """Initialize retrieval service with dependencies.
 
@@ -56,14 +56,18 @@ class RetrievalService:
             reranker: Optional cross-encoder reranker adapter.
             settings: Runtime settings; defaults to get_settings().
             token_counter: Optional token counter for query budget enforcement.
-            max_query_tokens: Maximum allowed query token count (default: 512).
+            max_query_tokens: Maximum allowed query token count (defaults to settings.EMBEDDING_MAX_LENGTH).
         """
         self.session_factory = session_factory
         self.embedder = embedder
         self.reranker = reranker
         self.settings = settings or get_settings()
         self._token_counter = token_counter
-        self.max_query_tokens = max_query_tokens
+        self.max_query_tokens = (
+            max_query_tokens
+            if max_query_tokens is not None
+            else self.settings.EMBEDDING_MAX_LENGTH
+        )
 
     def _get_token_counter(self) -> TokenCounter:
         """Lazily initialize default token counter if none was injected."""
@@ -103,13 +107,18 @@ class RetrievalService:
 
         # Budget verification
         token_count = self._get_token_counter().count(collapsed)
-        if token_count > self.max_query_tokens:
+        max_tokens = (
+            self.max_query_tokens
+            if self.max_query_tokens is not None
+            else self.settings.EMBEDDING_MAX_LENGTH
+        )
+        if token_count > max_tokens:
             raise RetrievalInputError(
-                f"Query exceeds maximum token length ({token_count} > {self.max_query_tokens})",
+                f"Query exceeds maximum token length ({token_count} > {max_tokens})",
                 code="RETRIEVAL_INPUT_ERROR",
                 details={
                     "token_count": token_count,
-                    "max_tokens": self.max_query_tokens,
+                    "max_tokens": max_tokens,
                 },
             )
 
