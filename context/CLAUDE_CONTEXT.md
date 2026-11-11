@@ -28,7 +28,11 @@ Multi-company RAG chatbot dashboard for the DevSynt AI Internship (Task 5). Comp
 - Authorization-record correction commit: `881ab922b5a50bd9c8b4fb314bae94ed403a611b`.
 - Ratification docs commit: `cbc02a7b28991f0c2fb02a407b942e2ecbda78d3`.
 - Phase 6 Main Merge CI URL: https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42796649207.
-- Tag Sequence: `v0.0-skeleton`, `v0.0-tooling`, `v0.1-sample-data`, `v0.2-database`, `v0.2.1-db-hardening` (`8c186d0`), `v0.3-extraction` (`65c4d8c`), `v0.3.1-extraction-hardening` (`92f4ad5`), `v0.4-chunking` (`c861425`), `v0.5-embedding` (`5e2bf49`), `v0.6-ingestion` (`0ac88d0`).
+- Phase 7 tested retrieval code SHA: `cb8f4a4` (`cb8f4a47ae84bc31bf94119d690a6e3441bf11ad`); evaluator fix: `2f7a93b` (`2f7a93b5d9272c3a561ed02f3d5d0086e9706476`); final branch head: `bdb2eab` (`bdb2eab8526cd7612bfced5cf4f5a68dfb13ea2a`).
+- Phase 7 merge SHA: `be29216` (`be29216144743bdf54ebd7d0a6d566685f506872`).
+- `v0.7-retrieval` release tag target: `be29216144743bdf54ebd7d0a6d566685f506872`.
+- Phase 7 Main Merge CI URL: https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/43036821145.
+- Tag Sequence: `v0.0-skeleton`, `v0.0-tooling`, `v0.1-sample-data`, `v0.2-database`, `v0.2.1-db-hardening` (`8c186d0`), `v0.3-extraction` (`65c4d8c`), `v0.3.1-extraction-hardening` (`92f4ad5`), `v0.4-chunking` (`c861425`), `v0.5-embedding` (`5e2bf49`), `v0.6-ingestion` (`0ac88d0`), `v0.7-retrieval` (`be29216`).
 
 ## Phase 5 Status & Embedding Contract
 - Snapshot: Phase 5 passed. Merged into main at `5e2bf49b32af8ba20b4692870eaf314ef0f644db` (`5e2bf49`) and tagged `v0.5-embedding`.
@@ -41,15 +45,16 @@ Multi-company RAG chatbot dashboard for the DevSynt AI Internship (Task 5). Comp
 - Evidence: Fresh GitHub clone: 305 passed, 1 skipped, 89.18% cov. DB suite 27 passed through direct runtime rag_app login (A-11). Real ingestion: 5/5 indexed, 34 pages, 126 chunks, 588.56 s (ceiling 900 s). Main CI passed: https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42796649207. Smoke preview: informational any-expected-source Hit@5: 5/6; Q023 retrieved 1 of 2 expected documents.
 
 ## Phase 7 Status & Retrieval Contract (A-12)
-- Current step: Phase 7 eval artifact: eval/reports/phase7_retrieval_2f7a93b.json, SHA-256 3398d57d146538bb44c954a95f8f09f5f0d4766a5fb1b83f836ff7d2d39e120c, generated at 2f7a93b5d9272c3a561ed02f3d5d0086e9706476 by one non-reranked run (RERANKER_BACKEND=none; reranker not loaded, verified by subprocess test). Evaluator corrected in 2f7a93b5d9272c3a561ed02f3d5d0086e9706476: backend none was previously ignored and per-question records are now persisted. Aggregate metrics and HNSW/exact 54/54 matched the accepted stdout evidence exactly (task-9082.log, SHA-256 ff71efe784ff33825954be3926428f607bcae9ae1b10b96e9bd13481f9d44e7e, 9207 bytes; external log not committed). Per-question records are the first persisted record; historical stdout contained no complete list, so historical list comparison was impossible. Regenerated latency: hybrid_cap p50 2355.6 ms, p95 4591.8 ms; dense p50 2054.4 ms, p95 4327.1 ms; keyword p50 1228.7 ms, p95 1540.9 ms; hybrid_nocap p50 2713.4 ms, p95 5196.2 ms, informational only. The earlier reranker comparison (MRR 0.799, p95 approximately 97 seconds) remains stdout-only, informational and unreproduced; reranker not adopted.
-
-Current step: awaiting Claude’s confirmation of the artifact, then the user’s explicit “Phase 7 passed”. Phase 8 NOT authorized.
+- Snapshot: Phase 7 passed. Tag v0.7-retrieval targets `be29216144743bdf54ebd7d0a6d566685f506872`. Tested retrieval code cb8f4a4; evaluator correction 2f7a93b; final branch head bdb2eab; merge SHA be29216144743bdf54ebd7d0a6d566685f506872; tag target be29216144743bdf54ebd7d0a6d566685f506872; merge CI https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/43036821145; Claude final PASS 2026-11-11; user ratification “Phase 7 passed — 2026-11-11”. Core, DB, model, regression and migration gates passed on merged main. Persisted non-reranked evaluation artifact: eval/reports/phase7_retrieval_2f7a93b.json, SHA-256 3398d57d146538bb44c954a95f8f09f5f0d4766a5fb1b83f836ff7d2d39e120c. Hybrid+cap document Hit@5 1.00, MRR 0.893, multi-document all-docs-hit 50%; HNSW/exact 54/54, zero mismatches. Reranker not adopted; RERANKER_BACKEND=none.
+- Current step: Phase 7 merged, tagged and user-ratified. Phase 8 pre-flight is authorized read-only; Phase 8 implementation is NOT authorized.
+- Release tag target: `be29216144743bdf54ebd7d0a6d566685f506872`. Note: release tag points to merge commit `be29216`; it does not point to the post-tag docs commit.
 - Baseline: Phase 6 Passed (user ratification “phase 6 passed” 2026-11-10; Claude PASS 2026-11-10; process deviation N8 remains historical). Main base `9dfa8f89006556f8310380d5d1537aa99952f7bc`; branch `phase-7-retrieval`. Tested code commit: `cb8f4a47ae84bc31bf94119d690a6e3441bf11ad`; evaluator fix commit: `2f7a93b5d9272c3a561ed02f3d5d0086e9706476`.
 - Decisions log (2026-11-11):
   * Reranker (bge-reranker-v2-m3, rev 953dc6f6...) NOT adopted: MRR 0.893 -> 0.799, p95 97 s (limit 8 s). RERANKER_BACKEND=none.
   * Process deviation N11: reranker eval exceeded its 30-minute ceiling and was continued by patching the running process; results informational only. Rule: on any exceeded limit/timeout, stop and report; never patch a process, clock or limit at runtime; never rerun for a passing number.
   * N9: stored section metadata is title-level; golden-set section labels never match (0% section Hit@5). Phase 8 prep decision pending a read-only diagnosis.
   * N10: keyword-only outperforms hybrid on multi-doc recall; hybrid+cap equals hybrid-no-cap; no tuning on the 54-question set.
+  * Retrieval latency: variable on CPU; regenerated hybrid+cap p95 4.6 seconds; Phase 8 must budget retrieval as approx 2–5 seconds.
 - Gate Evidence:
   - Static: Ruff check, Ruff format, and Mypy clean (`Success: no issues found in 54 source files`).
   - Core unit suite: 336 passed, 1 skipped, 35 deselected in 63.61s; total coverage 89.98% (threshold >= 88.0%).

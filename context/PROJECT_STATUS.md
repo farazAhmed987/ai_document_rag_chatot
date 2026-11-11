@@ -1,16 +1,16 @@
 # Project Status
-Last updated: 2026-11-11 | Updated by: Antigravity | Current phase: Phase 7 evaluation artifact generated at 2f7a93b (awaiting Claude confirmation and user explicit "Phase 7 passed"). NOT passed, NOT merged, NOT tagged. Phase 8 NOT authorized.
+Last updated: 2026-11-11 | Updated by: Antigravity | Current phase: Phase 7 merged and tagged v0.7-retrieval; Phase 8 pre-flight authorized read-only (Phase 8 implementation NOT authorized).
  
 Rules for this file: no secrets or connection strings; keep it under about 150 lines; when the logs grow, move old entries to context/archive/status-YYYY-MM.md. Historical snapshots: context/archive/preflight-8735072/.
  
 ## Environment
 - OS: Fedora Linux 44 | Python: 3.12.16 | venv: .venv at repo root | IDE: Antigravity
 - Repo: https://github.com/farazAhmed987/ai_document_rag_chatot
-- Current origin/main after Phase 6 release: 0ac88d0194c15bf55f6163e2c40adbd8c232235b
-- Phase 6 code tested: dcfc9d501323bfc9d45f7dfb931f19e30464d875
-- Phase 6 code merge: 0ac88d0194c15bf55f6163e2c40adbd8c232235b
-- v0.6-ingestion tag target: 0ac88d0194c15bf55f6163e2c40adbd8c232235b
-- Phase 6 Main Merge CI: https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42796649207
+- Current origin/main after Phase 7 release: be29216144743bdf54ebd7d0a6d566685f506872
+- Phase 7 code tested: cb8f4a47ae84bc31bf94119d690a6e3441bf11ad (evaluator fix 2f7a93b5d9272c3a561ed02f3d5d0086e9706476; final branch head bdb2eab8526cd7612bfced5cf4f5a68dfb13ea2a)
+- Phase 7 code merge: be29216144743bdf54ebd7d0a6d566685f506872
+- v0.7-retrieval tag target: be29216144743bdf54ebd7d0a6d566685f506872
+- Phase 7 Main Merge CI: https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/43036821145
 - Pinned Model Revision: BAAI/bge-m3 at 5617a9f61b028005a4858fdac845db406aefb181
 - Operational database: PostgreSQL 17.11 on Supabase (pgvector 0.8.2, session pooler, RLS forced, rag_app role restricted)
 - Analytics database: PostgreSQL 17.11 on Supabase (session pooler, independent migrations)
@@ -29,16 +29,22 @@ Rules for this file: no secrets or connection strings; keep it under about 150 l
 | 4 | Chunking | Passed | v0.4-chunking | 2026-11-07 | Primary 170/170; related evidence 176/176; evidence map v1.0.1; final tests and CI green. Include https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42385811834. |
 | 5 | Embedding module (BGE-M3) | Passed | v0.5-embedding | 2026-11-08 | Code tested at ff08c62; merge SHA 5e2bf49b32af8ba20b4692870eaf314ef0f644db; main CI https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42495781663; Claude PASS 2026-11-08; user “Phase 5 passed” 2026-11-08. Benchmark 272.23 s / 224.10 s (limit 600 s); 771.22 s outlier documented. Chunk fingerprint identical across transformers 4.57.6 / 5.22.2. Pins recorded under A-9. |
 | 6 | Ingestion service + CLI | Passed | v0.6-ingestion | 2026-11-10 | Code tested at dcfc9d5; merge SHA 0ac88d0194c15bf55f6163e2c40adbd8c232235b; tag v0.6-ingestion; Claude technical PASS 2026-11-10; user ratification, verbatim: “phase 6 passed” (2026-11-10); authorization-record correction: 881ab92. Fresh GitHub clone: 305 passed, 1 skipped, 89.18% cov. DB suite 27 passed through direct runtime rag_app (A-11). Real ingestion: 5/5 indexed, 34 pages, 126 chunks, 588.56 seconds. Main merge CI: 42796649207. Smoke preview: informational any-expected-source Hit@5 5/6; Q023 matched 1 of 2 expected documents. Process deviation N8 resolved with user ratification. |
-| 7 | Retrieval (dense, keyword, RRF, rerank) and golden-set evaluation | In progress | | | Implemented on branch phase-7-retrieval (tested code cb8f4a4, evaluator fix 2f7a93b); required eval gates met (doc Hit@5 1.00; MRR 0.893 vs dense 0.778; multi-doc all-docs-hit 50% vs 12.5%; ordered HNSW/exact mismatches 0/54). Evaluation artifact eval/reports/phase7_retrieval_2f7a93b.json persisted. Awaiting Claude confirmation and user explicit "Phase 7 passed". NOT passed, NOT merged, NOT tagged. Phase 8 NOT authorized. |
+| 7 | Retrieval (hybrid dense+keyword, RRF) + golden-set evaluation | Passed | v0.7-retrieval | 2026-11-11 | Tested retrieval code cb8f4a4; evaluator correction 2f7a93b; final branch head bdb2eab; merge SHA be29216144743bdf54ebd7d0a6d566685f506872; tag target be29216144743bdf54ebd7d0a6d566685f506872; merge CI https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/43036821145; Claude final PASS 2026-11-11; user ratification “Phase 7 passed — 2026-11-11”. Core, DB, model, regression and migration gates passed on merged main. Persisted non-reranked evaluation artifact: eval/reports/phase7_retrieval_2f7a93b.json, SHA-256 3398d57d146538bb44c954a95f8f09f5f0d4766a5fb1b83f836ff7d2d39e120c. Hybrid+cap document Hit@5 1.00, MRR 0.893, multi-document all-docs-hit 50%; HNSW/exact 54/54, zero mismatches. Reranker not adopted; RERANKER_BACKEND=none. |
 | 8 | LLM answer, threshold gate, citations, Q&A logging | Not started | | | |
 | 9 | FastAPI endpoints | Not started | | | |
 | 10 | Frontend | Not started | | | |
 | 11 | Hardening, README, diagram, demo video, LinkedIn post | Not started | | | |
  
 ## Current step
-Phase 7 eval artifact: eval/reports/phase7_retrieval_2f7a93b.json, SHA-256 3398d57d146538bb44c954a95f8f09f5f0d4766a5fb1b83f836ff7d2d39e120c, generated at 2f7a93b5d9272c3a561ed02f3d5d0086e9706476 by one non-reranked run (RERANKER_BACKEND=none; reranker not loaded, verified by subprocess test). Evaluator corrected in 2f7a93b5d9272c3a561ed02f3d5d0086e9706476: backend none was previously ignored and per-question records are now persisted. Aggregate metrics and HNSW/exact 54/54 matched the accepted stdout evidence exactly (task-9082.log, SHA-256 ff71efe784ff33825954be3926428f607bcae9ae1b10b96e9bd13481f9d44e7e, 9207 bytes; external log not committed). Per-question records are the first persisted record; historical stdout contained no complete list, so historical list comparison was impossible. Regenerated latency: hybrid_cap p50 2355.6 ms, p95 4591.8 ms; dense p50 2054.4 ms, p95 4327.1 ms; keyword p50 1228.7 ms, p95 1540.9 ms; hybrid_nocap p50 2713.4 ms, p95 5196.2 ms, informational only. The earlier reranker comparison (MRR 0.799, p95 approximately 97 seconds) remains stdout-only, informational and unreproduced; reranker not adopted.
+Current step: Phase 7 merged, tagged and user-ratified. Phase 8 pre-flight is authorized read-only; Phase 8 implementation is NOT authorized.
 
-Current step: awaiting Claude’s confirmation of the artifact, then the user’s explicit “Phase 7 passed”. Phase 8 NOT authorized.
+Release tag target: be29216144743bdf54ebd7d0a6d566685f506872. Note: release tag points to merge commit be29216; it does not point to the post-tag docs commit.
+
+Known issues:
+- N9: section metadata is title-level; section Hit@5 is 0%. Phase 8 decision pending.
+- N10: keyword-only multi-document all-docs-hit is 87.5%, versus hybrid 50%; no tuning on the 54-question set.
+- N11: earlier reranker evaluation exceeded its ceiling through an unauthorized runtime patch; results remain informational and the permanent stop rule remains active.
+- Retrieval latency varies on this CPU. Regenerated hybrid+cap p95 was 4.6 seconds; Phase 8 must budget retrieval as approximately 2–5 seconds.
 
 Data note: company "Himalaya Crest Realty (Pvt.) Ltd." and its 5 indexed documents / 126 chunks are kept in the ops DB for Phase 7. Do not delete or reprocess without Claude approval.
 Known issues: Section agreement Hit@5 is 0.0% due to heading hierarchy naming divergence (N9); runtime variance on CPU; keyword-only outperforms hybrid on multi-doc recall and no tuning on 54-question set (N10); reranker evaluation exceeded 30m ceiling and completed metrics are informational only (N11).
@@ -58,6 +64,7 @@ Known issues: Section agreement Hit@5 is 0.0% due to heading hierarchy naming di
 ## Gate log (newest first, append only)
 | Date | Phase | Commands run | Result | Commit or tag |
 |---|---|---|---|---|
+| 2026-11-11 | 7 Release & Merge | merge --no-ff, ruff, format, mypy, pytest core + cov (90.01%), check_phase_coverage (all 20 >=85%), 28 DB tests (rag_app), 7 model tests (offline), verify_chunks (170/170, 176/176), chunk_fingerprint (126, PASS), alembic heads unchanged, main merge CI 43036821145 | PASS | be29216144743bdf54ebd7d0a6d566685f506872 / tag v0.7-retrieval |
 | 2026-11-11 | 7 Retrieval Corrective Gates | ruff, format, mypy (54 files), pytest core + cov (89.98%), check_phase_coverage (all 7 >=85%), 1 DB integration test (rag_app, read-only tx, RLS, page match), 1 model test (offline BGE reranker), eval_retrieval (5-mode benchmark, ordered HNSW 0 mismatches, Hit@5 100%, MRR 0.893, multi-doc hit 50.0%, reranker evaluated not adopted) | PASS | d9718971a8489e3bc9cc19d6e18b2568202253b8 (awaiting Claude validation) |
 | 2026-11-11 | 7 Retrieval & Golden-Set Gates | ruff, format, mypy (54 files), pytest core + cov (90.05%), check_phase_coverage (all 7 >=85%), 28 DB tests (rag_app), 7 model tests (offline), verify_chunks (170/170, 176/176), chunk_fingerprint (126, PASS), alembic heads unchanged, eval_retrieval (HNSW 100%, Hit@5 100%, MRR 0.893, multi-doc hit 50%) | PASS | 93d15f7c32726d156da3519d1cbdf4653b478eb4 (awaiting Claude validation) |
 | 2026-11-10 | 6 Release & Merge | merge --no-ff, ruff, format, mypy, pytest core + cov (89.18%), check_phase_coverage, 27 DB tests (rag_app), verify_chunks (170/170, 176/176), chunk_fingerprint (126, PASS), 6 model tests, alembic current, main CI 42796649207 | PASS | 0ac88d0194c15bf55f6163e2c40adbd8c232235b / tag v0.6-ingestion |
