@@ -125,6 +125,7 @@ def test_normalize_query_rejects_non_string() -> None:
     service = RetrievalService(
         session_factory=MagicMock(),
         embedder=_DummyEmbedder(),
+        token_counter=_DummyTokenCounter(count_val=0),
     )
     with pytest.raises(RetrievalInputError):
         service.normalize_query(None)  # type: ignore[arg-type]
@@ -358,6 +359,7 @@ def test_search_rejects_invalid_inputs() -> None:
     service = RetrievalService(
         session_factory=MagicMock(),
         embedder=_DummyEmbedder(),
+        token_counter=_DummyTokenCounter(count_val=5),
     )
 
     # 1. Non-UUID company_id raises TypeError
