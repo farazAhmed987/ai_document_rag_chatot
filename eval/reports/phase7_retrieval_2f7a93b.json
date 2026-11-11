@@ -1,0 +1,4203 @@
+{
+  "answerable_questions": 38,
+  "company": "Himalaya Crest Realty (Pvt.) Ltd.",
+  "gate_passed": true,
+  "hnsw_mismatches": 0,
+  "modes": {
+    "dense": {
+      "answerable": {
+        "all_docs_hit": 0.125,
+        "hit_at_1": 0.631578947368421,
+        "hit_at_5": 1.0,
+        "mrr": 0.7780701754385965,
+        "multi_doc_recall": 0.5625,
+        "questions": 38,
+        "section_hit_at_5": 0.0
+      },
+      "label": "Dense only (k=20, top_n=5)",
+      "overall": {
+        "all_docs_hit": 0.125,
+        "hit_at_1": 0.5555555555555556,
+        "hit_at_5": 0.8703703703703703,
+        "mrr": 0.6833333333333333,
+        "multi_doc_recall": 0.5625,
+        "questions": 54,
+        "section_hit_at_5": 0.0
+      },
+      "p50_ms": 2054.436725999949,
+      "p95_ms": 4327.14887200018
+    },
+    "hybrid_cap": {
+      "answerable": {
+        "all_docs_hit": 0.5,
+        "hit_at_1": 0.8157894736842105,
+        "hit_at_5": 1.0,
+        "mrr": 0.8925438596491228,
+        "multi_doc_recall": 0.75,
+        "questions": 38,
+        "section_hit_at_5": 0.0
+      },
+      "label": "Hybrid with cap (k=20, cap=3, top_n=5)",
+      "overall": {
+        "all_docs_hit": 0.5,
+        "hit_at_1": 0.6851851851851852,
+        "hit_at_5": 0.8518518518518519,
+        "mrr": 0.7546296296296297,
+        "multi_doc_recall": 0.75,
+        "questions": 54,
+        "section_hit_at_5": 0.0
+      },
+      "p50_ms": 2355.637391000073,
+      "p95_ms": 4591.794056999788
+    },
+    "hybrid_nocap": {
+      "answerable": {
+        "all_docs_hit": 0.5,
+        "hit_at_1": 0.8157894736842105,
+        "hit_at_5": 1.0,
+        "mrr": 0.8925438596491228,
+        "multi_doc_recall": 0.75,
+        "questions": 38,
+        "section_hit_at_5": 0.0
+      },
+      "label": "Hybrid without cap (k=20, top_n=5)",
+      "overall": {
+        "all_docs_hit": 0.5,
+        "hit_at_1": 0.6851851851851852,
+        "hit_at_5": 0.8518518518518519,
+        "mrr": 0.7546296296296297,
+        "multi_doc_recall": 0.75,
+        "questions": 54,
+        "section_hit_at_5": 0.0
+      },
+      "p50_ms": 2713.3968214998276,
+      "p95_ms": 5196.191885999724
+    },
+    "keyword": {
+      "answerable": {
+        "all_docs_hit": 0.875,
+        "hit_at_1": 0.7631578947368421,
+        "hit_at_5": 1.0,
+        "mrr": 0.8771929824561404,
+        "multi_doc_recall": 0.9375,
+        "questions": 38,
+        "section_hit_at_5": 0.0
+      },
+      "label": "Keyword only (k=20, top_n=5)",
+      "overall": {
+        "all_docs_hit": 0.875,
+        "hit_at_1": 0.6481481481481481,
+        "hit_at_5": 0.8703703703703703,
+        "mrr": 0.7484567901234568,
+        "multi_doc_recall": 0.9375,
+        "questions": 54,
+        "section_hit_at_5": 0.0
+      },
+      "p50_ms": 1228.745333000461,
+      "p95_ms": 1540.8822279996457
+    }
+  },
+  "question_records": [
+    {
+      "expected_documents": [
+        "Company_Overview.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q001",
+      "mode": "dense",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Company_Overview.pdf",
+        "Company_Overview.pdf",
+        "FAQs.pdf",
+        "Company_Overview.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "direct"
+    },
+    {
+      "expected_documents": [
+        "Company_Overview.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q001",
+      "mode": "keyword",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Company_Overview.pdf",
+        "FAQs.pdf",
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "Property_Listings.pdf"
+      ],
+      "type": "direct"
+    },
+    {
+      "expected_documents": [
+        "Company_Overview.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q001",
+      "mode": "hybrid_nocap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Company_Overview.pdf",
+        "FAQs.pdf",
+        "Company_Overview.pdf",
+        "Company_Overview.pdf",
+        "Company_Overview.pdf"
+      ],
+      "type": "direct"
+    },
+    {
+      "expected_documents": [
+        "Company_Overview.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q001",
+      "mode": "hybrid_cap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Company_Overview.pdf",
+        "FAQs.pdf",
+        "Company_Overview.pdf",
+        "Company_Overview.pdf",
+        "Property_Listings.pdf"
+      ],
+      "type": "direct"
+    },
+    {
+      "expected_documents": [
+        "Company_Overview.md"
+      ],
+      "first_expected_rank": 2,
+      "hit_at_1": false,
+      "hit_at_5": true,
+      "id": "Q002",
+      "mode": "dense",
+      "reciprocal_rank": 0.5,
+      "top5_documents": [
+        "FAQs.pdf",
+        "Company_Overview.pdf",
+        "Company_Overview.pdf",
+        "Company_Overview.pdf",
+        "Property_Listings.pdf"
+      ],
+      "type": "direct"
+    },
+    {
+      "expected_documents": [
+        "Company_Overview.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q002",
+      "mode": "keyword",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Company_Overview.pdf",
+        "Company_Overview.pdf",
+        "FAQs.pdf",
+        "Company_Overview.pdf",
+        "FAQs.pdf"
+      ],
+      "type": "direct"
+    },
+    {
+      "expected_documents": [
+        "Company_Overview.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q002",
+      "mode": "hybrid_nocap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Company_Overview.pdf",
+        "FAQs.pdf",
+        "Company_Overview.pdf",
+        "Company_Overview.pdf",
+        "Property_Listings.pdf"
+      ],
+      "type": "direct"
+    },
+    {
+      "expected_documents": [
+        "Company_Overview.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q002",
+      "mode": "hybrid_cap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Company_Overview.pdf",
+        "FAQs.pdf",
+        "Company_Overview.pdf",
+        "Company_Overview.pdf",
+        "Property_Listings.pdf"
+      ],
+      "type": "direct"
+    },
+    {
+      "expected_documents": [
+        "Property_Listings.md"
+      ],
+      "first_expected_rank": 5,
+      "hit_at_1": false,
+      "hit_at_5": true,
+      "id": "Q003",
+      "mode": "dense",
+      "reciprocal_rank": 0.2,
+      "top5_documents": [
+        "Policies_and_Terms.pdf",
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf",
+        "Property_Listings.pdf"
+      ],
+      "type": "direct"
+    },
+    {
+      "expected_documents": [
+        "Property_Listings.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q003",
+      "mode": "keyword",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "direct"
+    },
+    {
+      "expected_documents": [
+        "Property_Listings.md"
+      ],
+      "first_expected_rank": 4,
+      "hit_at_1": false,
+      "hit_at_5": true,
+      "id": "Q003",
+      "mode": "hybrid_nocap",
+      "reciprocal_rank": 0.25,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf",
+        "Property_Listings.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "direct"
+    },
+    {
+      "expected_documents": [
+        "Property_Listings.md"
+      ],
+      "first_expected_rank": 4,
+      "hit_at_1": false,
+      "hit_at_5": true,
+      "id": "Q003",
+      "mode": "hybrid_cap",
+      "reciprocal_rank": 0.25,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf",
+        "Property_Listings.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "direct"
+    },
+    {
+      "expected_documents": [
+        "Company_Overview.md"
+      ],
+      "first_expected_rank": 3,
+      "hit_at_1": false,
+      "hit_at_5": true,
+      "id": "Q004",
+      "mode": "dense",
+      "reciprocal_rank": 0.3333333333333333,
+      "top5_documents": [
+        "FAQs.pdf",
+        "Policies_and_Terms.pdf",
+        "Company_Overview.pdf",
+        "Company_Overview.pdf",
+        "Company_Overview.pdf"
+      ],
+      "type": "direct"
+    },
+    {
+      "expected_documents": [
+        "Company_Overview.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q004",
+      "mode": "keyword",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Company_Overview.pdf",
+        "Company_Overview.pdf",
+        "Company_Overview.pdf",
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "direct"
+    },
+    {
+      "expected_documents": [
+        "Company_Overview.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q004",
+      "mode": "hybrid_nocap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Company_Overview.pdf",
+        "FAQs.pdf",
+        "Company_Overview.pdf",
+        "Company_Overview.pdf",
+        "Company_Overview.pdf"
+      ],
+      "type": "direct"
+    },
+    {
+      "expected_documents": [
+        "Company_Overview.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q004",
+      "mode": "hybrid_cap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Company_Overview.pdf",
+        "FAQs.pdf",
+        "Company_Overview.pdf",
+        "Company_Overview.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "direct"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q005",
+      "mode": "dense",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Policies_and_Terms.pdf",
+        "FAQs.pdf",
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "direct"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q005",
+      "mode": "keyword",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf",
+        "Services_and_Fees.pdf",
+        "FAQs.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "direct"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q005",
+      "mode": "hybrid_nocap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf",
+        "FAQs.pdf",
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "direct"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q005",
+      "mode": "hybrid_cap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf",
+        "FAQs.pdf",
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "direct"
+    },
+    {
+      "expected_documents": [
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q006",
+      "mode": "dense",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf",
+        "FAQs.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "direct"
+    },
+    {
+      "expected_documents": [
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 2,
+      "hit_at_1": false,
+      "hit_at_5": true,
+      "id": "Q006",
+      "mode": "keyword",
+      "reciprocal_rank": 0.5,
+      "top5_documents": [
+        "Property_Listings.pdf",
+        "Services_and_Fees.pdf",
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf",
+        "FAQs.pdf"
+      ],
+      "type": "direct"
+    },
+    {
+      "expected_documents": [
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q006",
+      "mode": "hybrid_nocap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "Services_and_Fees.pdf",
+        "FAQs.pdf",
+        "Policies_and_Terms.pdf",
+        "Services_and_Fees.pdf"
+      ],
+      "type": "direct"
+    },
+    {
+      "expected_documents": [
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q006",
+      "mode": "hybrid_cap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "Services_and_Fees.pdf",
+        "FAQs.pdf",
+        "Policies_and_Terms.pdf",
+        "Services_and_Fees.pdf"
+      ],
+      "type": "direct"
+    },
+    {
+      "expected_documents": [
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 5,
+      "hit_at_1": false,
+      "hit_at_5": true,
+      "id": "Q007",
+      "mode": "dense",
+      "reciprocal_rank": 0.2,
+      "top5_documents": [
+        "Company_Overview.pdf",
+        "FAQs.pdf",
+        "Policies_and_Terms.pdf",
+        "Property_Listings.pdf",
+        "Services_and_Fees.pdf"
+      ],
+      "type": "direct"
+    },
+    {
+      "expected_documents": [
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q007",
+      "mode": "keyword",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "FAQs.pdf",
+        "FAQs.pdf",
+        "Policies_and_Terms.pdf",
+        "Company_Overview.pdf"
+      ],
+      "type": "direct"
+    },
+    {
+      "expected_documents": [
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 3,
+      "hit_at_1": false,
+      "hit_at_5": true,
+      "id": "Q007",
+      "mode": "hybrid_nocap",
+      "reciprocal_rank": 0.3333333333333333,
+      "top5_documents": [
+        "FAQs.pdf",
+        "Company_Overview.pdf",
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "direct"
+    },
+    {
+      "expected_documents": [
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 3,
+      "hit_at_1": false,
+      "hit_at_5": true,
+      "id": "Q007",
+      "mode": "hybrid_cap",
+      "reciprocal_rank": 0.3333333333333333,
+      "top5_documents": [
+        "FAQs.pdf",
+        "Company_Overview.pdf",
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "direct"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q008",
+      "mode": "dense",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Policies_and_Terms.pdf",
+        "Services_and_Fees.pdf",
+        "FAQs.pdf",
+        "Policies_and_Terms.pdf",
+        "FAQs.pdf"
+      ],
+      "type": "direct"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md"
+      ],
+      "first_expected_rank": 2,
+      "hit_at_1": false,
+      "hit_at_5": true,
+      "id": "Q008",
+      "mode": "keyword",
+      "reciprocal_rank": 0.5,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf",
+        "FAQs.pdf"
+      ],
+      "type": "direct"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q008",
+      "mode": "hybrid_nocap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Policies_and_Terms.pdf",
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf",
+        "FAQs.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "direct"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q008",
+      "mode": "hybrid_cap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Policies_and_Terms.pdf",
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf",
+        "FAQs.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "direct"
+    },
+    {
+      "expected_documents": [
+        "Property_Listings.md"
+      ],
+      "first_expected_rank": 2,
+      "hit_at_1": false,
+      "hit_at_5": true,
+      "id": "Q009",
+      "mode": "dense",
+      "reciprocal_rank": 0.5,
+      "top5_documents": [
+        "FAQs.pdf",
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "Company_Overview.pdf"
+      ],
+      "type": "direct"
+    },
+    {
+      "expected_documents": [
+        "Property_Listings.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q009",
+      "mode": "keyword",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "FAQs.pdf",
+        "FAQs.pdf"
+      ],
+      "type": "direct"
+    },
+    {
+      "expected_documents": [
+        "Property_Listings.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q009",
+      "mode": "hybrid_nocap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Property_Listings.pdf",
+        "FAQs.pdf",
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "Property_Listings.pdf"
+      ],
+      "type": "direct"
+    },
+    {
+      "expected_documents": [
+        "Property_Listings.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q009",
+      "mode": "hybrid_cap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Property_Listings.pdf",
+        "FAQs.pdf",
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "Company_Overview.pdf"
+      ],
+      "type": "direct"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md"
+      ],
+      "first_expected_rank": 3,
+      "hit_at_1": false,
+      "hit_at_5": true,
+      "id": "Q010",
+      "mode": "dense",
+      "reciprocal_rank": 0.3333333333333333,
+      "top5_documents": [
+        "FAQs.pdf",
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf",
+        "FAQs.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "direct"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md"
+      ],
+      "first_expected_rank": 2,
+      "hit_at_1": false,
+      "hit_at_5": true,
+      "id": "Q010",
+      "mode": "keyword",
+      "reciprocal_rank": 0.5,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf",
+        "Services_and_Fees.pdf",
+        "FAQs.pdf",
+        "Services_and_Fees.pdf"
+      ],
+      "type": "direct"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md"
+      ],
+      "first_expected_rank": 2,
+      "hit_at_1": false,
+      "hit_at_5": true,
+      "id": "Q010",
+      "mode": "hybrid_nocap",
+      "reciprocal_rank": 0.5,
+      "top5_documents": [
+        "FAQs.pdf",
+        "Policies_and_Terms.pdf",
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "direct"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md"
+      ],
+      "first_expected_rank": 2,
+      "hit_at_1": false,
+      "hit_at_5": true,
+      "id": "Q010",
+      "mode": "hybrid_cap",
+      "reciprocal_rank": 0.5,
+      "top5_documents": [
+        "FAQs.pdf",
+        "Policies_and_Terms.pdf",
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "direct"
+    },
+    {
+      "expected_documents": [
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q011",
+      "mode": "dense",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "FAQs.pdf",
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf",
+        "Services_and_Fees.pdf"
+      ],
+      "type": "table"
+    },
+    {
+      "expected_documents": [
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q011",
+      "mode": "keyword",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "Services_and_Fees.pdf",
+        "Property_Listings.pdf",
+        "FAQs.pdf",
+        "Services_and_Fees.pdf"
+      ],
+      "type": "table"
+    },
+    {
+      "expected_documents": [
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q011",
+      "mode": "hybrid_nocap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "Services_and_Fees.pdf",
+        "Services_and_Fees.pdf",
+        "FAQs.pdf",
+        "Services_and_Fees.pdf"
+      ],
+      "type": "table"
+    },
+    {
+      "expected_documents": [
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q011",
+      "mode": "hybrid_cap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "Services_and_Fees.pdf",
+        "Services_and_Fees.pdf",
+        "FAQs.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "table"
+    },
+    {
+      "expected_documents": [
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 2,
+      "hit_at_1": false,
+      "hit_at_5": true,
+      "id": "Q012",
+      "mode": "dense",
+      "reciprocal_rank": 0.5,
+      "top5_documents": [
+        "FAQs.pdf",
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf",
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "table"
+    },
+    {
+      "expected_documents": [
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 2,
+      "hit_at_1": false,
+      "hit_at_5": true,
+      "id": "Q012",
+      "mode": "keyword",
+      "reciprocal_rank": 0.5,
+      "top5_documents": [
+        "Property_Listings.pdf",
+        "Services_and_Fees.pdf",
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "Services_and_Fees.pdf"
+      ],
+      "type": "table"
+    },
+    {
+      "expected_documents": [
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 2,
+      "hit_at_1": false,
+      "hit_at_5": true,
+      "id": "Q012",
+      "mode": "hybrid_nocap",
+      "reciprocal_rank": 0.5,
+      "top5_documents": [
+        "FAQs.pdf",
+        "Services_and_Fees.pdf",
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf",
+        "Property_Listings.pdf"
+      ],
+      "type": "table"
+    },
+    {
+      "expected_documents": [
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 2,
+      "hit_at_1": false,
+      "hit_at_5": true,
+      "id": "Q012",
+      "mode": "hybrid_cap",
+      "reciprocal_rank": 0.5,
+      "top5_documents": [
+        "FAQs.pdf",
+        "Services_and_Fees.pdf",
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf",
+        "Property_Listings.pdf"
+      ],
+      "type": "table"
+    },
+    {
+      "expected_documents": [
+        "Company_Overview.md"
+      ],
+      "first_expected_rank": 2,
+      "hit_at_1": false,
+      "hit_at_5": true,
+      "id": "Q013",
+      "mode": "dense",
+      "reciprocal_rank": 0.5,
+      "top5_documents": [
+        "FAQs.pdf",
+        "Company_Overview.pdf",
+        "Company_Overview.pdf",
+        "FAQs.pdf",
+        "Company_Overview.pdf"
+      ],
+      "type": "table"
+    },
+    {
+      "expected_documents": [
+        "Company_Overview.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q013",
+      "mode": "keyword",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Company_Overview.pdf",
+        "Property_Listings.pdf",
+        "Company_Overview.pdf",
+        "Property_Listings.pdf",
+        "Property_Listings.pdf"
+      ],
+      "type": "table"
+    },
+    {
+      "expected_documents": [
+        "Company_Overview.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q013",
+      "mode": "hybrid_nocap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Company_Overview.pdf",
+        "FAQs.pdf",
+        "Company_Overview.pdf",
+        "Company_Overview.pdf",
+        "Company_Overview.pdf"
+      ],
+      "type": "table"
+    },
+    {
+      "expected_documents": [
+        "Company_Overview.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q013",
+      "mode": "hybrid_cap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Company_Overview.pdf",
+        "FAQs.pdf",
+        "Company_Overview.pdf",
+        "Company_Overview.pdf",
+        "Property_Listings.pdf"
+      ],
+      "type": "table"
+    },
+    {
+      "expected_documents": [
+        "Property_Listings.md"
+      ],
+      "first_expected_rank": 2,
+      "hit_at_1": false,
+      "hit_at_5": true,
+      "id": "Q014",
+      "mode": "dense",
+      "reciprocal_rank": 0.5,
+      "top5_documents": [
+        "Policies_and_Terms.pdf",
+        "Property_Listings.pdf",
+        "Policies_and_Terms.pdf",
+        "Services_and_Fees.pdf",
+        "Property_Listings.pdf"
+      ],
+      "type": "table"
+    },
+    {
+      "expected_documents": [
+        "Property_Listings.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q014",
+      "mode": "keyword",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "Policies_and_Terms.pdf",
+        "Services_and_Fees.pdf"
+      ],
+      "type": "table"
+    },
+    {
+      "expected_documents": [
+        "Property_Listings.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q014",
+      "mode": "hybrid_nocap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Property_Listings.pdf",
+        "Policies_and_Terms.pdf",
+        "Property_Listings.pdf",
+        "Services_and_Fees.pdf",
+        "Services_and_Fees.pdf"
+      ],
+      "type": "table"
+    },
+    {
+      "expected_documents": [
+        "Property_Listings.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q014",
+      "mode": "hybrid_cap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Property_Listings.pdf",
+        "Policies_and_Terms.pdf",
+        "Property_Listings.pdf",
+        "Services_and_Fees.pdf",
+        "Services_and_Fees.pdf"
+      ],
+      "type": "table"
+    },
+    {
+      "expected_documents": [
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q015",
+      "mode": "dense",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "Services_and_Fees.pdf",
+        "Services_and_Fees.pdf",
+        "FAQs.pdf",
+        "FAQs.pdf"
+      ],
+      "type": "table"
+    },
+    {
+      "expected_documents": [
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 2,
+      "hit_at_1": false,
+      "hit_at_5": true,
+      "id": "Q015",
+      "mode": "keyword",
+      "reciprocal_rank": 0.5,
+      "top5_documents": [
+        "Property_Listings.pdf",
+        "Services_and_Fees.pdf",
+        "Services_and_Fees.pdf",
+        "Services_and_Fees.pdf",
+        "FAQs.pdf"
+      ],
+      "type": "table"
+    },
+    {
+      "expected_documents": [
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q015",
+      "mode": "hybrid_nocap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "FAQs.pdf",
+        "Services_and_Fees.pdf",
+        "FAQs.pdf",
+        "Services_and_Fees.pdf"
+      ],
+      "type": "table"
+    },
+    {
+      "expected_documents": [
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q015",
+      "mode": "hybrid_cap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "FAQs.pdf",
+        "Services_and_Fees.pdf",
+        "FAQs.pdf",
+        "Services_and_Fees.pdf"
+      ],
+      "type": "table"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q016",
+      "mode": "dense",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf",
+        "Services_and_Fees.pdf",
+        "FAQs.pdf"
+      ],
+      "type": "table"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md"
+      ],
+      "first_expected_rank": 3,
+      "hit_at_1": false,
+      "hit_at_5": true,
+      "id": "Q016",
+      "mode": "keyword",
+      "reciprocal_rank": 0.3333333333333333,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "FAQs.pdf",
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "table"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q016",
+      "mode": "hybrid_nocap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Policies_and_Terms.pdf",
+        "Services_and_Fees.pdf",
+        "FAQs.pdf",
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "table"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q016",
+      "mode": "hybrid_cap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Policies_and_Terms.pdf",
+        "Services_and_Fees.pdf",
+        "FAQs.pdf",
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "table"
+    },
+    {
+      "expected_documents": [
+        "Company_Overview.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q017",
+      "mode": "dense",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Company_Overview.pdf",
+        "Company_Overview.pdf",
+        "Company_Overview.pdf",
+        "FAQs.pdf",
+        "FAQs.pdf"
+      ],
+      "type": "multi_part"
+    },
+    {
+      "expected_documents": [
+        "Company_Overview.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q017",
+      "mode": "keyword",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Company_Overview.pdf",
+        "Company_Overview.pdf",
+        "Company_Overview.pdf",
+        "Property_Listings.pdf",
+        "FAQs.pdf"
+      ],
+      "type": "multi_part"
+    },
+    {
+      "expected_documents": [
+        "Company_Overview.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q017",
+      "mode": "hybrid_nocap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Company_Overview.pdf",
+        "Company_Overview.pdf",
+        "Company_Overview.pdf",
+        "Company_Overview.pdf",
+        "Company_Overview.pdf"
+      ],
+      "type": "multi_part"
+    },
+    {
+      "expected_documents": [
+        "Company_Overview.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q017",
+      "mode": "hybrid_cap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Company_Overview.pdf",
+        "Company_Overview.pdf",
+        "Company_Overview.pdf",
+        "Property_Listings.pdf",
+        "FAQs.pdf"
+      ],
+      "type": "multi_part"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q018",
+      "mode": "dense",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf",
+        "FAQs.pdf",
+        "Policies_and_Terms.pdf",
+        "Services_and_Fees.pdf"
+      ],
+      "type": "multi_part"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md"
+      ],
+      "first_expected_rank": 2,
+      "hit_at_1": false,
+      "hit_at_5": true,
+      "id": "Q018",
+      "mode": "keyword",
+      "reciprocal_rank": 0.5,
+      "top5_documents": [
+        "FAQs.pdf",
+        "Policies_and_Terms.pdf",
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf",
+        "FAQs.pdf"
+      ],
+      "type": "multi_part"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q018",
+      "mode": "hybrid_nocap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Policies_and_Terms.pdf",
+        "FAQs.pdf",
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf",
+        "Services_and_Fees.pdf"
+      ],
+      "type": "multi_part"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q018",
+      "mode": "hybrid_cap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Policies_and_Terms.pdf",
+        "FAQs.pdf",
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf",
+        "Services_and_Fees.pdf"
+      ],
+      "type": "multi_part"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q019",
+      "mode": "dense",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf",
+        "FAQs.pdf",
+        "Company_Overview.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "multi_part"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md"
+      ],
+      "first_expected_rank": 2,
+      "hit_at_1": false,
+      "hit_at_5": true,
+      "id": "Q019",
+      "mode": "keyword",
+      "reciprocal_rank": 0.5,
+      "top5_documents": [
+        "Company_Overview.pdf",
+        "Policies_and_Terms.pdf",
+        "Company_Overview.pdf",
+        "Company_Overview.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "multi_part"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q019",
+      "mode": "hybrid_nocap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Policies_and_Terms.pdf",
+        "Company_Overview.pdf",
+        "FAQs.pdf",
+        "Company_Overview.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "multi_part"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q019",
+      "mode": "hybrid_cap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Policies_and_Terms.pdf",
+        "Company_Overview.pdf",
+        "FAQs.pdf",
+        "Company_Overview.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "multi_part"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md"
+      ],
+      "first_expected_rank": 2,
+      "hit_at_1": false,
+      "hit_at_5": true,
+      "id": "Q020",
+      "mode": "dense",
+      "reciprocal_rank": 0.5,
+      "top5_documents": [
+        "FAQs.pdf",
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf",
+        "Services_and_Fees.pdf"
+      ],
+      "type": "multi_part"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q020",
+      "mode": "keyword",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Policies_and_Terms.pdf",
+        "FAQs.pdf",
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "multi_part"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md"
+      ],
+      "first_expected_rank": 2,
+      "hit_at_1": false,
+      "hit_at_5": true,
+      "id": "Q020",
+      "mode": "hybrid_nocap",
+      "reciprocal_rank": 0.5,
+      "top5_documents": [
+        "FAQs.pdf",
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf",
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "multi_part"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md"
+      ],
+      "first_expected_rank": 2,
+      "hit_at_1": false,
+      "hit_at_5": true,
+      "id": "Q020",
+      "mode": "hybrid_cap",
+      "reciprocal_rank": 0.5,
+      "top5_documents": [
+        "FAQs.pdf",
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf",
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "multi_part"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q021",
+      "mode": "dense",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Policies_and_Terms.pdf",
+        "FAQs.pdf",
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "multi_part"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md"
+      ],
+      "first_expected_rank": 2,
+      "hit_at_1": false,
+      "hit_at_5": true,
+      "id": "Q021",
+      "mode": "keyword",
+      "reciprocal_rank": 0.5,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf",
+        "FAQs.pdf",
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "multi_part"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q021",
+      "mode": "hybrid_nocap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Policies_and_Terms.pdf",
+        "Services_and_Fees.pdf",
+        "FAQs.pdf",
+        "Policies_and_Terms.pdf",
+        "FAQs.pdf"
+      ],
+      "type": "multi_part"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q021",
+      "mode": "hybrid_cap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Policies_and_Terms.pdf",
+        "Services_and_Fees.pdf",
+        "FAQs.pdf",
+        "Policies_and_Terms.pdf",
+        "FAQs.pdf"
+      ],
+      "type": "multi_part"
+    },
+    {
+      "expected_documents": [
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q022",
+      "mode": "dense",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "Services_and_Fees.pdf",
+        "FAQs.pdf",
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "multi_part"
+    },
+    {
+      "expected_documents": [
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q022",
+      "mode": "keyword",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "Services_and_Fees.pdf",
+        "FAQs.pdf",
+        "Services_and_Fees.pdf",
+        "Company_Overview.pdf"
+      ],
+      "type": "multi_part"
+    },
+    {
+      "expected_documents": [
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q022",
+      "mode": "hybrid_nocap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "Services_and_Fees.pdf",
+        "FAQs.pdf",
+        "Services_and_Fees.pdf",
+        "Services_and_Fees.pdf"
+      ],
+      "type": "multi_part"
+    },
+    {
+      "expected_documents": [
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q022",
+      "mode": "hybrid_cap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "Services_and_Fees.pdf",
+        "FAQs.pdf",
+        "Services_and_Fees.pdf",
+        "Company_Overview.pdf"
+      ],
+      "type": "multi_part"
+    },
+    {
+      "expected_documents": [
+        "Property_Listings.md",
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 4,
+      "hit_at_1": false,
+      "hit_at_5": true,
+      "id": "Q023",
+      "mode": "dense",
+      "reciprocal_rank": 0.25,
+      "top5_documents": [
+        "Policies_and_Terms.pdf",
+        "FAQs.pdf",
+        "FAQs.pdf",
+        "Services_and_Fees.pdf",
+        "Services_and_Fees.pdf"
+      ],
+      "type": "multi_doc"
+    },
+    {
+      "expected_documents": [
+        "Property_Listings.md",
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q023",
+      "mode": "keyword",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Property_Listings.pdf",
+        "Services_and_Fees.pdf",
+        "Services_and_Fees.pdf",
+        "Property_Listings.pdf",
+        "FAQs.pdf"
+      ],
+      "type": "multi_doc"
+    },
+    {
+      "expected_documents": [
+        "Property_Listings.md",
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q023",
+      "mode": "hybrid_nocap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "FAQs.pdf",
+        "FAQs.pdf",
+        "Services_and_Fees.pdf",
+        "Services_and_Fees.pdf"
+      ],
+      "type": "multi_doc"
+    },
+    {
+      "expected_documents": [
+        "Property_Listings.md",
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q023",
+      "mode": "hybrid_cap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "FAQs.pdf",
+        "FAQs.pdf",
+        "Services_and_Fees.pdf",
+        "Services_and_Fees.pdf"
+      ],
+      "type": "multi_doc"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md",
+        "Property_Listings.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q024",
+      "mode": "dense",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Policies_and_Terms.pdf",
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf",
+        "FAQs.pdf"
+      ],
+      "type": "multi_doc"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md",
+        "Property_Listings.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q024",
+      "mode": "keyword",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Property_Listings.pdf",
+        "FAQs.pdf",
+        "Property_Listings.pdf",
+        "Services_and_Fees.pdf",
+        "Property_Listings.pdf"
+      ],
+      "type": "multi_doc"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md",
+        "Property_Listings.md"
+      ],
+      "first_expected_rank": 3,
+      "hit_at_1": false,
+      "hit_at_5": true,
+      "id": "Q024",
+      "mode": "hybrid_nocap",
+      "reciprocal_rank": 0.3333333333333333,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "FAQs.pdf",
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "multi_doc"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md",
+        "Property_Listings.md"
+      ],
+      "first_expected_rank": 3,
+      "hit_at_1": false,
+      "hit_at_5": true,
+      "id": "Q024",
+      "mode": "hybrid_cap",
+      "reciprocal_rank": 0.3333333333333333,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "FAQs.pdf",
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "multi_doc"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md",
+        "Property_Listings.md"
+      ],
+      "first_expected_rank": 2,
+      "hit_at_1": false,
+      "hit_at_5": true,
+      "id": "Q025",
+      "mode": "dense",
+      "reciprocal_rank": 0.5,
+      "top5_documents": [
+        "FAQs.pdf",
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf",
+        "Services_and_Fees.pdf"
+      ],
+      "type": "multi_doc"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md",
+        "Property_Listings.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q025",
+      "mode": "keyword",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "Policies_and_Terms.pdf",
+        "Services_and_Fees.pdf"
+      ],
+      "type": "multi_doc"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md",
+        "Property_Listings.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q025",
+      "mode": "hybrid_nocap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Policies_and_Terms.pdf",
+        "FAQs.pdf",
+        "Property_Listings.pdf",
+        "Policies_and_Terms.pdf",
+        "Services_and_Fees.pdf"
+      ],
+      "type": "multi_doc"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md",
+        "Property_Listings.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q025",
+      "mode": "hybrid_cap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Policies_and_Terms.pdf",
+        "FAQs.pdf",
+        "Property_Listings.pdf",
+        "Policies_and_Terms.pdf",
+        "Services_and_Fees.pdf"
+      ],
+      "type": "multi_doc"
+    },
+    {
+      "expected_documents": [
+        "Property_Listings.md",
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 2,
+      "hit_at_1": false,
+      "hit_at_5": true,
+      "id": "Q026",
+      "mode": "dense",
+      "reciprocal_rank": 0.5,
+      "top5_documents": [
+        "Policies_and_Terms.pdf",
+        "Services_and_Fees.pdf",
+        "Services_and_Fees.pdf",
+        "Services_and_Fees.pdf",
+        "FAQs.pdf"
+      ],
+      "type": "multi_doc"
+    },
+    {
+      "expected_documents": [
+        "Property_Listings.md",
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q026",
+      "mode": "keyword",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "Services_and_Fees.pdf",
+        "Property_Listings.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "multi_doc"
+    },
+    {
+      "expected_documents": [
+        "Property_Listings.md",
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q026",
+      "mode": "hybrid_nocap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf",
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "Services_and_Fees.pdf"
+      ],
+      "type": "multi_doc"
+    },
+    {
+      "expected_documents": [
+        "Property_Listings.md",
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q026",
+      "mode": "hybrid_cap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf",
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "Services_and_Fees.pdf"
+      ],
+      "type": "multi_doc"
+    },
+    {
+      "expected_documents": [
+        "Property_Listings.md",
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q027",
+      "mode": "dense",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf",
+        "Services_and_Fees.pdf",
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "multi_doc"
+    },
+    {
+      "expected_documents": [
+        "Property_Listings.md",
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q027",
+      "mode": "keyword",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "multi_doc"
+    },
+    {
+      "expected_documents": [
+        "Property_Listings.md",
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q027",
+      "mode": "hybrid_nocap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "Property_Listings.pdf",
+        "Policies_and_Terms.pdf",
+        "Property_Listings.pdf",
+        "Property_Listings.pdf"
+      ],
+      "type": "multi_doc"
+    },
+    {
+      "expected_documents": [
+        "Property_Listings.md",
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q027",
+      "mode": "hybrid_cap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "Property_Listings.pdf",
+        "Policies_and_Terms.pdf",
+        "Property_Listings.pdf",
+        "Property_Listings.pdf"
+      ],
+      "type": "multi_doc"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md",
+        "Property_Listings.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q028",
+      "mode": "dense",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf",
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf",
+        "FAQs.pdf"
+      ],
+      "type": "multi_doc"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md",
+        "Property_Listings.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q028",
+      "mode": "keyword",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Property_Listings.pdf",
+        "Services_and_Fees.pdf",
+        "Property_Listings.pdf",
+        "FAQs.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "multi_doc"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md",
+        "Property_Listings.md"
+      ],
+      "first_expected_rank": 2,
+      "hit_at_1": false,
+      "hit_at_5": true,
+      "id": "Q028",
+      "mode": "hybrid_nocap",
+      "reciprocal_rank": 0.5,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf",
+        "FAQs.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "multi_doc"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md",
+        "Property_Listings.md"
+      ],
+      "first_expected_rank": 2,
+      "hit_at_1": false,
+      "hit_at_5": true,
+      "id": "Q028",
+      "mode": "hybrid_cap",
+      "reciprocal_rank": 0.5,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf",
+        "FAQs.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "multi_doc"
+    },
+    {
+      "expected_documents": [
+        "Company_Overview.md",
+        "Property_Listings.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q029",
+      "mode": "dense",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Property_Listings.pdf",
+        "Company_Overview.pdf",
+        "Company_Overview.pdf",
+        "Company_Overview.pdf",
+        "Property_Listings.pdf"
+      ],
+      "type": "multi_doc"
+    },
+    {
+      "expected_documents": [
+        "Company_Overview.md",
+        "Property_Listings.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q029",
+      "mode": "keyword",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Company_Overview.pdf",
+        "Property_Listings.pdf",
+        "Company_Overview.pdf",
+        "Property_Listings.pdf",
+        "Company_Overview.pdf"
+      ],
+      "type": "multi_doc"
+    },
+    {
+      "expected_documents": [
+        "Company_Overview.md",
+        "Property_Listings.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q029",
+      "mode": "hybrid_nocap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Property_Listings.pdf",
+        "Company_Overview.pdf",
+        "Company_Overview.pdf",
+        "Property_Listings.pdf",
+        "Company_Overview.pdf"
+      ],
+      "type": "multi_doc"
+    },
+    {
+      "expected_documents": [
+        "Company_Overview.md",
+        "Property_Listings.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q029",
+      "mode": "hybrid_cap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Property_Listings.pdf",
+        "Company_Overview.pdf",
+        "Company_Overview.pdf",
+        "Property_Listings.pdf",
+        "Company_Overview.pdf"
+      ],
+      "type": "multi_doc"
+    },
+    {
+      "expected_documents": [
+        "Property_Listings.md",
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q030",
+      "mode": "dense",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "Services_and_Fees.pdf",
+        "FAQs.pdf",
+        "FAQs.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "multi_doc"
+    },
+    {
+      "expected_documents": [
+        "Property_Listings.md",
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q030",
+      "mode": "keyword",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "Property_Listings.pdf",
+        "FAQs.pdf",
+        "Property_Listings.pdf",
+        "Services_and_Fees.pdf"
+      ],
+      "type": "multi_doc"
+    },
+    {
+      "expected_documents": [
+        "Property_Listings.md",
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q030",
+      "mode": "hybrid_nocap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "FAQs.pdf",
+        "Services_and_Fees.pdf",
+        "FAQs.pdf",
+        "Services_and_Fees.pdf"
+      ],
+      "type": "multi_doc"
+    },
+    {
+      "expected_documents": [
+        "Property_Listings.md",
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q030",
+      "mode": "hybrid_cap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "FAQs.pdf",
+        "Services_and_Fees.pdf",
+        "FAQs.pdf",
+        "Services_and_Fees.pdf"
+      ],
+      "type": "multi_doc"
+    },
+    {
+      "expected_documents": [],
+      "first_expected_rank": null,
+      "hit_at_1": false,
+      "hit_at_5": false,
+      "id": "Q031",
+      "mode": "dense",
+      "reciprocal_rank": 0.0,
+      "top5_documents": [
+        "Company_Overview.pdf",
+        "Company_Overview.pdf",
+        "Company_Overview.pdf",
+        "FAQs.pdf",
+        "FAQs.pdf"
+      ],
+      "type": "unanswerable"
+    },
+    {
+      "expected_documents": [],
+      "first_expected_rank": null,
+      "hit_at_1": false,
+      "hit_at_5": false,
+      "id": "Q031",
+      "mode": "keyword",
+      "reciprocal_rank": 0.0,
+      "top5_documents": [
+        "FAQs.pdf",
+        "Company_Overview.pdf",
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "Property_Listings.pdf"
+      ],
+      "type": "unanswerable"
+    },
+    {
+      "expected_documents": [],
+      "first_expected_rank": null,
+      "hit_at_1": false,
+      "hit_at_5": false,
+      "id": "Q031",
+      "mode": "hybrid_nocap",
+      "reciprocal_rank": 0.0,
+      "top5_documents": [
+        "Company_Overview.pdf",
+        "FAQs.pdf",
+        "Company_Overview.pdf",
+        "Company_Overview.pdf",
+        "FAQs.pdf"
+      ],
+      "type": "unanswerable"
+    },
+    {
+      "expected_documents": [],
+      "first_expected_rank": null,
+      "hit_at_1": false,
+      "hit_at_5": false,
+      "id": "Q031",
+      "mode": "hybrid_cap",
+      "reciprocal_rank": 0.0,
+      "top5_documents": [
+        "Company_Overview.pdf",
+        "FAQs.pdf",
+        "Company_Overview.pdf",
+        "Company_Overview.pdf",
+        "FAQs.pdf"
+      ],
+      "type": "unanswerable"
+    },
+    {
+      "expected_documents": [],
+      "first_expected_rank": null,
+      "hit_at_1": false,
+      "hit_at_5": false,
+      "id": "Q032",
+      "mode": "dense",
+      "reciprocal_rank": 0.0,
+      "top5_documents": [
+        "Company_Overview.pdf",
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "FAQs.pdf"
+      ],
+      "type": "unanswerable"
+    },
+    {
+      "expected_documents": [],
+      "first_expected_rank": null,
+      "hit_at_1": false,
+      "hit_at_5": false,
+      "id": "Q032",
+      "mode": "keyword",
+      "reciprocal_rank": 0.0,
+      "top5_documents": [
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "Services_and_Fees.pdf",
+        "Property_Listings.pdf",
+        "Company_Overview.pdf"
+      ],
+      "type": "unanswerable"
+    },
+    {
+      "expected_documents": [],
+      "first_expected_rank": null,
+      "hit_at_1": false,
+      "hit_at_5": false,
+      "id": "Q032",
+      "mode": "hybrid_nocap",
+      "reciprocal_rank": 0.0,
+      "top5_documents": [
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "Company_Overview.pdf",
+        "Property_Listings.pdf",
+        "Property_Listings.pdf"
+      ],
+      "type": "unanswerable"
+    },
+    {
+      "expected_documents": [],
+      "first_expected_rank": null,
+      "hit_at_1": false,
+      "hit_at_5": false,
+      "id": "Q032",
+      "mode": "hybrid_cap",
+      "reciprocal_rank": 0.0,
+      "top5_documents": [
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "Company_Overview.pdf",
+        "Property_Listings.pdf",
+        "Services_and_Fees.pdf"
+      ],
+      "type": "unanswerable"
+    },
+    {
+      "expected_documents": [],
+      "first_expected_rank": null,
+      "hit_at_1": false,
+      "hit_at_5": false,
+      "id": "Q033",
+      "mode": "dense",
+      "reciprocal_rank": 0.0,
+      "top5_documents": [
+        "Policies_and_Terms.pdf",
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf",
+        "FAQs.pdf",
+        "Services_and_Fees.pdf"
+      ],
+      "type": "unanswerable"
+    },
+    {
+      "expected_documents": [],
+      "first_expected_rank": null,
+      "hit_at_1": false,
+      "hit_at_5": false,
+      "id": "Q033",
+      "mode": "keyword",
+      "reciprocal_rank": 0.0,
+      "top5_documents": [
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "FAQs.pdf",
+        "Services_and_Fees.pdf"
+      ],
+      "type": "unanswerable"
+    },
+    {
+      "expected_documents": [],
+      "first_expected_rank": null,
+      "hit_at_1": false,
+      "hit_at_5": false,
+      "id": "Q033",
+      "mode": "hybrid_nocap",
+      "reciprocal_rank": 0.0,
+      "top5_documents": [
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "Services_and_Fees.pdf",
+        "FAQs.pdf",
+        "Property_Listings.pdf"
+      ],
+      "type": "unanswerable"
+    },
+    {
+      "expected_documents": [],
+      "first_expected_rank": null,
+      "hit_at_1": false,
+      "hit_at_5": false,
+      "id": "Q033",
+      "mode": "hybrid_cap",
+      "reciprocal_rank": 0.0,
+      "top5_documents": [
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "Services_and_Fees.pdf",
+        "FAQs.pdf",
+        "Property_Listings.pdf"
+      ],
+      "type": "unanswerable"
+    },
+    {
+      "expected_documents": [],
+      "first_expected_rank": null,
+      "hit_at_1": false,
+      "hit_at_5": false,
+      "id": "Q034",
+      "mode": "dense",
+      "reciprocal_rank": 0.0,
+      "top5_documents": [
+        "Policies_and_Terms.pdf",
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf",
+        "Property_Listings.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "unanswerable"
+    },
+    {
+      "expected_documents": [],
+      "first_expected_rank": null,
+      "hit_at_1": false,
+      "hit_at_5": false,
+      "id": "Q034",
+      "mode": "keyword",
+      "reciprocal_rank": 0.0,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf",
+        "FAQs.pdf",
+        "Policies_and_Terms.pdf",
+        "FAQs.pdf"
+      ],
+      "type": "unanswerable"
+    },
+    {
+      "expected_documents": [],
+      "first_expected_rank": null,
+      "hit_at_1": false,
+      "hit_at_5": false,
+      "id": "Q034",
+      "mode": "hybrid_nocap",
+      "reciprocal_rank": 0.0,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf",
+        "FAQs.pdf"
+      ],
+      "type": "unanswerable"
+    },
+    {
+      "expected_documents": [],
+      "first_expected_rank": null,
+      "hit_at_1": false,
+      "hit_at_5": false,
+      "id": "Q034",
+      "mode": "hybrid_cap",
+      "reciprocal_rank": 0.0,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf",
+        "FAQs.pdf"
+      ],
+      "type": "unanswerable"
+    },
+    {
+      "expected_documents": [],
+      "first_expected_rank": null,
+      "hit_at_1": false,
+      "hit_at_5": false,
+      "id": "Q035",
+      "mode": "dense",
+      "reciprocal_rank": 0.0,
+      "top5_documents": [
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "FAQs.pdf",
+        "Company_Overview.pdf"
+      ],
+      "type": "unanswerable"
+    },
+    {
+      "expected_documents": [],
+      "first_expected_rank": null,
+      "hit_at_1": false,
+      "hit_at_5": false,
+      "id": "Q035",
+      "mode": "keyword",
+      "reciprocal_rank": 0.0,
+      "top5_documents": [
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "Company_Overview.pdf",
+        "Services_and_Fees.pdf"
+      ],
+      "type": "unanswerable"
+    },
+    {
+      "expected_documents": [],
+      "first_expected_rank": null,
+      "hit_at_1": false,
+      "hit_at_5": false,
+      "id": "Q035",
+      "mode": "hybrid_nocap",
+      "reciprocal_rank": 0.0,
+      "top5_documents": [
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "FAQs.pdf"
+      ],
+      "type": "unanswerable"
+    },
+    {
+      "expected_documents": [],
+      "first_expected_rank": null,
+      "hit_at_1": false,
+      "hit_at_5": false,
+      "id": "Q035",
+      "mode": "hybrid_cap",
+      "reciprocal_rank": 0.0,
+      "top5_documents": [
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "FAQs.pdf",
+        "Company_Overview.pdf"
+      ],
+      "type": "unanswerable"
+    },
+    {
+      "expected_documents": [],
+      "first_expected_rank": null,
+      "hit_at_1": false,
+      "hit_at_5": false,
+      "id": "Q036",
+      "mode": "dense",
+      "reciprocal_rank": 0.0,
+      "top5_documents": [
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "FAQs.pdf",
+        "Property_Listings.pdf",
+        "FAQs.pdf"
+      ],
+      "type": "unanswerable"
+    },
+    {
+      "expected_documents": [],
+      "first_expected_rank": null,
+      "hit_at_1": false,
+      "hit_at_5": false,
+      "id": "Q036",
+      "mode": "keyword",
+      "reciprocal_rank": 0.0,
+      "top5_documents": [
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "Company_Overview.pdf",
+        "FAQs.pdf"
+      ],
+      "type": "unanswerable"
+    },
+    {
+      "expected_documents": [],
+      "first_expected_rank": null,
+      "hit_at_1": false,
+      "hit_at_5": false,
+      "id": "Q036",
+      "mode": "hybrid_nocap",
+      "reciprocal_rank": 0.0,
+      "top5_documents": [
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "FAQs.pdf",
+        "Property_Listings.pdf",
+        "Company_Overview.pdf"
+      ],
+      "type": "unanswerable"
+    },
+    {
+      "expected_documents": [],
+      "first_expected_rank": null,
+      "hit_at_1": false,
+      "hit_at_5": false,
+      "id": "Q036",
+      "mode": "hybrid_cap",
+      "reciprocal_rank": 0.0,
+      "top5_documents": [
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "FAQs.pdf",
+        "Property_Listings.pdf",
+        "Company_Overview.pdf"
+      ],
+      "type": "unanswerable"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md",
+        "Property_Listings.md"
+      ],
+      "first_expected_rank": 2,
+      "hit_at_1": false,
+      "hit_at_5": true,
+      "id": "Q037",
+      "mode": "dense",
+      "reciprocal_rank": 0.5,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf",
+        "Property_Listings.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "trap"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md",
+        "Property_Listings.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q037",
+      "mode": "keyword",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "trap"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md",
+        "Property_Listings.md"
+      ],
+      "first_expected_rank": 2,
+      "hit_at_1": false,
+      "hit_at_5": true,
+      "id": "Q037",
+      "mode": "hybrid_nocap",
+      "reciprocal_rank": 0.5,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf",
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "trap"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md",
+        "Property_Listings.md"
+      ],
+      "first_expected_rank": 2,
+      "hit_at_1": false,
+      "hit_at_5": true,
+      "id": "Q037",
+      "mode": "hybrid_cap",
+      "reciprocal_rank": 0.5,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf",
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "trap"
+    },
+    {
+      "expected_documents": [
+        "Property_Listings.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q038",
+      "mode": "dense",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "FAQs.pdf",
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "trap"
+    },
+    {
+      "expected_documents": [
+        "Property_Listings.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q038",
+      "mode": "keyword",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "Services_and_Fees.pdf",
+        "Services_and_Fees.pdf"
+      ],
+      "type": "trap"
+    },
+    {
+      "expected_documents": [
+        "Property_Listings.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q038",
+      "mode": "hybrid_nocap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "Services_and_Fees.pdf",
+        "Property_Listings.pdf"
+      ],
+      "type": "trap"
+    },
+    {
+      "expected_documents": [
+        "Property_Listings.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q038",
+      "mode": "hybrid_cap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "Services_and_Fees.pdf",
+        "FAQs.pdf"
+      ],
+      "type": "trap"
+    },
+    {
+      "expected_documents": [
+        "Company_Overview.md"
+      ],
+      "first_expected_rank": 2,
+      "hit_at_1": false,
+      "hit_at_5": true,
+      "id": "Q039",
+      "mode": "dense",
+      "reciprocal_rank": 0.5,
+      "top5_documents": [
+        "FAQs.pdf",
+        "Company_Overview.pdf",
+        "Company_Overview.pdf",
+        "Company_Overview.pdf",
+        "Services_and_Fees.pdf"
+      ],
+      "type": "trap"
+    },
+    {
+      "expected_documents": [
+        "Company_Overview.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q039",
+      "mode": "keyword",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Company_Overview.pdf",
+        "Company_Overview.pdf",
+        "Company_Overview.pdf",
+        "Property_Listings.pdf",
+        "FAQs.pdf"
+      ],
+      "type": "trap"
+    },
+    {
+      "expected_documents": [
+        "Company_Overview.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q039",
+      "mode": "hybrid_nocap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Company_Overview.pdf",
+        "Company_Overview.pdf",
+        "FAQs.pdf",
+        "Company_Overview.pdf",
+        "Company_Overview.pdf"
+      ],
+      "type": "trap"
+    },
+    {
+      "expected_documents": [
+        "Company_Overview.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q039",
+      "mode": "hybrid_cap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Company_Overview.pdf",
+        "Company_Overview.pdf",
+        "FAQs.pdf",
+        "Company_Overview.pdf",
+        "Property_Listings.pdf"
+      ],
+      "type": "trap"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q040",
+      "mode": "dense",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf",
+        "FAQs.pdf",
+        "FAQs.pdf"
+      ],
+      "type": "trap"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md"
+      ],
+      "first_expected_rank": 3,
+      "hit_at_1": false,
+      "hit_at_5": true,
+      "id": "Q040",
+      "mode": "keyword",
+      "reciprocal_rank": 0.3333333333333333,
+      "top5_documents": [
+        "FAQs.pdf",
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "trap"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q040",
+      "mode": "hybrid_nocap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Policies_and_Terms.pdf",
+        "FAQs.pdf",
+        "Policies_and_Terms.pdf",
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "trap"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q040",
+      "mode": "hybrid_cap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Policies_and_Terms.pdf",
+        "FAQs.pdf",
+        "Policies_and_Terms.pdf",
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "trap"
+    },
+    {
+      "expected_documents": [
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q041",
+      "mode": "dense",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf",
+        "FAQs.pdf",
+        "Services_and_Fees.pdf"
+      ],
+      "type": "trap"
+    },
+    {
+      "expected_documents": [
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q041",
+      "mode": "keyword",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf",
+        "Services_and_Fees.pdf",
+        "FAQs.pdf",
+        "Services_and_Fees.pdf"
+      ],
+      "type": "trap"
+    },
+    {
+      "expected_documents": [
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q041",
+      "mode": "hybrid_nocap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf",
+        "Services_and_Fees.pdf",
+        "FAQs.pdf",
+        "Services_and_Fees.pdf"
+      ],
+      "type": "trap"
+    },
+    {
+      "expected_documents": [
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q041",
+      "mode": "hybrid_cap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf",
+        "Services_and_Fees.pdf",
+        "FAQs.pdf",
+        "Services_and_Fees.pdf"
+      ],
+      "type": "trap"
+    },
+    {
+      "expected_documents": [
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q042",
+      "mode": "dense",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "Services_and_Fees.pdf",
+        "FAQs.pdf",
+        "Services_and_Fees.pdf",
+        "FAQs.pdf"
+      ],
+      "type": "trap"
+    },
+    {
+      "expected_documents": [
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q042",
+      "mode": "keyword",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "FAQs.pdf",
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf",
+        "Property_Listings.pdf"
+      ],
+      "type": "trap"
+    },
+    {
+      "expected_documents": [
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q042",
+      "mode": "hybrid_nocap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "Services_and_Fees.pdf",
+        "FAQs.pdf",
+        "Services_and_Fees.pdf",
+        "FAQs.pdf"
+      ],
+      "type": "trap"
+    },
+    {
+      "expected_documents": [
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q042",
+      "mode": "hybrid_cap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "Services_and_Fees.pdf",
+        "FAQs.pdf",
+        "Services_and_Fees.pdf",
+        "FAQs.pdf"
+      ],
+      "type": "trap"
+    },
+    {
+      "expected_documents": [
+        "Property_Listings.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q043",
+      "mode": "dense",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "FAQs.pdf",
+        "Company_Overview.pdf"
+      ],
+      "type": "roman_urdu"
+    },
+    {
+      "expected_documents": [
+        "Property_Listings.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q043",
+      "mode": "keyword",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "Services_and_Fees.pdf",
+        "FAQs.pdf"
+      ],
+      "type": "roman_urdu"
+    },
+    {
+      "expected_documents": [
+        "Property_Listings.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q043",
+      "mode": "hybrid_nocap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "Property_Listings.pdf"
+      ],
+      "type": "roman_urdu"
+    },
+    {
+      "expected_documents": [
+        "Property_Listings.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q043",
+      "mode": "hybrid_cap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "FAQs.pdf",
+        "FAQs.pdf"
+      ],
+      "type": "roman_urdu"
+    },
+    {
+      "expected_documents": [
+        "FAQs.md",
+        "Policies_and_Terms.md"
+      ],
+      "first_expected_rank": 4,
+      "hit_at_1": false,
+      "hit_at_5": true,
+      "id": "Q044",
+      "mode": "dense",
+      "reciprocal_rank": 0.25,
+      "top5_documents": [
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "FAQs.pdf",
+        "FAQs.pdf"
+      ],
+      "type": "roman_urdu"
+    },
+    {
+      "expected_documents": [
+        "FAQs.md",
+        "Policies_and_Terms.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q044",
+      "mode": "keyword",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "FAQs.pdf",
+        "Company_Overview.pdf",
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "roman_urdu"
+    },
+    {
+      "expected_documents": [
+        "FAQs.md",
+        "Policies_and_Terms.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q044",
+      "mode": "hybrid_nocap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "FAQs.pdf",
+        "Property_Listings.pdf",
+        "Company_Overview.pdf",
+        "Property_Listings.pdf",
+        "Property_Listings.pdf"
+      ],
+      "type": "roman_urdu"
+    },
+    {
+      "expected_documents": [
+        "FAQs.md",
+        "Policies_and_Terms.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q044",
+      "mode": "hybrid_cap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "FAQs.pdf",
+        "Property_Listings.pdf",
+        "Company_Overview.pdf",
+        "Property_Listings.pdf",
+        "Property_Listings.pdf"
+      ],
+      "type": "roman_urdu"
+    },
+    {
+      "expected_documents": [
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q045",
+      "mode": "dense",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "Services_and_Fees.pdf",
+        "Property_Listings.pdf",
+        "FAQs.pdf",
+        "Services_and_Fees.pdf"
+      ],
+      "type": "roman_urdu"
+    },
+    {
+      "expected_documents": [
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q045",
+      "mode": "keyword",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "Services_and_Fees.pdf",
+        "Services_and_Fees.pdf",
+        "Property_Listings.pdf",
+        "FAQs.pdf"
+      ],
+      "type": "roman_urdu"
+    },
+    {
+      "expected_documents": [
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q045",
+      "mode": "hybrid_nocap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "Services_and_Fees.pdf",
+        "FAQs.pdf",
+        "Services_and_Fees.pdf",
+        "FAQs.pdf"
+      ],
+      "type": "roman_urdu"
+    },
+    {
+      "expected_documents": [
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q045",
+      "mode": "hybrid_cap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "Services_and_Fees.pdf",
+        "FAQs.pdf",
+        "Services_and_Fees.pdf",
+        "FAQs.pdf"
+      ],
+      "type": "roman_urdu"
+    },
+    {
+      "expected_documents": [
+        "FAQs.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q046",
+      "mode": "dense",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "FAQs.pdf",
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "roman_urdu"
+    },
+    {
+      "expected_documents": [
+        "FAQs.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q046",
+      "mode": "keyword",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "FAQs.pdf"
+      ],
+      "type": "roman_urdu"
+    },
+    {
+      "expected_documents": [
+        "FAQs.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q046",
+      "mode": "hybrid_nocap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "FAQs.pdf",
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "roman_urdu"
+    },
+    {
+      "expected_documents": [
+        "FAQs.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q046",
+      "mode": "hybrid_cap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "FAQs.pdf",
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "roman_urdu"
+    },
+    {
+      "expected_documents": [
+        "Company_Overview.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q047",
+      "mode": "dense",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Company_Overview.pdf",
+        "Company_Overview.pdf",
+        "FAQs.pdf",
+        "Company_Overview.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "roman_urdu"
+    },
+    {
+      "expected_documents": [
+        "Company_Overview.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q047",
+      "mode": "keyword",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Company_Overview.pdf",
+        "Company_Overview.pdf",
+        "Company_Overview.pdf",
+        "FAQs.pdf",
+        "FAQs.pdf"
+      ],
+      "type": "roman_urdu"
+    },
+    {
+      "expected_documents": [
+        "Company_Overview.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q047",
+      "mode": "hybrid_nocap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Company_Overview.pdf",
+        "Company_Overview.pdf",
+        "Company_Overview.pdf",
+        "Company_Overview.pdf",
+        "FAQs.pdf"
+      ],
+      "type": "roman_urdu"
+    },
+    {
+      "expected_documents": [
+        "Company_Overview.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q047",
+      "mode": "hybrid_cap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Company_Overview.pdf",
+        "Company_Overview.pdf",
+        "Company_Overview.pdf",
+        "FAQs.pdf",
+        "FAQs.pdf"
+      ],
+      "type": "roman_urdu"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q048",
+      "mode": "dense",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Policies_and_Terms.pdf",
+        "FAQs.pdf",
+        "Policies_and_Terms.pdf",
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "roman_urdu"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q048",
+      "mode": "keyword",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Policies_and_Terms.pdf",
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf",
+        "FAQs.pdf"
+      ],
+      "type": "roman_urdu"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q048",
+      "mode": "hybrid_nocap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf",
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf",
+        "FAQs.pdf"
+      ],
+      "type": "roman_urdu"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q048",
+      "mode": "hybrid_cap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf",
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf",
+        "FAQs.pdf"
+      ],
+      "type": "roman_urdu"
+    },
+    {
+      "expected_documents": [
+        "Company_Overview.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q049",
+      "mode": "dense",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Company_Overview.pdf",
+        "FAQs.pdf",
+        "FAQs.pdf",
+        "Company_Overview.pdf",
+        "Property_Listings.pdf"
+      ],
+      "type": "roman_urdu"
+    },
+    {
+      "expected_documents": [
+        "Company_Overview.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q049",
+      "mode": "keyword",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Company_Overview.pdf",
+        "Company_Overview.pdf",
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "FAQs.pdf"
+      ],
+      "type": "roman_urdu"
+    },
+    {
+      "expected_documents": [
+        "Company_Overview.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q049",
+      "mode": "hybrid_nocap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Company_Overview.pdf",
+        "Property_Listings.pdf",
+        "FAQs.pdf",
+        "Company_Overview.pdf",
+        "Company_Overview.pdf"
+      ],
+      "type": "roman_urdu"
+    },
+    {
+      "expected_documents": [
+        "Company_Overview.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q049",
+      "mode": "hybrid_cap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Company_Overview.pdf",
+        "Property_Listings.pdf",
+        "FAQs.pdf",
+        "Company_Overview.pdf",
+        "Company_Overview.pdf"
+      ],
+      "type": "roman_urdu"
+    },
+    {
+      "expected_documents": [
+        "FAQs.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q050",
+      "mode": "dense",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "FAQs.pdf",
+        "FAQs.pdf",
+        "Policies_and_Terms.pdf",
+        "Company_Overview.pdf",
+        "Services_and_Fees.pdf"
+      ],
+      "type": "roman_urdu"
+    },
+    {
+      "expected_documents": [
+        "FAQs.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q050",
+      "mode": "keyword",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "FAQs.pdf",
+        "Services_and_Fees.pdf",
+        "Company_Overview.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "roman_urdu"
+    },
+    {
+      "expected_documents": [
+        "FAQs.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q050",
+      "mode": "hybrid_nocap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "FAQs.pdf",
+        "Policies_and_Terms.pdf",
+        "Services_and_Fees.pdf",
+        "FAQs.pdf",
+        "Company_Overview.pdf"
+      ],
+      "type": "roman_urdu"
+    },
+    {
+      "expected_documents": [
+        "FAQs.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q050",
+      "mode": "hybrid_cap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "FAQs.pdf",
+        "Policies_and_Terms.pdf",
+        "Services_and_Fees.pdf",
+        "FAQs.pdf",
+        "Company_Overview.pdf"
+      ],
+      "type": "roman_urdu"
+    },
+    {
+      "expected_documents": [
+        "Property_Listings.md"
+      ],
+      "first_expected_rank": 3,
+      "hit_at_1": false,
+      "hit_at_5": true,
+      "id": "Q051",
+      "mode": "dense",
+      "reciprocal_rank": 0.3333333333333333,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf",
+        "Property_Listings.pdf",
+        "Policies_and_Terms.pdf",
+        "FAQs.pdf"
+      ],
+      "type": "follow_up"
+    },
+    {
+      "expected_documents": [
+        "Property_Listings.md"
+      ],
+      "first_expected_rank": null,
+      "hit_at_1": false,
+      "hit_at_5": false,
+      "id": "Q051",
+      "mode": "keyword",
+      "reciprocal_rank": 0.0,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "FAQs.pdf",
+        "FAQs.pdf",
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "follow_up"
+    },
+    {
+      "expected_documents": [
+        "Property_Listings.md"
+      ],
+      "first_expected_rank": null,
+      "hit_at_1": false,
+      "hit_at_5": false,
+      "id": "Q051",
+      "mode": "hybrid_nocap",
+      "reciprocal_rank": 0.0,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf"
+      ],
+      "type": "follow_up"
+    },
+    {
+      "expected_documents": [
+        "Property_Listings.md"
+      ],
+      "first_expected_rank": null,
+      "hit_at_1": false,
+      "hit_at_5": false,
+      "id": "Q051",
+      "mode": "hybrid_cap",
+      "reciprocal_rank": 0.0,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf",
+        "FAQs.pdf"
+      ],
+      "type": "follow_up"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md",
+        "Property_Listings.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q052",
+      "mode": "dense",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Policies_and_Terms.pdf",
+        "FAQs.pdf",
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf",
+        "FAQs.pdf"
+      ],
+      "type": "follow_up"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md",
+        "Property_Listings.md"
+      ],
+      "first_expected_rank": 4,
+      "hit_at_1": false,
+      "hit_at_5": true,
+      "id": "Q052",
+      "mode": "keyword",
+      "reciprocal_rank": 0.25,
+      "top5_documents": [
+        "FAQs.pdf",
+        "Services_and_Fees.pdf",
+        "FAQs.pdf",
+        "Policies_and_Terms.pdf",
+        "Services_and_Fees.pdf"
+      ],
+      "type": "follow_up"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md",
+        "Property_Listings.md"
+      ],
+      "first_expected_rank": 3,
+      "hit_at_1": false,
+      "hit_at_5": true,
+      "id": "Q052",
+      "mode": "hybrid_nocap",
+      "reciprocal_rank": 0.3333333333333333,
+      "top5_documents": [
+        "FAQs.pdf",
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf",
+        "FAQs.pdf"
+      ],
+      "type": "follow_up"
+    },
+    {
+      "expected_documents": [
+        "Policies_and_Terms.md",
+        "Property_Listings.md"
+      ],
+      "first_expected_rank": 3,
+      "hit_at_1": false,
+      "hit_at_5": true,
+      "id": "Q052",
+      "mode": "hybrid_cap",
+      "reciprocal_rank": 0.3333333333333333,
+      "top5_documents": [
+        "FAQs.pdf",
+        "Services_and_Fees.pdf",
+        "Policies_and_Terms.pdf",
+        "Policies_and_Terms.pdf",
+        "FAQs.pdf"
+      ],
+      "type": "follow_up"
+    },
+    {
+      "expected_documents": [
+        "Property_Listings.md",
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q053",
+      "mode": "dense",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "FAQs.pdf",
+        "Property_Listings.pdf",
+        "Services_and_Fees.pdf"
+      ],
+      "type": "follow_up"
+    },
+    {
+      "expected_documents": [
+        "Property_Listings.md",
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q053",
+      "mode": "keyword",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "Services_and_Fees.pdf",
+        "FAQs.pdf"
+      ],
+      "type": "follow_up"
+    },
+    {
+      "expected_documents": [
+        "Property_Listings.md",
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q053",
+      "mode": "hybrid_nocap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "FAQs.pdf",
+        "Property_Listings.pdf",
+        "Services_and_Fees.pdf"
+      ],
+      "type": "follow_up"
+    },
+    {
+      "expected_documents": [
+        "Property_Listings.md",
+        "Services_and_Fees.md"
+      ],
+      "first_expected_rank": 1,
+      "hit_at_1": true,
+      "hit_at_5": true,
+      "id": "Q053",
+      "mode": "hybrid_cap",
+      "reciprocal_rank": 1.0,
+      "top5_documents": [
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "FAQs.pdf",
+        "Property_Listings.pdf",
+        "Services_and_Fees.pdf"
+      ],
+      "type": "follow_up"
+    },
+    {
+      "expected_documents": [
+        "Property_Listings.md"
+      ],
+      "first_expected_rank": null,
+      "hit_at_1": false,
+      "hit_at_5": false,
+      "id": "Q054",
+      "mode": "dense",
+      "reciprocal_rank": 0.0,
+      "top5_documents": [
+        "Services_and_Fees.pdf",
+        "Services_and_Fees.pdf",
+        "FAQs.pdf",
+        "Services_and_Fees.pdf",
+        "FAQs.pdf"
+      ],
+      "type": "follow_up"
+    },
+    {
+      "expected_documents": [
+        "Property_Listings.md"
+      ],
+      "first_expected_rank": 2,
+      "hit_at_1": false,
+      "hit_at_5": true,
+      "id": "Q054",
+      "mode": "keyword",
+      "reciprocal_rank": 0.5,
+      "top5_documents": [
+        "FAQs.pdf",
+        "Property_Listings.pdf",
+        "Property_Listings.pdf",
+        "FAQs.pdf",
+        "FAQs.pdf"
+      ],
+      "type": "follow_up"
+    },
+    {
+      "expected_documents": [
+        "Property_Listings.md"
+      ],
+      "first_expected_rank": null,
+      "hit_at_1": false,
+      "hit_at_5": false,
+      "id": "Q054",
+      "mode": "hybrid_nocap",
+      "reciprocal_rank": 0.0,
+      "top5_documents": [
+        "FAQs.pdf",
+        "Services_and_Fees.pdf",
+        "FAQs.pdf",
+        "Policies_and_Terms.pdf",
+        "Services_and_Fees.pdf"
+      ],
+      "type": "follow_up"
+    },
+    {
+      "expected_documents": [
+        "Property_Listings.md"
+      ],
+      "first_expected_rank": null,
+      "hit_at_1": false,
+      "hit_at_5": false,
+      "id": "Q054",
+      "mode": "hybrid_cap",
+      "reciprocal_rank": 0.0,
+      "top5_documents": [
+        "FAQs.pdf",
+        "Services_and_Fees.pdf",
+        "FAQs.pdf",
+        "Policies_and_Terms.pdf",
+        "Services_and_Fees.pdf"
+      ],
+      "type": "follow_up"
+    }
+  ],
+  "timestamp": 1794404151.8080206,
+  "total_questions": 54,
+  "version": "1.0.0"
+}

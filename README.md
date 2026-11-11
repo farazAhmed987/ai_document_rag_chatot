@@ -34,3 +34,19 @@ python -m app.cli reprocess --company "Acme Corp" --document "<DOCUMENT_UUID>"
 ```bash
 python -m app.cli delete --company "Acme Corp" --document "<DOCUMENT_UUID>" --yes
 ```
+
+### 7. Search Documents (Phase 7 Hybrid Retrieval)
+```bash
+# Default hybrid search (RRF k=60, diversification cap=3, top-5)
+python -m app.cli search --company "Acme Corp" "What is the security deposit?"
+
+# Search with reranking and custom top-N
+python -m app.cli search --company "Acme Corp" "What is the security deposit?" --top-n 5 --rerank
+
+# Specific retrieval modes: hybrid, hybrid+rerank, dense, keyword
+python -m app.cli search --company "Acme Corp" "lease agreement terms" --mode keyword
+python -m app.cli search --company "Acme Corp" "commercial plots in Blue Area" --mode dense
+
+# Structured JSON output
+python -m app.cli search --company "Acme Corp" "payment plans" --format json
+```

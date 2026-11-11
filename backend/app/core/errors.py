@@ -117,3 +117,24 @@ class DatabaseConfigurationError(AppError):
 
     default_code = "DATABASE_CONFIG_ERROR"
     status_code = 500
+
+
+class RetrievalError(AppError):
+    """Base error for retrieval pipeline failures."""
+
+    default_code = "RETRIEVAL_ERROR"
+    status_code = 500
+
+
+class RetrievalInputError(RetrievalError):
+    """User query is empty, invalid, or exceeds maximum length."""
+
+    default_code = "RETRIEVAL_INPUT_ERROR"
+    status_code = 400
+
+
+class RerankerConfigurationError(RetrievalError):
+    """Reranker backend or model configuration error."""
+
+    default_code = "RERANKER_CONFIG_ERROR"
+    status_code = 500

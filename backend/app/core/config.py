@@ -46,7 +46,11 @@ class Settings(BaseSettings):
     EMBEDDER_BACKEND: Literal["bge-m3", "fake"] = "bge-m3"
     EMBEDDING_BATCH_SIZE: int = Field(default=16, gt=0)
     EMBEDDING_MAX_LENGTH: int = Field(default=2048, ge=2048, le=8192)
+
+    RERANKER_BACKEND: Literal["none", "fake", "bge-m3"] = "none"
     RERANKER_MODEL_NAME: str = "BAAI/bge-reranker-v2-m3"
+    RERANKER_MODEL_REVISION: str | None = "953dc6f6f85a1b2dbfca4c34a2796e7dde08d41e"
+    RERANKER_MAX_LENGTH: int = Field(default=1024, gt=0)
 
     STORAGE_BACKEND: str = "local"
     STORAGE_PATH: Path = REPO_ROOT / "data" / "storage"
@@ -60,9 +64,16 @@ class Settings(BaseSettings):
     CHUNK_OVERLAP: int = Field(default=60, ge=0)
     MIN_CHUNK_TOKENS: int = Field(default=80, gt=0)
     MAX_TABLE_TOKENS: int = Field(default=1500, gt=0)
-    DENSE_K: int = Field(default=20, gt=0)
-    KEYWORD_K: int = Field(default=20, gt=0)
-    RERANK_TOP_N: int = Field(default=5, gt=0)
+
+    DENSE_K: int = Field(default=20, gt=0, le=100)
+    KEYWORD_K: int = Field(default=20, gt=0, le=100)
+    RRF_K: int = Field(default=60, gt=0)
+    RETRIEVAL_TOP_N: int = Field(default=5, gt=0)
+    RETRIEVAL_MAX_TOP_N: int = Field(default=10, gt=0)
+    RETRIEVAL_MAX_PER_DOC: int = Field(default=3, gt=0)
+    RERANK_CANDIDATES: int = Field(default=20, gt=0)
+    RERANK_TOP_N: int | None = Field(default=None)
+
     MIN_RELEVANCE: float | None = None
     HISTORY_TURNS: int = Field(default=6, ge=0)
     CORS_ORIGINS: str = "http://localhost:5173,http://127.0.0.1:5173"
@@ -138,6 +149,33 @@ class Settings(BaseSettings):
             raise ValueError("MIN_CHUNK_TOKENS must be smaller than CHUNK_TOKENS")
         if self.MAX_TABLE_TOKENS < self.CHUNK_TOKENS:
             raise ValueError("MAX_TABLE_TOKENS must be at least CHUNK_TOKENS")
+        return self
+
+    @model_validator(mode="after")
+    def validate_retrieval_and_reranker(self) -> Settings:
+        """Validate retrieval parameters and reranker constraints."""
+        if self.RERANK_TOP_N is not None and self.RERANK_TOP_N != self.RETRIEVAL_TOP_N:
+            raise ValueError(
+                f"RERANK_TOP_N ({self.RERANK_TOP_N}) is deprecated and must match "
+                f"RETRIEVAL_TOP_N ({self.RETRIEVAL_TOP_N}) if explicitly specified."
+            )
+        if self.RETRIEVAL_TOP_N > self.RETRIEVAL_MAX_TOP_N:
+            raise ValueError(
+                f"RETRIEVAL_TOP_N ({self.RETRIEVAL_TOP_N}) cannot exceed "
+                f"RETRIEVAL_MAX_TOP_N ({self.RETRIEVAL_MAX_TOP_N})"
+            )
+        if self.RERANK_CANDIDATES < self.RETRIEVAL_TOP_N:
+            raise ValueError(
+                f"RERANK_CANDIDATES ({self.RERANK_CANDIDATES}) cannot be less than "
+                f"RETRIEVAL_TOP_N ({self.RETRIEVAL_TOP_N})"
+            )
+        if self.RERANKER_BACKEND == "bge-m3":
+            if not self.RERANKER_MODEL_REVISION or not re.fullmatch(
+                r"[0-9a-fA-F]{40}", self.RERANKER_MODEL_REVISION
+            ):
+                raise ValueError(
+                    "RERANKER_MODEL_REVISION must be a 40-character SHA when RERANKER_BACKEND is 'bge-m3'"
+                )
         return self
 
     def require_database_url(self, *, analytics: bool = False) -> str:

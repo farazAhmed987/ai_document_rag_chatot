@@ -140,3 +140,17 @@ source-specific evidence map. Original facts and sample documents are unchanged.
   - Document reprocessing idempotently accepts documents in `indexed`, `failed`, or `processing` states.
 - **Proof:** All 46 unit tests and 10 live database integration tests pass under direct `rag_app` connection isolation (`test_db_direct_runtime_connection_isolation`).
 - **Scope:** No schema migration created. Strict RLS policy enforcement preserved.
+
+## A-12 — Tenant-Safe Hybrid Retrieval and Optional Reranking Architecture (2026-11-10)
+
+- **Title:** Tenant-Safe Hybrid Retrieval and Optional Reranking Architecture
+- **Context & Motivation:** Multi-tenant hybrid retrieval for Phase 7 combining pgvector dense semantic search with PostgreSQL full-text search (tsvector simple dictionary) using Reciprocal Rank Fusion (RRF), per-document diversification with backfill, and an optional CPU cross-encoder reranker (`BAAI/bge-reranker-v2-m3`).
+- **Decisions:**
+  - **Hybrid Search Pipeline:** Dense search retrieves top 20 candidates (`DENSE_K=20`) using pgvector cosine distance over `ix_chunks_embedding_hnsw`. Keyword search retrieves top 20 candidates (`KEYWORD_K=20`) using PostgreSQL `ts_rank_cd` over `ix_chunks_tsv` with safe OR tsquery construction. Candidates are fused via Reciprocal Rank Fusion (`RRF_K=60`, equal weights of 1.0).
+  - **Diversification & Backfill:** Fused candidates enforce a per-document cap of 3 (`RETRIEVAL_MAX_PER_DOC=3`) to prevent single-document domination. If candidate diversity starves the target `top_n` (default 5, max 10), remaining unselected candidates from the fused list are backfilled in their original order.
+  - **Optional Cross-Encoder Reranker:** Configured via `RERANKER_BACKEND` (`"none"|"fake"|"bge-m3"`). When enabled, cross-encoder scores the top `RERANK_CANDIDATES=20` fused candidates with raw logits (`activation_fn=None`, Decision D2), followed by per-document diversification. Default backend is `"none"`; Claude reviews performance before adoption.
+  - **Configuration & Deprecation:** `RETRIEVAL_TOP_N=5` is the primary top-N result setting; `RERANK_CANDIDATES=20` governs the candidate pool size for reranking. `RERANK_TOP_N` is retained as a deprecated alias; if explicitly specified, it must match `RETRIEVAL_TOP_N` or raise a configuration error (Decision D2).
+  - **Database & Zero Migrations:** Zero schema or index mutations are introduced. Existing HNSW and GIN indices are leveraged directly.
+  - **Multi-Tenant Security:** All retrieval queries execute inside `tenant_session` as the restricted `rag_app` user (`rolsuper=false`, `rolbypassrls=false`) via `RUNTIME_DATABASE_URL`. Explicit defense-in-depth filters require `chunks.company_id == company_id AND documents.company_id == company_id AND documents.status == 'indexed'`.
+  - **Golden-Set Evaluation (Decision D1):** Evaluated against `eval/golden_set_draft.json` (54 questions, byte-for-byte unchanged). Metrics are evaluated strictly at document level for answerable questions excluding follow_up (N=38). Gate criteria: Document Hit@5 >= 0.90, MRR >= dense-only MRR, multi-doc all-docs-hit >= dense-only value. Section agreement is informational. Exact disclaimer is printed: "Page-level metrics not computed: the approved golden set contains no page locators."
+  - **HNSW Verification:** Compares top-20 retrieved candidate chunk IDs between HNSW index scan and exact brute-force cosine scan across all 54 golden questions, ensuring recall >= 0.95.

@@ -1,0 +1,1199 @@
+"""Unit tests for hybrid retrieval service, RRF fusion, and diversification.
+
+SRD Sections 8.2, 9; DM-3, IN-5, MT-1, MT-3; A-12.
+"""
+
+from __future__ import annotations
+
+from unittest.mock import MagicMock, patch
+from uuid import UUID, uuid4
+
+import pytest
+
+from app.core.config import Settings, get_settings
+from app.core.errors import (
+    RerankerConfigurationError,
+    RetrievalInputError,
+)
+from app.repositories.retrieval import (
+    build_or_tsquery_expression,
+    extract_search_tokens,
+)
+from app.schemas.retrieval import RetrievedChunk
+from app.services.retrieval import RetrievalService
+
+
+class _DummyTokenCounter:
+    """Configurable token counter for testing budget limits."""
+
+    def __init__(self, count_val: int = 5) -> None:
+        self.count_val = count_val
+
+    def count(self, text: str) -> int:
+        del text
+        return self.count_val
+
+
+class _DummyEmbedder:
+    """Stub embedder returning unit vectors."""
+
+    dimension = 1024
+
+    def embed_query(self, text: str) -> list[float]:
+        del text
+        return [1.0] + [0.0] * 1023
+
+    def embed_documents(
+        self, texts: list[str], batch_size: int = 16
+    ) -> list[list[float]]:
+        del batch_size
+        return [[1.0] + [0.0] * 1023 for _ in texts]
+
+
+def _make_chunk(
+    doc_id: UUID,
+    chunk_index: int,
+    doc_name: str = "DocA.pdf",
+    similarity: float = 0.8,
+    keyword_score: float = 0.5,
+    chunk_id: UUID | None = None,
+) -> RetrievedChunk:
+    """Helper to build RetrievedChunk test double."""
+    cid = chunk_id or uuid4()
+    return RetrievedChunk(
+        rank=1,
+        chunk_id=cid,
+        document_id=doc_id,
+        document_name=doc_name,
+        chunk_index=chunk_index,
+        page=chunk_index + 1,
+        section=f"Section {chunk_index}",
+        content=f"Company: C\nDocument: {doc_name}\nSection: S\n\nContent for chunk {chunk_index}",
+        body=f"Content for chunk {chunk_index}",
+        token_count=50,
+        score=similarity,
+        dense_rank=1,
+        dense_similarity=similarity,
+        keyword_rank=1,
+        keyword_score=keyword_score,
+    )
+
+
+# ---------------------------------------------------------------------------
+# Query Normalization & Token Extraction
+# ---------------------------------------------------------------------------
+
+
+def test_normalize_query_collapses_whitespace_and_nfkc() -> None:
+    """Normalizes ligature symbols and excess whitespace."""
+    mock_factory = MagicMock()
+    service = RetrievalService(
+        session_factory=mock_factory,
+        embedder=_DummyEmbedder(),
+        token_counter=_DummyTokenCounter(count_val=5),
+    )
+
+    raw_query = "   What   is   the   \t  \n  deposit?   "
+    cleaned = service.normalize_query(raw_query)
+    assert cleaned == "What is the deposit?"
+
+    # NFKC compatibility check (ligature 'fi')
+    ligature_query = "What is the speciﬁc fee?"
+    cleaned_ligature = service.normalize_query(ligature_query)
+    assert cleaned_ligature == "What is the specific fee?"
+
+
+def test_empty_query_uses_retrieval_input_error() -> None:
+    """Empty or whitespace-only query raises RetrievalInputError with code RETRIEVAL_INPUT_ERROR."""
+    service = RetrievalService(
+        session_factory=MagicMock(),
+        embedder=_DummyEmbedder(),
+        token_counter=_DummyTokenCounter(count_val=0),
+    )
+
+    for empty_input in ["", "   ", "\t\n\r  ", "      "]:
+        with pytest.raises(RetrievalInputError) as exc_info:
+            service.normalize_query(empty_input)
+        assert exc_info.value.code == "RETRIEVAL_INPUT_ERROR"
+        assert "Query cannot be empty" in str(exc_info.value)
+
+
+def test_normalize_query_rejects_non_string() -> None:
+    """Non-string query raises RetrievalInputError."""
+    service = RetrievalService(
+        session_factory=MagicMock(),
+        embedder=_DummyEmbedder(),
+        token_counter=_DummyTokenCounter(count_val=0),
+    )
+    with pytest.raises(RetrievalInputError):
+        service.normalize_query(None)  # type: ignore[arg-type]
+
+
+def test_query_at_embedding_token_limit_is_accepted() -> None:
+    """Exactly 2048 fake tokens is accepted without error."""
+    mock_factory = MagicMock()
+    service = RetrievalService(
+        session_factory=mock_factory,
+        embedder=_DummyEmbedder(),
+        token_counter=_DummyTokenCounter(count_val=2048),
+        settings=get_settings(),
+    )
+    # 2048 tokens matches EMBEDDING_MAX_LENGTH (2048)
+    cleaned = service.normalize_query("Valid query within embedding token limit")
+    assert cleaned == "Valid query within embedding token limit"
+
+
+def test_query_over_embedding_token_limit_is_rejected() -> None:
+    """Exactly 2049 fake tokens is rejected with RETRIEVAL_INPUT_ERROR and no query in error."""
+    mock_factory = MagicMock()
+    service = RetrievalService(
+        session_factory=mock_factory,
+        embedder=_DummyEmbedder(),
+        token_counter=_DummyTokenCounter(count_val=2049),
+        settings=get_settings(),
+    )
+    secret_text = "CONFIDENTIAL_SEARCH_QUERY_SECRET_ABC123"
+    with pytest.raises(RetrievalInputError) as exc_info:
+        service.normalize_query(secret_text)
+
+    assert exc_info.value.code == "RETRIEVAL_INPUT_ERROR"
+    assert "Query exceeds maximum token length (2049 > 2048)" in str(exc_info.value)
+    # Error message and repr contain no query text
+    assert secret_text not in str(exc_info.value)
+    assert secret_text not in repr(exc_info.value)
+
+
+def test_long_character_query_below_token_limit_is_accepted() -> None:
+    """A string longer than 1000 characters but counted below the token limit is accepted."""
+    mock_factory = MagicMock()
+    service = RetrievalService(
+        session_factory=mock_factory,
+        embedder=_DummyEmbedder(),
+        token_counter=_DummyTokenCounter(count_val=300),
+        settings=get_settings(),
+    )
+    # Create string with > 1000 characters
+    long_char_query = "real estate property details " * 45  # 1305 characters
+    assert len(long_char_query) > 1000
+
+    cleaned = service.normalize_query(long_char_query)
+    assert len(cleaned) > 1000
+    assert cleaned == " ".join(long_char_query.split())
+
+
+def test_extract_search_tokens_and_build_tsquery() -> None:
+    """Extracts alphanumeric tokens and constructs safe OR tsquery."""
+    tokens = extract_search_tokens("Residential rent & security-deposit 100%?")
+    assert "residential" in tokens
+    assert "rent" in tokens
+    assert "security" in tokens
+    assert "deposit" in tokens
+    assert "100" in tokens
+
+    tsquery = build_or_tsquery_expression(tokens)
+    assert tsquery is not None
+    assert "'residential'" in tsquery
+    assert " | " in tsquery
+
+    # Stopword filtering and entity preservation
+    filtered_tokens = extract_search_tokens(
+        "what is the rate for HCR-ISB-0102 on 2026-11-10?"
+    )
+    assert "what" not in filtered_tokens
+    assert "is" not in filtered_tokens
+    assert "the" not in filtered_tokens
+    assert "for" not in filtered_tokens
+    assert "rate" in filtered_tokens
+    assert "hcr-isb-0102" in filtered_tokens
+    assert "2026-11-10" in filtered_tokens
+
+    # Empty noise query returns None
+    noise_tokens = extract_search_tokens("!@#$%^&*()_+=-")
+    assert noise_tokens == []
+    assert build_or_tsquery_expression(noise_tokens) is None
+
+
+# ---------------------------------------------------------------------------
+# Reciprocal Rank Fusion (RRF)
+# ---------------------------------------------------------------------------
+
+
+def test_fuse_rrf_combines_dense_and_keyword() -> None:
+    """RRF correctly scores dense-only, keyword-only, and overlapping candidates."""
+    doc_id = uuid4()
+    c1 = _make_chunk(doc_id, 1, doc_name="Doc1.pdf", similarity=0.9, keyword_score=0.0)
+    c2 = _make_chunk(doc_id, 2, doc_name="Doc1.pdf", similarity=0.8, keyword_score=0.0)
+    c3 = _make_chunk(doc_id, 3, doc_name="Doc1.pdf", similarity=0.0, keyword_score=0.7)
+
+    # c1 is rank 1 in dense, rank 1 in keyword
+    # c2 is rank 2 in dense only
+    # c3 is rank 2 in keyword only
+    dense_list = [c1, c2]
+    keyword_list = [c1, c3]
+
+    service = RetrievalService(session_factory=MagicMock(), embedder=_DummyEmbedder())
+    fused = service.fuse_rrf(dense_list, keyword_list, k=60)
+
+    assert len(fused) == 3
+    # c1 has both: 1/(60+1) + 1/(60+1) = 2/61 ≈ 0.032787
+    expected_c1 = (1.0 / 61.0) + (1.0 / 61.0)
+    assert pytest.approx(fused[0].score, 1e-6) == expected_c1
+    assert fused[0].chunk_id == c1.chunk_id
+    assert fused[0].rank == 1
+
+    # c2 has 1/(60+2) = 1/62 ≈ 0.016129
+    # c3 has 1/(60+2) = 1/62 ≈ 0.016129
+    expected_c2 = 1.0 / 62.0
+    assert pytest.approx(fused[1].score, 1e-6) == expected_c2
+    assert pytest.approx(fused[2].score, 1e-6) == expected_c2
+
+
+def test_fuse_rrf_deterministic_tie_breaks() -> None:
+    """Tie-breaking sorts by score DESC, document_name ASC, chunk_index ASC, chunk_id ASC."""
+    doc_a = uuid4()
+    doc_b = uuid4()
+
+    # Same score (dense rank 1 each), different doc names
+    c_b = _make_chunk(
+        doc_b,
+        1,
+        doc_name="B_Doc.pdf",
+        chunk_id=UUID("00000000-0000-0000-0000-000000000002"),
+    )
+    c_a = _make_chunk(
+        doc_a,
+        1,
+        doc_name="A_Doc.pdf",
+        chunk_id=UUID("00000000-0000-0000-0000-000000000001"),
+    )
+
+    service = RetrievalService(session_factory=MagicMock(), embedder=_DummyEmbedder())
+    fused = service.fuse_rrf([c_b], [c_a], k=60)
+
+    # Both have score 1/61. A_Doc.pdf must be sorted before B_Doc.pdf
+    assert fused[0].document_name == "A_Doc.pdf"
+    assert fused[1].document_name == "B_Doc.pdf"
+
+
+def test_fuse_rrf_requires_positive_k() -> None:
+    """RRF constant k <= 0 raises ValueError."""
+    service = RetrievalService(session_factory=MagicMock(), embedder=_DummyEmbedder())
+    with pytest.raises(ValueError, match="k must be positive"):
+        service.fuse_rrf([], [], k=0)
+
+
+# ---------------------------------------------------------------------------
+# Diversification & Backfill
+# ---------------------------------------------------------------------------
+
+
+def test_diversify_caps_at_max_per_doc() -> None:
+    """Restricts results to max_per_doc when candidates from other documents exist."""
+    doc_a = uuid4()
+    doc_b = uuid4()
+
+    # 4 chunks from doc_a, 2 chunks from doc_b
+    chunks_a = [_make_chunk(doc_a, i, "DocA.pdf") for i in range(1, 5)]
+    chunks_b = [_make_chunk(doc_b, i, "DocB.pdf") for i in range(1, 3)]
+    candidates = chunks_a + chunks_b  # 4 from A, then 2 from B
+
+    service = RetrievalService(session_factory=MagicMock(), embedder=_DummyEmbedder())
+    diversified = service.diversify(candidates, max_per_doc=3, top_n=5)
+
+    assert len(diversified) == 5
+    # First 3 from DocA, next 2 from DocB (chunk 4 from DocA was suppressed)
+    doc_counts = {doc_a: 0, doc_b: 0}
+    for c in diversified:
+        doc_counts[c.document_id] += 1
+    assert doc_counts[doc_a] == 3
+    assert doc_counts[doc_b] == 2
+    assert [c.rank for c in diversified] == [1, 2, 3, 4, 5]
+
+
+def test_diversify_backfills_when_under_top_n() -> None:
+    """Backfills suppressed chunks from the same document if candidate pool lacks diversity."""
+    doc_a = uuid4()
+    # 5 chunks all from doc_a
+    candidates = [_make_chunk(doc_a, i, "DocA.pdf") for i in range(1, 6)]
+
+    service = RetrievalService(session_factory=MagicMock(), embedder=_DummyEmbedder())
+    # top_n=5, max_per_doc=3: pass 1 selects 3, pass 2 backfills the remaining 2
+    diversified = service.diversify(candidates, max_per_doc=3, top_n=5)
+
+    assert len(diversified) == 5
+    assert all(c.document_id == doc_a for c in diversified)
+    assert [c.chunk_index for c in diversified] == [1, 2, 3, 4, 5]
+
+
+def test_diversify_handles_pool_smaller_than_top_n() -> None:
+    """Returns all available candidates when pool size < top_n without error."""
+    doc_a = uuid4()
+    candidates = [_make_chunk(doc_a, 1, "DocA.pdf"), _make_chunk(doc_a, 2, "DocA.pdf")]
+
+    service = RetrievalService(session_factory=MagicMock(), embedder=_DummyEmbedder())
+    diversified = service.diversify(candidates, max_per_doc=3, top_n=5)
+
+    assert len(diversified) == 2
+    assert [c.rank for c in diversified] == [1, 2]
+
+
+# ---------------------------------------------------------------------------
+# Reranking Logic
+# ---------------------------------------------------------------------------
+
+
+def test_rerank_updates_scores_and_preserves_tail() -> None:
+    """Reranks top RERANK_CANDIDATES and appends remaining candidates in order."""
+
+    class _StubReranker:
+        model_name = "stub"
+        model_revision = "rev1"
+        max_length = 1024
+
+        def predict(
+            self, pairs: list[tuple[str, str]], batch_size: int = 32
+        ) -> list[float]:
+            del batch_size
+            # Invert order of first 2 pairs: give second higher score
+            return [1.5, 4.2]
+
+    doc_id = uuid4()
+    c1 = _make_chunk(doc_id, 1, "Doc1.pdf", similarity=0.9)
+    c2 = _make_chunk(doc_id, 2, "Doc1.pdf", similarity=0.8)
+    c3 = _make_chunk(doc_id, 3, "Doc1.pdf", similarity=0.7)
+
+    service = RetrievalService(
+        session_factory=MagicMock(),
+        embedder=_DummyEmbedder(),
+        reranker=_StubReranker(),
+    )
+
+    reranked = service.rerank(
+        query="deposit query",
+        candidates=[c1, c2, c3],
+        top_k=2,  # Rerank first 2 only
+    )
+
+    assert len(reranked) == 3
+    # c2 received score 4.2, c1 received score 1.5; c3 remained un-reranked at tail
+    assert reranked[0].chunk_id == c2.chunk_id
+    assert reranked[0].rerank_score == 4.2
+    assert reranked[1].chunk_id == c1.chunk_id
+    assert reranked[1].rerank_score == 1.5
+    assert reranked[2].chunk_id == c3.chunk_id
+    assert reranked[2].rerank_score is None
+
+
+# ---------------------------------------------------------------------------
+# Service Search Validation & Edge Cases
+# ---------------------------------------------------------------------------
+
+
+def test_search_rejects_invalid_inputs() -> None:
+    """Validates company_id, top_n bounds, and mode requirements."""
+    service = RetrievalService(
+        session_factory=MagicMock(),
+        embedder=_DummyEmbedder(),
+        token_counter=_DummyTokenCounter(count_val=5),
+    )
+
+    # 1. Non-UUID company_id raises TypeError
+    with pytest.raises(TypeError, match="company_id must be a uuid.UUID"):
+        service.search(company_id="not-a-uuid", query="hello")  # type: ignore[arg-type]
+
+    cid = uuid4()
+    # 2. top_n <= 0 raises RetrievalInputError
+    with pytest.raises(RetrievalInputError, match="top_n must be positive"):
+        service.search(company_id=cid, query="hello", top_n=0)
+
+    # 3. top_n > RETRIEVAL_MAX_TOP_N raises RetrievalInputError
+    with pytest.raises(RetrievalInputError, match="cannot exceed RETRIEVAL_MAX_TOP_N"):
+        service.search(company_id=cid, query="hello", top_n=25)
+
+    # 4. Invalid mode raises RetrievalInputError
+    with pytest.raises(RetrievalInputError, match="Unsupported retrieval mode"):
+        service.search(company_id=cid, query="hello", mode="unknown_mode")  # type: ignore[arg-type]
+
+    # 5. hybrid+rerank requested when reranker is None raises RerankerConfigurationError
+    with pytest.raises(
+        RerankerConfigurationError, match="no reranker backend is configured"
+    ):
+        service.search(company_id=cid, query="hello", mode="hybrid+rerank")
+
+
+# ---------------------------------------------------------------------------
+# Settings & Deprecated Configuration Validation
+# ---------------------------------------------------------------------------
+
+
+def test_settings_retrieval_validation() -> None:
+    """Verifies bounds and deprecated RERANK_TOP_N matching logic in Settings."""
+    # 1. Valid settings with deprecated RERANK_TOP_N matching RETRIEVAL_TOP_N
+    s_valid = Settings(
+        _env_file=None,
+        RETRIEVAL_TOP_N=5,
+        RERANK_TOP_N=5,
+        RETRIEVAL_MAX_TOP_N=10,
+        RERANK_CANDIDATES=20,
+    )
+    assert s_valid.RETRIEVAL_TOP_N == 5
+
+    # 2. RERANK_TOP_N != RETRIEVAL_TOP_N raises ValueError
+    with pytest.raises(ValueError, match="RERANK_TOP_N .* must match RETRIEVAL_TOP_N"):
+        Settings(
+            _env_file=None,
+            RETRIEVAL_TOP_N=5,
+            RERANK_TOP_N=7,
+        )
+
+    # 3. RETRIEVAL_TOP_N > RETRIEVAL_MAX_TOP_N raises ValueError
+    with pytest.raises(ValueError, match="cannot exceed RETRIEVAL_MAX_TOP_N"):
+        Settings(
+            _env_file=None,
+            RETRIEVAL_TOP_N=15,
+            RETRIEVAL_MAX_TOP_N=10,
+        )
+
+    # 4. RERANK_CANDIDATES < RETRIEVAL_TOP_N raises ValueError
+    with pytest.raises(
+        ValueError, match="RERANK_CANDIDATES .* cannot be less than RETRIEVAL_TOP_N"
+    ):
+        Settings(
+            _env_file=None,
+            RETRIEVAL_TOP_N=5,
+            RERANK_CANDIDATES=3,
+        )
+
+    # 5. RERANKER_BACKEND == 'bge-m3' requires 40-char SHA revision
+    with pytest.raises(
+        ValueError, match="RERANKER_MODEL_REVISION must be a 40-character SHA"
+    ):
+        Settings(
+            _env_file=None,
+            RERANKER_BACKEND="bge-m3",
+            RERANKER_MODEL_REVISION=None,
+        )
+
+    with pytest.raises(
+        ValueError, match="RERANKER_MODEL_REVISION must be a 40-character SHA"
+    ):
+        Settings(
+            _env_file=None,
+            RERANKER_BACKEND="bge-m3",
+            RERANKER_MODEL_REVISION="not_a_valid_40_char_hex_revision",
+        )
+
+
+# ---------------------------------------------------------------------------
+# RetrievalService.search End-to-End Orchestration Tests
+# ---------------------------------------------------------------------------
+
+
+def test_service_search_all_modes() -> None:
+    """Verifies search orchestration across hybrid, dense, keyword, and hybrid+rerank."""
+    mock_session = MagicMock()
+    mock_factory = MagicMock()
+    mock_factory.return_value.__enter__.return_value = mock_session
+
+    doc_id = uuid4()
+    c1 = _make_chunk(doc_id, 1, "DocA.pdf", similarity=0.9, keyword_score=0.8)
+    c2 = _make_chunk(doc_id, 2, "DocA.pdf", similarity=0.7, keyword_score=0.6)
+
+    class _StubReranker:
+        model_name = "stub"
+        model_revision = "rev1"
+        max_length = 1024
+
+        def predict(
+            self, pairs: list[tuple[str, str]], batch_size: int = 32
+        ) -> list[float]:
+            del batch_size
+            return [2.5] * len(pairs)
+
+    service = RetrievalService(
+        session_factory=mock_factory,
+        embedder=_DummyEmbedder(),
+        reranker=_StubReranker(),
+        token_counter=_DummyTokenCounter(count_val=5),
+    )
+
+    cid = uuid4()
+
+    with (
+        patch("app.services.retrieval.tenant_session") as mock_tenant_ctx,
+        patch("app.services.retrieval.RetrievalRepository") as mock_repo_cls,
+    ):
+        mock_tenant_ctx.return_value.__enter__.return_value = mock_session
+        mock_repo = MagicMock()
+        mock_repo_cls.return_value = mock_repo
+        mock_repo.dense_search.return_value = [c1, c2]
+        mock_repo.keyword_search.return_value = [c1, c2]
+
+        # 1. Hybrid search
+        res_hybrid = service.search(
+            company_id=cid, query="deposit policy", mode="hybrid"
+        )
+        assert res_hybrid.mode == "hybrid"
+        assert len(res_hybrid.chunks) == 2
+        assert res_hybrid.embed_ms >= 0.0
+        assert res_hybrid.dense_ms >= 0.0
+        assert res_hybrid.keyword_ms >= 0.0
+        assert res_hybrid.fuse_ms >= 0.0
+        assert res_hybrid.rerank_ms == 0.0
+
+        # 2. Dense search
+        res_dense = service.search(company_id=cid, query="deposit policy", mode="dense")
+        assert res_dense.mode == "dense"
+        assert len(res_dense.chunks) == 2
+
+        # 3. Keyword search
+        res_kw = service.search(company_id=cid, query="deposit policy", mode="keyword")
+        assert res_kw.mode == "keyword"
+        assert len(res_kw.chunks) == 2
+
+        # 4. Hybrid+rerank search
+        res_rerank = service.search(
+            company_id=cid, query="deposit policy", mode="hybrid+rerank"
+        )
+        assert res_rerank.mode == "hybrid+rerank"
+        assert len(res_rerank.chunks) == 2
+        assert res_rerank.rerank_ms >= 0.0
+
+
+# ---------------------------------------------------------------------------
+# RetrievalRepository Unit Tests
+# ---------------------------------------------------------------------------
+
+
+def test_repository_contracts_with_mock_session() -> None:
+    """Verifies repository query construction and boundary conditions."""
+    from app.repositories.retrieval import RetrievalRepository
+
+    mock_session = MagicMock()
+    cid = uuid4()
+
+    # 1. Type validation
+    with pytest.raises(TypeError, match="company_id must be a uuid.UUID"):
+        RetrievalRepository(mock_session, "not-a-uuid")  # type: ignore[arg-type]
+
+    repo = RetrievalRepository(mock_session, cid)
+
+    # 2. Limit <= 0 returns empty immediately
+    assert repo.dense_search([1.0] * 1024, limit=0) == []
+    assert repo.keyword_search("query text", limit=0) == []
+
+    # 3. Noise query returns empty immediately
+    assert repo.keyword_search("!@#$%^&*()_+=-", limit=10) == []
+
+    # 4. Dense search executes query and formats RetrievedChunk
+    mock_row = MagicMock()
+    mock_row.id = uuid4()
+    mock_row.document_id = uuid4()
+    mock_row.document_name = "Sample.pdf"
+    mock_row.chunk_index = 0
+    mock_row.page = 1
+    mock_row.section = "Introduction"
+    mock_row.content = "Company: C\nDocument: D\nSection: S\n\nBody text"
+    mock_row.token_count = 25
+    mock_row.distance = 0.15
+
+    mock_session.execute.return_value.all.return_value = [mock_row]
+    dense_out = repo.dense_search([1.0] * 1024, limit=5)
+    assert len(dense_out) == 1
+    assert dense_out[0].document_name == "Sample.pdf"
+    assert pytest.approx(dense_out[0].dense_similarity, 1e-4) == 0.85
+    assert dense_out[0].body == "Body text"
+
+    # 5. Keyword search executes query and formats RetrievedChunk
+    mock_kw_row = MagicMock()
+    mock_kw_row.id = uuid4()
+    mock_kw_row.document_id = uuid4()
+    mock_kw_row.document_name = "Sample.pdf"
+    mock_kw_row.chunk_index = 0
+    mock_kw_row.page = 1
+    mock_kw_row.section = "Introduction"
+    mock_kw_row.content = "Company: C\nDocument: D\nSection: S\n\nBody text"
+    mock_kw_row.token_count = 25
+    mock_kw_row.rank_score = 0.42
+
+    mock_session.execute.return_value.all.return_value = [mock_kw_row]
+    kw_out = repo.keyword_search("sample text", limit=5)
+    assert len(kw_out) == 1
+    assert kw_out[0].document_name == "Sample.pdf"
+    assert kw_out[0].keyword_score == 0.42
+
+
+# ---------------------------------------------------------------------------
+# CLI Search Command Unit Tests
+# ---------------------------------------------------------------------------
+
+
+def test_cli_search_command_table_and_json(capsys: pytest.CaptureFixture[str]) -> None:
+    """Verifies CLI search subcommand dispatches, formats output, and exits cleanly."""
+    from app.cli import main as cli_main
+
+    cid = uuid4()
+    c1 = _make_chunk(cid, 1, "DocA.pdf", similarity=0.9)
+
+    mock_result = MagicMock()
+    mock_result.query = "deposit query"
+    mock_result.mode = "hybrid"
+    mock_result.chunks = [c1]
+    mock_result.embed_ms = 1.2
+    mock_result.dense_ms = 3.4
+    mock_result.keyword_ms = 2.1
+    mock_result.fuse_ms = 0.5
+    mock_result.rerank_ms = 0.0
+    mock_result.total_ms = 7.2
+
+    mock_comp = MagicMock()
+    mock_comp.id = cid
+    mock_comp.name = "Himalaya Crest Realty (Pvt.) Ltd."
+
+    with (
+        patch("app.cli.get_session_factory"),
+        patch("app.cli.admin_session"),
+        patch("app.cli.CompanyRepository") as mock_repo_cls,
+        patch("app.cli.create_embedder"),
+        patch("app.cli.create_reranker"),
+        patch("app.cli.RetrievalService") as mock_service_cls,
+    ):
+        mock_repo = MagicMock()
+        mock_repo.get_by_name.return_value = mock_comp
+        mock_repo_cls.return_value = mock_repo
+
+        mock_service = MagicMock()
+        mock_service_cls.return_value = mock_service
+        mock_service.search.return_value = mock_result
+
+        # 1. Table format with exact company name and --query flag
+        code = cli_main(
+            [
+                "search",
+                "--company",
+                "Himalaya Crest Realty (Pvt.) Ltd.",
+                "--query",
+                "deposit query",
+            ]
+        )
+        assert code == 0
+        captured = capsys.readouterr()
+        assert "Rank" in captured.out
+        assert "DocA.pdf" in captured.out
+        assert "Timings:" in captured.out
+        mock_repo.get_by_name.assert_called_with("Himalaya Crest Realty (Pvt.) Ltd.")
+
+        # 2. JSON format with exact schema keys
+        code_json = cli_main(
+            [
+                "search",
+                "--company",
+                "Himalaya Crest Realty (Pvt.) Ltd.",
+                "--query",
+                "deposit query",
+                "--format",
+                "json",
+            ]
+        )
+        assert code_json == 0
+        captured_json = capsys.readouterr()
+        assert '"query": "deposit query"' in captured_json.out
+        assert '"mode": "hybrid"' in captured_json.out
+        assert '"content":' in captured_json.out
+        assert '"token_count":' in captured_json.out
+
+
+def test_retrieved_chunk_frozen_schema_and_contiguous_rank() -> None:
+    """Verifies exact frozen public schema field list, contiguous rank, and metadata pass-through."""
+    import dataclasses
+
+    expected_fields = [
+        "rank",
+        "chunk_id",
+        "document_id",
+        "document_name",
+        "chunk_index",
+        "page",
+        "section",
+        "content",
+        "body",
+        "token_count",
+        "dense_rank",
+        "dense_similarity",
+        "keyword_rank",
+        "keyword_score",
+        "rrf_score",
+        "rerank_score",
+        "score",
+    ]
+    actual_fields = [f.name for f in dataclasses.fields(RetrievedChunk)]
+    assert actual_fields == expected_fields, (
+        f"Field list mismatch: {actual_fields} != {expected_fields}"
+    )
+
+    # Verify pass-through and contiguous ranking via diversify
+    service = RetrievalService(
+        session_factory=MagicMock(),
+        embedder=_DummyEmbedder(),
+        token_counter=_DummyTokenCounter(count_val=5),
+    )
+    doc_id = uuid4()
+    candidates = [
+        _make_chunk(doc_id, idx, f"Doc_{idx}.pdf", similarity=0.9 - idx * 0.1)
+        for idx in range(5)
+    ]
+    diversified = service.diversify(candidates, top_n=5)
+    assert [c.rank for c in diversified] == [1, 2, 3, 4, 5]
+    for idx, c in enumerate(diversified):
+        assert c.page == idx + 1
+        assert "Content for chunk" in c.content
+        assert c.body == f"Content for chunk {idx}"
+        assert c.token_count == 50
+
+
+def test_keyword_sql_plainto_tsquery_and_no_websearch() -> None:
+    """Verifies plainto_tsquery usage, absence of websearch_to_tsquery, parameterized query, and OR semantics."""
+    from pathlib import Path
+
+    from app.repositories.retrieval import build_plainto_or_tsquery
+
+    # 1. Absence of websearch_to_tsquery in retrieval repo source
+    repo_file = (
+        Path(__file__).resolve().parents[2] / "app" / "repositories" / "retrieval.py"
+    )
+    repo_text = repo_file.read_text(encoding="utf-8")
+    assert "websearch_to_tsquery" not in repo_text
+
+    # 2. plainto_tsquery and OR semantics via replace in compiled SQL
+    expr = build_plainto_or_tsquery("residential rent 100")
+    compiled_sql = str(expr.compile())
+    assert "plainto_tsquery" in compiled_sql
+    assert "replace" in compiled_sql
+    assert "to_tsquery" in compiled_sql
+
+    # 3. Parameterized binding: query text is bound, not concatenated raw
+    params = expr.compile().params
+    assert any("residential rent 100" in str(v) for v in params.values())
+
+    # 4. Domain entity and number preservation in token extraction
+    tokens = extract_search_tokens(
+        "HCR-ISB-0102 list price Rs. 15,000,000 rate 7.5% on 2026-11-10"
+    )
+    assert "hcr-isb-0102" in tokens
+    assert any("15000000" in t or "15" in t for t in tokens)
+    assert "7" in tokens
+    assert "5" in tokens
+    assert "2026-11-10" in tokens
+
+
+def _load_eval_retrieval():
+    import importlib.util
+    from pathlib import Path
+
+    eval_script = Path(__file__).resolve().parents[3] / "scripts" / "eval_retrieval.py"
+    spec = importlib.util.spec_from_file_location("eval_retrieval", eval_script)
+    if spec is None or spec.loader is None:
+        raise ImportError(f"Cannot load {eval_script}")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def test_eval_retrieval_hnsw_exactness_logic() -> None:
+    """Verifies ordered HNSW equality passes when identical and fails on reordering."""
+    eval_mod = _load_eval_retrieval()
+
+    mock_session = MagicMock()
+    cid = uuid4()
+    u1, u2, u3 = uuid4(), uuid4(), uuid4()
+
+    res_a = MagicMock()
+    res_a.all.return_value = [(u1,), (u2,), (u3,)]
+    res_b = MagicMock()
+    res_b.all.return_value = [(u2,), (u1,), (u3,)]
+
+    # Case A: Identical ordered lists -> mismatch == 0
+    mock_session.execute.side_effect = [
+        res_a,  # HNSW
+        None,
+        None,  # SET LOCAL
+        res_a,  # Exact
+        None,
+        None,  # SET LOCAL
+    ]
+    mismatches, discrepancies = eval_mod.verify_hnsw_exactness(
+        session=mock_session,
+        company_id=cid,
+        queries=["test query"],
+        query_vectors=[[1.0] * 1024],
+        top_k=3,
+    )
+    assert mismatches == 0
+    assert discrepancies == []
+
+    # Case B: Same set in different order -> mismatch_count == 1 (ordered failure)
+    mock_session.execute.side_effect = [
+        res_a,  # HNSW: u1, u2, u3
+        None,
+        None,
+        res_b,  # Exact: u2, u1, u3
+        None,
+        None,
+    ]
+    mismatches_reordered, disc_reordered = eval_mod.verify_hnsw_exactness(
+        session=mock_session,
+        company_id=cid,
+        queries=["test query"],
+        query_vectors=[[1.0] * 1024],
+        top_k=3,
+    )
+    assert mismatches_reordered == 1
+    assert len(disc_reordered) == 1
+
+
+def test_section_matching_exact_and_suffix() -> None:
+    """Verifies exact case-insensitive and heading-path suffix matching with delimiter ' > '."""
+    eval_mod = _load_eval_retrieval()
+
+    # Exact normalized match
+    assert eval_mod.match_section("Overview", "overview") is True
+    assert eval_mod.match_section("  Property Listings  ", "property listings") is True
+
+    # Suffix match with delimiter ' > '
+    assert (
+        eval_mod.match_section(
+            "Himalaya Crest > Services and Fees > Commission Rates",
+            "Commission Rates",
+        )
+        is True
+    )
+    assert eval_mod.match_section("Level 1 > Level 2 > Target", "target") is True
+
+    # Non-suffix rejection
+    assert eval_mod.match_section("Level 1 > Level 2 > Target", "Level 2") is False
+    assert eval_mod.match_section("Level 1 > Level 2 > Target", "Level 1") is False
+
+    # Disparate strings rejection
+    assert eval_mod.match_section("FAQs", "About Us") is False
+    assert eval_mod.match_section(None, "Overview") is False
+    assert eval_mod.match_section("Overview", None) is False
+
+
+def test_reranker_evaluation_stops_at_wall_clock_limit(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Verifies reranker evaluation enforces the 1800s wall-clock limit, stops, and reports NEEDS CLAUDE DECISION."""
+    eval_mod = _load_eval_retrieval()
+
+    mock_service = MagicMock()
+    dummy_chunk = RetrievedChunk(
+        rank=1,
+        chunk_id=uuid4(),
+        document_id=uuid4(),
+        document_name="Property_Listings.pdf",
+        chunk_index=0,
+        page=1,
+        section="Overview",
+        content="Overview content",
+        body="Overview content",
+        token_count=100,
+        dense_rank=1,
+        dense_similarity=0.9,
+        keyword_rank=1,
+        keyword_score=1.0,
+        rrf_score=0.03,
+        rerank_score=2.5,
+        score=2.5,
+    )
+    mock_search_res = MagicMock(chunks=[dummy_chunk])
+    mock_service.search.return_value = mock_search_res
+
+    mock_questions = [
+        {
+            "id": f"Q{i:03d}",
+            "question": f"Question {i}?",
+            "type": "direct",
+            "expected_sources": [{"document": "Property_Listings.pdf"}],
+        }
+        for i in range(1, 55)
+    ]
+    cid = uuid4()
+
+    # Case A: Fake clock below 1800.0s -> completes all questions
+    clock_below = MagicMock(side_effect=[0.0] + [float(i * 10) for i in range(1, 200)])
+    completed, q_evals, _ = eval_mod.evaluate_questions_for_mode(
+        service=mock_service,
+        company_id=cid,
+        questions=mock_questions[:5],
+        mode="hybrid+rerank",
+        is_reranker_mode=True,
+        clock=clock_below,
+        max_seconds=1800.0,
+    )
+    assert completed is True
+    assert len(q_evals) == 5
+
+    # Case B: Fake clock exceeds 1800.0s on question 4
+    # Starts at 0.0, question 1: 50..100s, question 2: 300..500s, question 3: 800..1200s, question 4: 1500..1850s (> 1800.0s)
+    clock_values = [
+        0.0,
+        50.0,
+        100.0,
+        300.0,
+        500.0,
+        800.0,
+        1200.0,
+        1500.0,
+        1850.0,
+        2000.0,
+    ]
+    clock_over = MagicMock(side_effect=clock_values)
+    mock_service.search.reset_mock()
+
+    completed_over, q_evals_over, _ = eval_mod.evaluate_questions_for_mode(
+        service=mock_service,
+        company_id=cid,
+        questions=mock_questions,
+        mode="hybrid+rerank",
+        is_reranker_mode=True,
+        clock=clock_over,
+        max_seconds=1800.0,
+    )
+
+    # 1. Stopped early
+    assert completed_over is False
+    # 2. Did not evaluate all 54 questions
+    assert mock_service.search.call_count < 54
+    assert mock_service.search.call_count == 3
+
+    # 3. Captured output assertions
+    captured = capsys.readouterr().out
+    assert "Completed questions: 3/54" in captured
+    assert "Elapsed wall time:" in captured
+    assert "NEEDS CLAUDE DECISION" in captured
+    assert "ERROR: Reranker evaluation exceeded 1800.0s wall-clock limit!" in captured
+
+
+# ---------------------------------------------------------------------------
+# Evaluator Option A / RG-10 / A-12 Tests
+# ---------------------------------------------------------------------------
+
+
+def test_eval_retrieval_backend_none_subprocess_no_reranker_import() -> None:
+    """Verifies that RERANKER_BACKEND=none does not import BGE reranker adapter or sentence_transformers."""
+    import os
+    import subprocess
+    import sys
+    from pathlib import Path
+
+    repo_root = Path(__file__).resolve().parents[3]
+    cmd = [
+        sys.executable,
+        "-c",
+        """
+import os, sys
+os.environ["RERANKER_BACKEND"] = "none"
+# Import evaluator
+import scripts.eval_retrieval as ev
+loaded = set(sys.modules.keys())
+assert "app.adapters.rerankers.bge_reranker" not in loaded, (
+    f"BGE reranker adapter unexpectedly in sys.modules: {'app.adapters.rerankers.bge_reranker' in loaded}"
+)
+st_modules = [m for m in loaded if m == "sentence_transformers" or m.startswith("sentence_transformers.")]
+assert not st_modules, f"sentence_transformers unexpectedly imported: {st_modules}"
+print("SUBPROCESS_IMPORT_OK")
+""",
+    ]
+    env = os.environ.copy()
+    env["PYTHONPATH"] = f"{repo_root / 'backend'}:{repo_root}"
+    env["RERANKER_BACKEND"] = "none"
+    proc = subprocess.run(
+        cmd,
+        cwd=str(repo_root),
+        env=env,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert proc.returncode == 0, (
+        f"Subprocess failed with stdout:\n{proc.stdout}\nstderr:\n{proc.stderr}"
+    )
+    assert "SUBPROCESS_IMPORT_OK" in proc.stdout
+
+
+def test_eval_retrieval_mode_selection_backend_none() -> None:
+    """With RERANKER_BACKEND=none, selected modes are dense, keyword, hybrid_nocap, hybrid_cap (no reranker)."""
+    eval_mod = _load_eval_retrieval()
+    settings = Settings(_env_file=None, RERANKER_BACKEND="none")
+
+    modes = eval_mod.build_evaluation_modes(settings=settings)
+    mode_keys = [m[0] for m in modes]
+    assert mode_keys == ["dense", "keyword", "hybrid_nocap", "hybrid_cap"]
+    assert "hybrid_rerank" not in mode_keys
+
+
+def test_eval_retrieval_mode_selection_with_reranker() -> None:
+    """When a reranker backend is active, hybrid_rerank is included."""
+    eval_mod = _load_eval_retrieval()
+    settings = Settings(
+        _env_file=None,
+        RERANKER_BACKEND="bge-m3",
+        RERANKER_MODEL_REVISION="953dc6f6f85a1b2dbfca4c34a2796e7dde08d41e",
+    )
+    fake_reranker = MagicMock()
+    modes = eval_mod.build_evaluation_modes(
+        settings=settings, reranker_instance=fake_reranker
+    )
+    mode_keys = [m[0] for m in modes]
+    assert mode_keys == [
+        "dense",
+        "keyword",
+        "hybrid_nocap",
+        "hybrid_cap",
+        "hybrid_rerank",
+    ]
+    assert modes[4][4] is fake_reranker
+
+
+def test_eval_retrieval_per_question_record_schema_and_ordering() -> None:
+    """Verifies per-question record schema, fields, document-only lists, and deterministic ordering."""
+    eval_mod = _load_eval_retrieval()
+
+    mock_questions = [
+        {
+            "id": "Q002",
+            "type": "direct",
+            "expected_sources": [{"document": "Property_Listings.pdf"}],
+        },
+        {
+            "id": "Q001",
+            "type": "table",
+            "expected_sources": [{"document": "Services_and_Fees.pdf"}],
+        },
+    ]
+
+    # Two modes: dense, keyword
+    c_q1_d = RetrievedChunk(
+        rank=1,
+        chunk_id=uuid4(),
+        document_id=uuid4(),
+        document_name="Services_and_Fees.pdf",
+        chunk_index=0,
+        page=1,
+        section="Fees",
+        content="body text",
+        body="body text",
+        token_count=10,
+        dense_rank=1,
+        dense_similarity=0.9,
+    )
+    c_q2_d = RetrievedChunk(
+        rank=1,
+        chunk_id=uuid4(),
+        document_id=uuid4(),
+        document_name="Company_Overview.pdf",
+        chunk_index=0,
+        page=1,
+        section="About",
+        content="about text",
+        body="about text",
+        token_count=10,
+        dense_rank=1,
+        dense_similarity=0.7,
+    )
+
+    mode_evals = {
+        "dense": [
+            eval_mod.evaluate_question(mock_questions[1], [c_q1_d]),  # Q001
+            eval_mod.evaluate_question(mock_questions[0], [c_q2_d]),  # Q002
+        ],
+        "keyword": [
+            eval_mod.evaluate_question(mock_questions[1], [c_q1_d]),  # Q001
+            eval_mod.evaluate_question(mock_questions[0], [c_q2_d]),  # Q002
+        ],
+    }
+
+    records = eval_mod.build_per_question_records(
+        questions=mock_questions,
+        mode_evals=mode_evals,
+        mode_order=["dense", "keyword"],
+    )
+
+    # 2 questions * 2 modes = 4 records
+    assert len(records) == 4
+
+    expected_keys = [
+        "expected_documents",
+        "first_expected_rank",
+        "hit_at_1",
+        "hit_at_5",
+        "id",
+        "mode",
+        "reciprocal_rank",
+        "top5_documents",
+        "type",
+    ]
+
+    # Check order: Q001 dense, Q001 keyword, Q002 dense, Q002 keyword
+    assert records[0]["id"] == "Q001" and records[0]["mode"] == "dense"
+    assert records[1]["id"] == "Q001" and records[1]["mode"] == "keyword"
+    assert records[2]["id"] == "Q002" and records[2]["mode"] == "dense"
+    assert records[3]["id"] == "Q002" and records[3]["mode"] == "keyword"
+
+    forbidden_fields = {
+        "query",
+        "content",
+        "body",
+        "embedding",
+        "chunk_content",
+        "text",
+    }
+    for rec in records:
+        assert sorted(rec.keys()) == sorted(expected_keys)
+        # No forbidden text or content
+        assert not any(k in rec for k in forbidden_fields)
+        # expected_documents and top5_documents are lists of strings (doc names)
+        assert isinstance(rec["expected_documents"], list)
+        assert isinstance(rec["top5_documents"], list)
+        assert all(isinstance(d, str) for d in rec["expected_documents"])
+        assert all(isinstance(d, str) for d in rec["top5_documents"])
+
+
+def test_eval_retrieval_deterministic_serialization() -> None:
+    """Verifies that serialize_evaluation_report produces identical sorted-key bytes on repeated calls."""
+    eval_mod = _load_eval_retrieval()
+
+    sample_report = {
+        "timestamp": 1234567890.123,
+        "company": "Test Company",
+        "gate_passed": True,
+        "hnsw_mismatches": 0,
+        "modes": {
+            "dense": {
+                "label": "Dense only",
+                "answerable": {"hit_at_1": 0.632, "mrr": 0.778},
+            },
+            "keyword": {
+                "label": "Keyword only",
+                "answerable": {"hit_at_1": 0.763, "mrr": 0.877},
+            },
+        },
+        "question_records": [
+            {
+                "id": "Q001",
+                "mode": "dense",
+                "hit_at_1": True,
+                "top5_documents": ["A.pdf"],
+            },
+        ],
+    }
+
+    bytes1 = eval_mod.serialize_evaluation_report(sample_report)
+    bytes2 = eval_mod.serialize_evaluation_report(sample_report)
+    assert bytes1 == bytes2
+    assert isinstance(bytes1, str)
+    # Confirm sorted keys
+    import json
+
+    loaded = json.loads(bytes1)
+    assert loaded["company"] == "Test Company"
