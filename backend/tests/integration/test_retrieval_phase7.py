@@ -56,9 +56,8 @@ def test_db_retrieval_tenant_isolation_and_status_filtering() -> None:
     try:
         # 1. Setup two distinct tenants via admin session
         with admin_session(admin_factory) as admin_s:
-            comp_repo = CompanyRepository(admin_s)
-            comp_repo.create(comp_a_name, company_id=comp_a_id)
-            comp_repo.create(comp_b_name, company_id=comp_b_id)
+            CompanyRepository(admin_s, company_id=comp_a_id).create(name=comp_a_name)
+            CompanyRepository(admin_s, company_id=comp_b_id).create(name=comp_b_name)
 
             # Document 1 for Company A (status: indexed)
             doc_a1_id = uuid4()
@@ -143,7 +142,6 @@ def test_db_retrieval_tenant_isolation_and_status_filtering() -> None:
                 embedding=vec_target,
             )
             admin_s.add_all([chunk_a1, chunk_a2, chunk_b1])
-            admin_s.commit()
 
         # 2. Query as Company A under restricted runtime rag_app connection
         with tenant_session(runtime_factory, comp_a_id) as ts:
@@ -187,10 +185,12 @@ def test_db_retrieval_tenant_isolation_and_status_filtering() -> None:
             admin_s.execute(
                 delete(Company).where(Company.name.in_([comp_a_name, comp_b_name]))
             )
-            admin_s.commit()
 
-            # Confirm cleanup
+        with admin_session(admin_factory) as admin_s:
             remaining = admin_s.scalar(
                 select(Company.id).where(Company.name.in_([comp_a_name, comp_b_name]))
             )
             assert remaining is None, "Test companies must be cleanly deleted"
+
+        admin_engine.dispose()
+        runtime_engine.dispose()
