@@ -26,13 +26,13 @@ class RetrievedChunk:
     content: str
     body: str
     token_count: int
-    score: float
     dense_rank: int | None = None
     dense_similarity: float | None = None
     keyword_rank: int | None = None
     keyword_score: float | None = None
     rrf_score: float | None = None
     rerank_score: float | None = None
+    score: float = 0.0
 
 
 @dataclass(slots=True)

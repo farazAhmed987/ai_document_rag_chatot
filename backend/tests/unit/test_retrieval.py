@@ -611,29 +611,234 @@ def test_cli_search_command_table_and_json(capsys: pytest.CaptureFixture[str]) -
     mock_result.rerank_ms = 0.0
     mock_result.total_ms = 7.2
 
+    mock_comp = MagicMock()
+    mock_comp.id = cid
+    mock_comp.name = "Himalaya Crest Realty (Pvt.) Ltd."
+
     with (
         patch("app.cli.get_session_factory"),
+        patch("app.cli.admin_session"),
+        patch("app.cli.CompanyRepository") as mock_repo_cls,
         patch("app.cli.create_embedder"),
         patch("app.cli.create_reranker"),
         patch("app.cli.RetrievalService") as mock_service_cls,
     ):
+        mock_repo = MagicMock()
+        mock_repo.get_by_name.return_value = mock_comp
+        mock_repo_cls.return_value = mock_repo
+
         mock_service = MagicMock()
         mock_service_cls.return_value = mock_service
         mock_service.search.return_value = mock_result
 
-        # 1. Table format
-        code = cli_main(["search", "--company", str(cid), "deposit query"])
+        # 1. Table format with exact company name and --query flag
+        code = cli_main(
+            [
+                "search",
+                "--company",
+                "Himalaya Crest Realty (Pvt.) Ltd.",
+                "--query",
+                "deposit query",
+            ]
+        )
         assert code == 0
         captured = capsys.readouterr()
         assert "Rank" in captured.out
         assert "DocA.pdf" in captured.out
         assert "Timings:" in captured.out
+        mock_repo.get_by_name.assert_called_with("Himalaya Crest Realty (Pvt.) Ltd.")
 
-        # 2. JSON format
+        # 2. JSON format with exact schema keys
         code_json = cli_main(
-            ["search", "--company", str(cid), "deposit query", "--format", "json"]
+            [
+                "search",
+                "--company",
+                "Himalaya Crest Realty (Pvt.) Ltd.",
+                "--query",
+                "deposit query",
+                "--format",
+                "json",
+            ]
         )
         assert code_json == 0
         captured_json = capsys.readouterr()
         assert '"query": "deposit query"' in captured_json.out
         assert '"mode": "hybrid"' in captured_json.out
+        assert '"content":' in captured_json.out
+        assert '"token_count":' in captured_json.out
+
+
+def test_retrieved_chunk_frozen_schema_and_contiguous_rank() -> None:
+    """Verifies exact frozen public schema field list, contiguous rank, and metadata pass-through."""
+    import dataclasses
+
+    expected_fields = [
+        "rank",
+        "chunk_id",
+        "document_id",
+        "document_name",
+        "chunk_index",
+        "page",
+        "section",
+        "content",
+        "body",
+        "token_count",
+        "dense_rank",
+        "dense_similarity",
+        "keyword_rank",
+        "keyword_score",
+        "rrf_score",
+        "rerank_score",
+        "score",
+    ]
+    actual_fields = [f.name for f in dataclasses.fields(RetrievedChunk)]
+    assert actual_fields == expected_fields, (
+        f"Field list mismatch: {actual_fields} != {expected_fields}"
+    )
+
+    # Verify pass-through and contiguous ranking via diversify
+    service = RetrievalService(
+        session_factory=MagicMock(),
+        embedder=_DummyEmbedder(),
+        token_counter=_DummyTokenCounter(count_val=5),
+    )
+    doc_id = uuid4()
+    candidates = [
+        _make_chunk(doc_id, idx, f"Doc_{idx}.pdf", similarity=0.9 - idx * 0.1)
+        for idx in range(5)
+    ]
+    diversified = service.diversify(candidates, top_n=5)
+    assert [c.rank for c in diversified] == [1, 2, 3, 4, 5]
+    for idx, c in enumerate(diversified):
+        assert c.page == idx + 1
+        assert "Content for chunk" in c.content
+        assert c.body == f"Content for chunk {idx}"
+        assert c.token_count == 50
+
+
+def test_keyword_sql_plainto_tsquery_and_no_websearch() -> None:
+    """Verifies plainto_tsquery usage, absence of websearch_to_tsquery, parameterized query, and OR semantics."""
+    from pathlib import Path
+
+    from app.repositories.retrieval import build_plainto_or_tsquery
+
+    # 1. Absence of websearch_to_tsquery in retrieval repo source
+    repo_file = (
+        Path(__file__).resolve().parents[2] / "app" / "repositories" / "retrieval.py"
+    )
+    repo_text = repo_file.read_text(encoding="utf-8")
+    assert "websearch_to_tsquery" not in repo_text
+
+    # 2. plainto_tsquery and OR semantics via replace in compiled SQL
+    expr = build_plainto_or_tsquery("residential rent 100")
+    compiled_sql = str(expr.compile())
+    assert "plainto_tsquery" in compiled_sql
+    assert "replace" in compiled_sql
+    assert "to_tsquery" in compiled_sql
+
+    # 3. Parameterized binding: query text is bound, not concatenated raw
+    params = expr.compile().params
+    assert any("residential rent 100" in str(v) for v in params.values())
+
+    # 4. Domain entity and number preservation in token extraction
+    tokens = extract_search_tokens(
+        "HCR-ISB-0102 list price Rs. 15,000,000 rate 7.5% on 2026-11-10"
+    )
+    assert "hcr-isb-0102" in tokens
+    assert any("15000000" in t or "15" in t for t in tokens)
+    assert "7" in tokens
+    assert "5" in tokens
+    assert "2026-11-10" in tokens
+
+
+def _load_eval_retrieval():
+    import importlib.util
+    from pathlib import Path
+
+    eval_script = Path(__file__).resolve().parents[3] / "scripts" / "eval_retrieval.py"
+    spec = importlib.util.spec_from_file_location("eval_retrieval", eval_script)
+    if spec is None or spec.loader is None:
+        raise ImportError(f"Cannot load {eval_script}")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def test_eval_retrieval_hnsw_exactness_logic() -> None:
+    """Verifies ordered HNSW equality passes when identical and fails on reordering."""
+    eval_mod = _load_eval_retrieval()
+
+    mock_session = MagicMock()
+    cid = uuid4()
+    u1, u2, u3 = uuid4(), uuid4(), uuid4()
+
+    res_a = MagicMock()
+    res_a.all.return_value = [(u1,), (u2,), (u3,)]
+    res_b = MagicMock()
+    res_b.all.return_value = [(u2,), (u1,), (u3,)]
+
+    # Case A: Identical ordered lists -> mismatch == 0
+    mock_session.execute.side_effect = [
+        res_a,  # HNSW
+        None,
+        None,  # SET LOCAL
+        res_a,  # Exact
+        None,
+        None,  # SET LOCAL
+    ]
+    mismatches, discrepancies = eval_mod.verify_hnsw_exactness(
+        session=mock_session,
+        company_id=cid,
+        queries=["test query"],
+        query_vectors=[[1.0] * 1024],
+        top_k=3,
+    )
+    assert mismatches == 0
+    assert discrepancies == []
+
+    # Case B: Same set in different order -> mismatch_count == 1 (ordered failure)
+    mock_session.execute.side_effect = [
+        res_a,  # HNSW: u1, u2, u3
+        None,
+        None,
+        res_b,  # Exact: u2, u1, u3
+        None,
+        None,
+    ]
+    mismatches_reordered, disc_reordered = eval_mod.verify_hnsw_exactness(
+        session=mock_session,
+        company_id=cid,
+        queries=["test query"],
+        query_vectors=[[1.0] * 1024],
+        top_k=3,
+    )
+    assert mismatches_reordered == 1
+    assert len(disc_reordered) == 1
+
+
+def test_section_matching_exact_and_suffix() -> None:
+    """Verifies exact case-insensitive and heading-path suffix matching with delimiter ' > '."""
+    eval_mod = _load_eval_retrieval()
+
+    # Exact normalized match
+    assert eval_mod.match_section("Overview", "overview") is True
+    assert eval_mod.match_section("  Property Listings  ", "property listings") is True
+
+    # Suffix match with delimiter ' > '
+    assert (
+        eval_mod.match_section(
+            "Himalaya Crest > Services and Fees > Commission Rates",
+            "Commission Rates",
+        )
+        is True
+    )
+    assert eval_mod.match_section("Level 1 > Level 2 > Target", "target") is True
+
+    # Non-suffix rejection
+    assert eval_mod.match_section("Level 1 > Level 2 > Target", "Level 2") is False
+    assert eval_mod.match_section("Level 1 > Level 2 > Target", "Level 1") is False
+
+    # Disparate strings rejection
+    assert eval_mod.match_section("FAQs", "About Us") is False
+    assert eval_mod.match_section(None, "Overview") is False
+    assert eval_mod.match_section("Overview", None) is False

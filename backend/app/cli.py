@@ -101,10 +101,18 @@ def build_parser() -> argparse.ArgumentParser:
     p_search = subparsers.add_parser(
         "search", help="Execute hybrid search against indexed tenant documents"
     )
+    p_search.add_argument("--company", required=True, help="Exact company name")
     p_search.add_argument(
-        "--company", required=True, help="Tenant company name or UUID"
+        "--query",
+        default=None,
+        help="Search query text",
     )
-    p_search.add_argument("query", help="Search query text")
+    p_search.add_argument(
+        "positional_query",
+        nargs="?",
+        default=None,
+        help=argparse.SUPPRESS,
+    )
     p_search.add_argument(
         "--top-n",
         type=int,
@@ -330,19 +338,27 @@ def main(argv: Sequence[str] | None = None) -> int:
             runtime_factory = get_session_factory(settings, use_runtime=True)
 
             target_company_id: UUID
-            try:
-                target_company_id = UUID(args.company)
-            except ValueError:
-                with admin_session(admin_factory) as admin_s:
-                    comp_repo = CompanyRepository(admin_s)
-                    comp = comp_repo.get_by_name(args.company)
-                    if comp is None:
-                        print(
-                            f"Company '{args.company}' not found in database",
-                            file=sys.stderr,
-                        )
-                        return 1
-                    target_company_id = comp.id
+            with admin_session(admin_factory) as admin_s:
+                comp_repo = CompanyRepository(admin_s)
+                comp = comp_repo.get_by_name(args.company)
+                if comp is None:
+                    try:
+                        comp_uuid = UUID(args.company)
+                        comp = CompanyRepository(admin_s, company_id=comp_uuid).get()
+                    except ValueError:
+                        pass
+                if comp is None:
+                    print(
+                        f"Company '{args.company}' not found in database",
+                        file=sys.stderr,
+                    )
+                    return 1
+                target_company_id = comp.id
+
+            query_text = args.query or args.positional_query
+            if not query_text:
+                print("Error: search query text is required", file=sys.stderr)
+                return 1
 
             embedder = create_embedder(settings=settings)
             reranker = create_reranker(settings=settings)
@@ -356,7 +372,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             search_mode: Any = "hybrid+rerank" if args.rerank else args.mode
             result = retrieval_service.search(
                 company_id=target_company_id,
-                query=args.query,
+                query=query_text,
                 top_n=args.top_n,
                 mode=search_mode,
             )
@@ -384,7 +400,9 @@ def main(argv: Sequence[str] | None = None) -> int:
                             "chunk_index": c.chunk_index,
                             "page": c.page,
                             "section": c.section,
-                            "score": round(c.score, 4),
+                            "content": c.content,
+                            "body": c.body,
+                            "token_count": c.token_count,
                             "dense_rank": c.dense_rank,
                             "dense_similarity": round(c.dense_similarity, 4)
                             if c.dense_similarity is not None
@@ -399,7 +417,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                             "rerank_score": round(c.rerank_score, 4)
                             if c.rerank_score is not None
                             else None,
-                            "body": c.body,
+                            "score": round(c.score, 4),
                         }
                         for c in result.chunks
                     ],

@@ -9,7 +9,7 @@ from __future__ import annotations
 from uuid import uuid4
 
 import pytest
-from sqlalchemy import create_engine, delete, select
+from sqlalchemy import create_engine, delete, select, text
 from sqlalchemy.orm import sessionmaker
 
 from app.core.config import get_settings
@@ -145,6 +145,27 @@ def test_db_retrieval_tenant_isolation_and_status_filtering() -> None:
 
         # 2. Query as Company A under restricted runtime rag_app connection
         with tenant_session(runtime_factory, comp_a_id) as ts:
+            # Item I: Verify restricted connection properties and read-only transaction
+            current_user = ts.execute(text("SELECT current_user")).scalar()
+            assert current_user == "rag_app"
+
+            bypass_rls = ts.execute(
+                text("SELECT rolbypassrls FROM pg_roles WHERE rolname = current_user")
+            ).scalar()
+            assert bypass_rls is False
+
+            tenant_setting = ts.execute(
+                text("SELECT current_setting('app.company_id', true)")
+            ).scalar()
+            assert tenant_setting == str(comp_a_id)
+
+            # Read-only transaction verification
+            ts.execute(text("SET TRANSACTION READ ONLY"))
+            ro_setting = ts.execute(
+                text("SELECT current_setting('transaction_read_only')")
+            ).scalar()
+            assert ro_setting == "on"
+
             repo_a = RetrievalRepository(session=ts, company_id=comp_a_id)
 
             # Test A: Dense search
@@ -154,6 +175,9 @@ def test_db_retrieval_tenant_isolation_and_status_filtering() -> None:
             assert retrieved.document_name == "A_indexed.pdf"
             assert retrieved.document_id == doc_a1_id
             assert pytest.approx(retrieved.dense_similarity, 1e-4) == 1.0
+
+            # Returned page equals stored page
+            assert retrieved.page == chunk_a1.page == 1
 
             # Verify no chunks from failed doc_a2 or cross-tenant doc_b1 were returned
             retrieved_doc_ids = {c.document_id for c in dense_results}
@@ -166,6 +190,7 @@ def test_db_retrieval_tenant_isolation_and_status_filtering() -> None:
             assert kw_results[0].document_name == "A_indexed.pdf"
             assert kw_results[0].document_id == doc_a1_id
             assert kw_results[0].keyword_score > 0.0
+            assert kw_results[0].page == chunk_a1.page == 1
 
             # Test C: Noise query does not crash or return invalid rows
             noise_results = repo_a.keyword_search(query="??? !!! @#$%", limit=10)
@@ -178,6 +203,7 @@ def test_db_retrieval_tenant_isolation_and_status_filtering() -> None:
             assert len(dense_b) == 1
             assert dense_b[0].document_name == "B_indexed.pdf"
             assert dense_b[0].document_id == doc_b1_id
+            assert doc_a1_id not in {c.document_id for c in dense_b}
 
     finally:
         # Cleanup test tenants

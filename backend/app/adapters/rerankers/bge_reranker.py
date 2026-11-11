@@ -78,15 +78,17 @@ class BgeM3Reranker:
         self,
         *,
         model_name: str = "BAAI/bge-reranker-v2-m3",
+        model_name_or_path: str | None = None,
         model_revision: str | None = None,
+        revision: str | None = None,
         max_length: int = 1024,
         allow_download: bool = False,
     ) -> None:
         """Initialize BgeM3Reranker configuration without loading weights."""
         if max_length <= 0:
             raise ValueError("max_length must be positive")
-        self.model_name = model_name
-        self.model_revision = model_revision
+        self.model_name = model_name_or_path or model_name
+        self.model_revision = revision or model_revision
         self.max_length = max_length
         self._allow_download = allow_download
         self._model: Any = None
@@ -134,3 +136,7 @@ class BgeM3Reranker:
         if hasattr(raw_scores, "tolist"):
             return [float(x) for x in raw_scores.tolist()]
         return [float(x) for x in raw_scores]
+
+
+# Alias for backward and cross-module compatibility
+BGEReranker = BgeM3Reranker

@@ -6,9 +6,10 @@ SRD Sections 8.2, 9; DM-3, IN-5, MT-1, MT-3; A-12.
 from __future__ import annotations
 
 import re
+from typing import Any
 from uuid import UUID
 
-from sqlalchemy import func, select, text
+from sqlalchemy import String, cast, func, select, text
 from sqlalchemy.orm import Session
 
 from app.models.chunk import Chunk
@@ -190,6 +191,18 @@ def build_or_tsquery_expression(tokens: list[str]) -> str | None:
     return " | ".join(quoted)
 
 
+def build_plainto_or_tsquery(cleaned_query: str) -> Any:
+    """Build a parameterized PostgreSQL OR tsquery expression via plainto_tsquery and replace."""
+    return func.to_tsquery(
+        "simple",
+        func.replace(
+            cast(func.plainto_tsquery("simple", cleaned_query), String),
+            " & ",
+            " | ",
+        ),
+    )
+
+
 class RetrievalRepository:
     """Repository executing candidate retrieval bounded to an authorized tenant."""
 
@@ -301,11 +314,11 @@ class RetrievalRepository:
             return []
 
         tokens = extract_search_tokens(query)
-        tsquery_str = build_or_tsquery_expression(tokens)
-        if tsquery_str is None:
+        if not tokens:
             return []
 
-        ts_query = func.to_tsquery("simple", tsquery_str)
+        cleaned_query = " ".join(tokens)
+        ts_query = build_plainto_or_tsquery(cleaned_query)
         rank_score_expr = func.ts_rank_cd(Chunk.tsv, ts_query).label("rank_score")
 
         stmt = (
