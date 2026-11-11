@@ -45,8 +45,8 @@ jobs:
         run: |
           set -o pipefail
           pytest -m "not db and not model" --cov=app --cov-report=term-missing --cov-report=json:coverage.json --cov-fail-under=88 -v 2>&1 | tee /tmp/pytest_out.txt || {
-            tail -n 40 /tmp/pytest_out.txt | while IFS= read -r line; do
-              echo "::error title=PytestFailure::$line"
+            tail -n 10 /tmp/pytest_out.txt | while IFS= read -r line; do
+              echo "::error title=PytestEnd::$line"
             done
             exit 1
           }
