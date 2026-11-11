@@ -35,7 +35,6 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT / "backend"))
 
 from app.adapters.embedders.factory import create_embedder
-from app.adapters.rerankers.bge_reranker import BGEReranker
 from app.core.config import Settings, get_settings
 from app.models.chunk import Chunk
 from app.models.document import Document
@@ -95,6 +94,7 @@ def evaluate_question(
         normalize_doc_stem(s["document"]) for s in expected_sources if "document" in s
     }
     retrieved_stems = [normalize_doc_stem(c.document_name) for c in retrieved_chunks]
+    top5_documents = [c.document_name for c in retrieved_chunks[:5]]
 
     # Document Hit@1 and Hit@5
     hit_at_1 = bool(retrieved_stems and retrieved_stems[0] in expected_stems)
@@ -102,9 +102,11 @@ def evaluate_question(
 
     # Mean Reciprocal Rank (MRR)
     mrr = 0.0
+    first_expected_rank: int | None = None
     for rank_idx, stem in enumerate(retrieved_stems[:5], start=1):
         if stem in expected_stems:
             mrr = 1.0 / rank_idx
+            first_expected_rank = rank_idx
             break
 
     # Multi-doc metrics
@@ -137,6 +139,8 @@ def evaluate_question(
         "language": question.get("language"),
         "expected_documents": sorted(expected_stems),
         "retrieved_documents": retrieved_stems[:5],
+        "top5_documents": top5_documents,
+        "first_expected_rank": first_expected_rank,
         "hit_at_1": hit_at_1,
         "hit_at_5": hit_at_5,
         "mrr": mrr,
@@ -180,6 +184,93 @@ def compute_aggregate_metrics(eval_rows: list[dict[str, Any]]) -> dict[str, Any]
         ),
         "section_hit_at_5": sum(1 for r in eval_rows if r["section_hit_at_5"]) / total,
     }
+
+
+def build_evaluation_modes(
+    settings: Settings,
+    reranker_instance: Any = None,
+) -> list[tuple[str, str, str, int, Any]]:
+    """Build the list of retrieval modes to evaluate based on settings."""
+    modes: list[tuple[str, str, str, int, Any]] = [
+        ("dense", "Dense only (k=20, top_n=5)", "dense", 3, None),
+        ("keyword", "Keyword only (k=20, top_n=5)", "keyword", 3, None),
+        ("hybrid_nocap", "Hybrid without cap (k=20, top_n=5)", "hybrid", 10, None),
+        ("hybrid_cap", "Hybrid with cap (k=20, cap=3, top_n=5)", "hybrid", 3, None),
+    ]
+    if settings.RERANKER_BACKEND != "none":
+        modes.append(
+            (
+                "hybrid_rerank",
+                "Hybrid with cap + real reranker",
+                "hybrid+rerank",
+                3,
+                reranker_instance,
+            )
+        )
+    return modes
+
+
+def build_per_question_records(
+    questions: list[dict[str, Any]],
+    mode_evals: dict[str, list[dict[str, Any]]],
+    mode_order: list[str] | None = None,
+) -> list[dict[str, Any]]:
+    """Build deterministic per-question records across all questions and modes."""
+    sorted_questions = sorted(questions, key=lambda q: str(q.get("id", "")))
+
+    if mode_order is None:
+        mode_order = list(mode_evals.keys())
+
+    eval_by_qid_mode: dict[tuple[str, str], dict[str, Any]] = {}
+    for mode_name, evals in mode_evals.items():
+        for e in evals:
+            qid = str(e.get("question_id") or e.get("id", ""))
+            eval_by_qid_mode[(qid, mode_name)] = e
+
+    records: list[dict[str, Any]] = []
+    for q in sorted_questions:
+        qid = str(q.get("id", ""))
+        q_type = str(q.get("type", ""))
+        raw_exp_docs = sorted(
+            {
+                str(s["document"])
+                for s in q.get("expected_sources", [])
+                if "document" in s
+            }
+        )
+        for mode_name in mode_order:
+            if mode_name not in mode_evals:
+                continue
+            e = eval_by_qid_mode.get((qid, mode_name))
+            if e is None:
+                continue
+            first_rank = e.get("first_expected_rank")
+            reciprocal_rank = float(e.get("mrr", 0.0))
+            hit_at_1 = bool(e.get("hit_at_1", False))
+            hit_at_5 = bool(e.get("hit_at_5", False))
+            top5_docs = list(
+                e.get("top5_documents") or e.get("retrieved_documents", [])
+            )[:5]
+
+            record = {
+                "id": qid,
+                "type": q_type,
+                "mode": mode_name,
+                "first_expected_rank": first_rank,
+                "hit_at_1": hit_at_1,
+                "hit_at_5": hit_at_5,
+                "reciprocal_rank": reciprocal_rank,
+                "expected_documents": raw_exp_docs,
+                "top5_documents": top5_docs,
+            }
+            records.append(record)
+
+    return records
+
+
+def serialize_evaluation_report(report_data: dict[str, Any]) -> str:
+    """Serialize evaluation report deterministically with sorted keys and 2-space indentation."""
+    return json.dumps(report_data, indent=2, sort_keys=True)
 
 
 def verify_hnsw_exactness(
@@ -381,13 +472,17 @@ def run_evaluation(
 
     # 2. Build service, embedder, and real reranker
     embedder = create_embedder(settings=cfg)
-    print(
-        f"Loading real BAAI/bge-reranker-v2-m3 at offline revision {PINNED_RERANKER_REVISION}..."
-    )
-    real_reranker = BGEReranker(
-        model_name_or_path=cfg.RERANKER_MODEL_NAME,
-        revision=PINNED_RERANKER_REVISION,
-    )
+    real_reranker: Any = None
+    if cfg.RERANKER_BACKEND != "none":
+        from app.adapters.rerankers.bge_reranker import BGEReranker
+
+        print(
+            f"Loading real BAAI/bge-reranker-v2-m3 at offline revision {PINNED_RERANKER_REVISION}..."
+        )
+        real_reranker = BGEReranker(
+            model_name_or_path=cfg.RERANKER_MODEL_NAME,
+            revision=PINNED_RERANKER_REVISION,
+        )
 
     service = RetrievalService(
         session_factory=runtime_factory,
@@ -421,20 +516,10 @@ def run_evaluation(
     if discrepancies:
         print(f"FAILED: Mismatches observed on {len(discrepancies)} queries.")
 
-    # 4. Evaluate 5 modes
-    modes_to_test = [
-        ("dense", "Dense only (k=20, top_n=5)", "dense", 3, None),
-        ("keyword", "Keyword only (k=20, top_n=5)", "keyword", 3, None),
-        ("hybrid_nocap", "Hybrid without cap (k=20, top_n=5)", "hybrid", 10, None),
-        ("hybrid_cap", "Hybrid with cap (k=20, cap=3, top_n=5)", "hybrid", 3, None),
-        (
-            "hybrid_rerank",
-            "Hybrid with cap + real reranker",
-            "hybrid+rerank",
-            3,
-            real_reranker,
-        ),
-    ]
+    # 4. Evaluate modes
+    modes_to_test = build_evaluation_modes(
+        settings=cfg, reranker_instance=real_reranker
+    )
 
     mode_results: dict[str, Any] = {}
     special_queries_results: dict[str, dict[str, list[str]]] = {
@@ -529,36 +614,47 @@ def run_evaluation(
     print("-" * len(header))
 
     # 6. Real Reranker Adoption Decision
-    hybrid_cap_ans = mode_results["hybrid_cap"]["answerable"]
-    rerank_ans = mode_results["hybrid_rerank"]["answerable"]
-    rerank_p95_s = mode_results["hybrid_rerank"]["p95_ms"] / 1000.0
+    if "hybrid_rerank" in mode_results:
+        hybrid_cap_ans = mode_results["hybrid_cap"]["answerable"]
+        rerank_ans = mode_results["hybrid_rerank"]["answerable"]
+        rerank_p95_s = mode_results["hybrid_rerank"]["p95_ms"] / 1000.0
 
-    mrr_improves = rerank_ans["mrr"] > hybrid_cap_ans["mrr"]
-    multi_recall_improves = (
-        rerank_ans["multi_doc_recall"] > hybrid_cap_ans["multi_doc_recall"]
-    )
-    hit5_not_regresses = rerank_ans["hit_at_5"] >= hybrid_cap_ans["hit_at_5"]
-    p95_acceptable = rerank_p95_s <= 8.0
+        mrr_improves = rerank_ans["mrr"] > hybrid_cap_ans["mrr"]
+        multi_recall_improves = (
+            rerank_ans["multi_doc_recall"] > hybrid_cap_ans["multi_doc_recall"]
+        )
+        hit5_not_regresses = rerank_ans["hit_at_5"] >= hybrid_cap_ans["hit_at_5"]
+        p95_acceptable = rerank_p95_s <= 8.0
 
-    print("\nREAL RERANKER ADOPTION CRITERIA CHECK:")
-    print(
-        f"  1. MRR improves over hybrid+cap: {rerank_ans['mrr']:.3f} > {hybrid_cap_ans['mrr']:.3f} -> {mrr_improves}"
-    )
-    print(
-        f"  2. Multi-doc recall improves:   {rerank_ans['multi_doc_recall'] * 100:.1f}% > {hybrid_cap_ans['multi_doc_recall'] * 100:.1f}% -> {multi_recall_improves}"
-    )
-    print(
-        f"  3. Hit@5 does not regress:      {rerank_ans['hit_at_5'] * 100:.1f}% >= {hybrid_cap_ans['hit_at_5'] * 100:.1f}% -> {hit5_not_regresses}"
-    )
-    print(
-        f"  4. p95 <= 8.0 seconds:          {rerank_p95_s:.2f}s <= 8.0s -> {p95_acceptable}"
-    )
-
-    if mrr_improves and multi_recall_improves and hit5_not_regresses and p95_acceptable:
-        print("Reranker evaluation: adopted")
-    else:
+        print("\nREAL RERANKER ADOPTION CRITERIA CHECK:")
         print(
-            "Reranker evaluation: evaluated, not adopted (keeping RERANKER_BACKEND=none)"
+            f"  1. MRR improves over hybrid+cap: {rerank_ans['mrr']:.3f} > {hybrid_cap_ans['mrr']:.3f} -> {mrr_improves}"
+        )
+        print(
+            f"  2. Multi-doc recall improves:   {rerank_ans['multi_doc_recall'] * 100:.1f}% > {hybrid_cap_ans['multi_doc_recall'] * 100:.1f}% -> {multi_recall_improves}"
+        )
+        print(
+            f"  3. Hit@5 does not regress:      {rerank_ans['hit_at_5'] * 100:.1f}% >= {hybrid_cap_ans['hit_at_5'] * 100:.1f}% -> {hit5_not_regresses}"
+        )
+        print(
+            f"  4. p95 <= 8.0 seconds:          {rerank_p95_s:.2f}s <= 8.0s -> {p95_acceptable}"
+        )
+
+        if (
+            mrr_improves
+            and multi_recall_improves
+            and hit5_not_regresses
+            and p95_acceptable
+        ):
+            print("Reranker evaluation: adopted")
+        else:
+            print(
+                "Reranker evaluation: evaluated, not adopted (keeping RERANKER_BACKEND=none)"
+            )
+    else:
+        print("\nREAL RERANKER ADOPTION CRITERIA CHECK:")
+        print(
+            "  Reranker evaluation skipped (RERANKER_BACKEND=none; keeping RERANKER_BACKEND=none)"
         )
 
     # 7. Section Matching Analysis & Mismatch List
@@ -654,9 +750,21 @@ def run_evaluation(
     print(f"Total evaluation elapsed time: {time.perf_counter() - t0_eval_all:.2f}s\n")
 
     if output_path is not None:
+        mode_order = [m[0] for m in modes_to_test]
+        mode_evals = {k: v["eval_rows"] for k, v in mode_results.items()}
+        question_records = build_per_question_records(
+            questions=questions,
+            mode_evals=mode_evals,
+            mode_order=mode_order,
+        )
         report_data = {
+            "version": "1.0.0",
             "timestamp": time.time(),
             "company": company_name,
+            "total_questions": len(questions),
+            "answerable_questions": len(
+                [q for q in questions if q.get("type") in ANSWERABLE_TYPES]
+            ),
             "gate_passed": gate_passed,
             "hnsw_mismatches": hnsw_mismatches,
             "modes": {
@@ -669,9 +777,11 @@ def run_evaluation(
                 }
                 for k, v in mode_results.items()
             },
+            "question_records": question_records,
         }
         output_path.parent.mkdir(parents=True, exist_ok=True)
-        output_path.write_text(json.dumps(report_data, indent=2), encoding="utf-8")
+        serialized_json = serialize_evaluation_report(report_data)
+        output_path.write_text(serialized_json, encoding="utf-8")
         print(f"Evaluation report written to {output_path}")
 
     admin_engine.dispose()

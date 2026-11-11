@@ -972,3 +972,228 @@ def test_reranker_evaluation_stops_at_wall_clock_limit(
     assert "Elapsed wall time:" in captured
     assert "NEEDS CLAUDE DECISION" in captured
     assert "ERROR: Reranker evaluation exceeded 1800.0s wall-clock limit!" in captured
+
+
+# ---------------------------------------------------------------------------
+# Evaluator Option A / RG-10 / A-12 Tests
+# ---------------------------------------------------------------------------
+
+
+def test_eval_retrieval_backend_none_subprocess_no_reranker_import() -> None:
+    """Verifies that RERANKER_BACKEND=none does not import BGE reranker adapter or sentence_transformers."""
+    import os
+    import subprocess
+    import sys
+    from pathlib import Path
+
+    repo_root = Path(__file__).resolve().parents[3]
+    cmd = [
+        sys.executable,
+        "-c",
+        """
+import os, sys
+os.environ["RERANKER_BACKEND"] = "none"
+# Import evaluator
+import scripts.eval_retrieval as ev
+loaded = set(sys.modules.keys())
+assert "app.adapters.rerankers.bge_reranker" not in loaded, (
+    f"BGE reranker adapter unexpectedly in sys.modules: {'app.adapters.rerankers.bge_reranker' in loaded}"
+)
+st_modules = [m for m in loaded if m == "sentence_transformers" or m.startswith("sentence_transformers.")]
+assert not st_modules, f"sentence_transformers unexpectedly imported: {st_modules}"
+print("SUBPROCESS_IMPORT_OK")
+""",
+    ]
+    env = os.environ.copy()
+    env["PYTHONPATH"] = f"{repo_root / 'backend'}:{repo_root}"
+    env["RERANKER_BACKEND"] = "none"
+    proc = subprocess.run(
+        cmd,
+        cwd=str(repo_root),
+        env=env,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert proc.returncode == 0, (
+        f"Subprocess failed with stdout:\n{proc.stdout}\nstderr:\n{proc.stderr}"
+    )
+    assert "SUBPROCESS_IMPORT_OK" in proc.stdout
+
+
+def test_eval_retrieval_mode_selection_backend_none() -> None:
+    """With RERANKER_BACKEND=none, selected modes are dense, keyword, hybrid_nocap, hybrid_cap (no reranker)."""
+    eval_mod = _load_eval_retrieval()
+    settings = Settings(_env_file=None, RERANKER_BACKEND="none")
+
+    modes = eval_mod.build_evaluation_modes(settings=settings)
+    mode_keys = [m[0] for m in modes]
+    assert mode_keys == ["dense", "keyword", "hybrid_nocap", "hybrid_cap"]
+    assert "hybrid_rerank" not in mode_keys
+
+
+def test_eval_retrieval_mode_selection_with_reranker() -> None:
+    """When a reranker backend is active, hybrid_rerank is included."""
+    eval_mod = _load_eval_retrieval()
+    settings = Settings(
+        _env_file=None,
+        RERANKER_BACKEND="bge-m3",
+        RERANKER_MODEL_REVISION="953dc6f6f85a1b2dbfca4c34a2796e7dde08d41e",
+    )
+    fake_reranker = MagicMock()
+    modes = eval_mod.build_evaluation_modes(
+        settings=settings, reranker_instance=fake_reranker
+    )
+    mode_keys = [m[0] for m in modes]
+    assert mode_keys == [
+        "dense",
+        "keyword",
+        "hybrid_nocap",
+        "hybrid_cap",
+        "hybrid_rerank",
+    ]
+    assert modes[4][4] is fake_reranker
+
+
+def test_eval_retrieval_per_question_record_schema_and_ordering() -> None:
+    """Verifies per-question record schema, fields, document-only lists, and deterministic ordering."""
+    eval_mod = _load_eval_retrieval()
+
+    mock_questions = [
+        {
+            "id": "Q002",
+            "type": "direct",
+            "expected_sources": [{"document": "Property_Listings.pdf"}],
+        },
+        {
+            "id": "Q001",
+            "type": "table",
+            "expected_sources": [{"document": "Services_and_Fees.pdf"}],
+        },
+    ]
+
+    # Two modes: dense, keyword
+    c_q1_d = RetrievedChunk(
+        rank=1,
+        chunk_id=uuid4(),
+        document_id=uuid4(),
+        document_name="Services_and_Fees.pdf",
+        chunk_index=0,
+        page=1,
+        section="Fees",
+        content="body text",
+        body="body text",
+        token_count=10,
+        dense_rank=1,
+        dense_similarity=0.9,
+    )
+    c_q2_d = RetrievedChunk(
+        rank=1,
+        chunk_id=uuid4(),
+        document_id=uuid4(),
+        document_name="Company_Overview.pdf",
+        chunk_index=0,
+        page=1,
+        section="About",
+        content="about text",
+        body="about text",
+        token_count=10,
+        dense_rank=1,
+        dense_similarity=0.7,
+    )
+
+    mode_evals = {
+        "dense": [
+            eval_mod.evaluate_question(mock_questions[1], [c_q1_d]),  # Q001
+            eval_mod.evaluate_question(mock_questions[0], [c_q2_d]),  # Q002
+        ],
+        "keyword": [
+            eval_mod.evaluate_question(mock_questions[1], [c_q1_d]),  # Q001
+            eval_mod.evaluate_question(mock_questions[0], [c_q2_d]),  # Q002
+        ],
+    }
+
+    records = eval_mod.build_per_question_records(
+        questions=mock_questions,
+        mode_evals=mode_evals,
+        mode_order=["dense", "keyword"],
+    )
+
+    # 2 questions * 2 modes = 4 records
+    assert len(records) == 4
+
+    expected_keys = [
+        "expected_documents",
+        "first_expected_rank",
+        "hit_at_1",
+        "hit_at_5",
+        "id",
+        "mode",
+        "reciprocal_rank",
+        "top5_documents",
+        "type",
+    ]
+
+    # Check order: Q001 dense, Q001 keyword, Q002 dense, Q002 keyword
+    assert records[0]["id"] == "Q001" and records[0]["mode"] == "dense"
+    assert records[1]["id"] == "Q001" and records[1]["mode"] == "keyword"
+    assert records[2]["id"] == "Q002" and records[2]["mode"] == "dense"
+    assert records[3]["id"] == "Q002" and records[3]["mode"] == "keyword"
+
+    forbidden_fields = {
+        "query",
+        "content",
+        "body",
+        "embedding",
+        "chunk_content",
+        "text",
+    }
+    for rec in records:
+        assert sorted(rec.keys()) == sorted(expected_keys)
+        # No forbidden text or content
+        assert not any(k in rec for k in forbidden_fields)
+        # expected_documents and top5_documents are lists of strings (doc names)
+        assert isinstance(rec["expected_documents"], list)
+        assert isinstance(rec["top5_documents"], list)
+        assert all(isinstance(d, str) for d in rec["expected_documents"])
+        assert all(isinstance(d, str) for d in rec["top5_documents"])
+
+
+def test_eval_retrieval_deterministic_serialization() -> None:
+    """Verifies that serialize_evaluation_report produces identical sorted-key bytes on repeated calls."""
+    eval_mod = _load_eval_retrieval()
+
+    sample_report = {
+        "timestamp": 1234567890.123,
+        "company": "Test Company",
+        "gate_passed": True,
+        "hnsw_mismatches": 0,
+        "modes": {
+            "dense": {
+                "label": "Dense only",
+                "answerable": {"hit_at_1": 0.632, "mrr": 0.778},
+            },
+            "keyword": {
+                "label": "Keyword only",
+                "answerable": {"hit_at_1": 0.763, "mrr": 0.877},
+            },
+        },
+        "question_records": [
+            {
+                "id": "Q001",
+                "mode": "dense",
+                "hit_at_1": True,
+                "top5_documents": ["A.pdf"],
+            },
+        ],
+    }
+
+    bytes1 = eval_mod.serialize_evaluation_report(sample_report)
+    bytes2 = eval_mod.serialize_evaluation_report(sample_report)
+    assert bytes1 == bytes2
+    assert isinstance(bytes1, str)
+    # Confirm sorted keys
+    import json
+
+    loaded = json.loads(bytes1)
+    assert loaded["company"] == "Test Company"
