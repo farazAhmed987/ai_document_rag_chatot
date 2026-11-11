@@ -45,10 +45,9 @@ jobs:
         run: |
           set -o pipefail
           pytest -m "not db and not model" --cov=app --cov-report=term-missing --cov-report=json:coverage.json --cov-fail-under=88 -v 2>&1 | tee /tmp/pytest_out.txt || {
-            echo "### Pytest Failure Details" >> "$GITHUB_STEP_SUMMARY"
-            echo '```text' >> "$GITHUB_STEP_SUMMARY"
-            cat /tmp/pytest_out.txt >> "$GITHUB_STEP_SUMMARY"
-            echo '```' >> "$GITHUB_STEP_SUMMARY"
+            tail -n 40 /tmp/pytest_out.txt | while IFS= read -r line; do
+              echo "::error title=PytestFailure::$line"
+            done
             exit 1
           }
       - name: Phase module coverage
