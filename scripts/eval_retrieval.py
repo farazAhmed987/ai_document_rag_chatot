@@ -464,6 +464,12 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         help="Optional path to write JSON evaluation report",
     )
+    parser.add_argument(
+        "--reranker",
+        type=str,
+        default=None,
+        help="Optional reranker backend (e.g. 'bge-m3' or 'none')",
+    )
     return parser
 
 
@@ -472,10 +478,15 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
 
+    cfg = get_settings()
+    if args.reranker is not None:
+        cfg.RERANKER_BACKEND = args.reranker
+
     try:
         passed = run_evaluation(
             golden_path=args.golden,
             company_name=args.company,
+            settings=cfg,
             output_path=args.output,
         )
         return 0 if passed else 1

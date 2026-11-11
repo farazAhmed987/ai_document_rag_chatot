@@ -159,6 +159,18 @@ def test_extract_search_tokens_and_build_tsquery() -> None:
     assert "'residential'" in tsquery
     assert " | " in tsquery
 
+    # Stopword filtering and entity preservation
+    filtered_tokens = extract_search_tokens(
+        "what is the rate for HCR-ISB-0102 on 2026-11-10?"
+    )
+    assert "what" not in filtered_tokens
+    assert "is" not in filtered_tokens
+    assert "the" not in filtered_tokens
+    assert "for" not in filtered_tokens
+    assert "rate" in filtered_tokens
+    assert "hcr-isb-0102" in filtered_tokens
+    assert "2026-11-10" in filtered_tokens
+
     # Empty noise query returns None
     noise_tokens = extract_search_tokens("!@#$%^&*()_+=-")
     assert noise_tokens == []

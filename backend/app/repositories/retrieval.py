@@ -16,12 +16,169 @@ from app.models.document import Document
 from app.schemas.retrieval import RetrievedChunk
 from app.services.chunking import strip_context_header
 
-_TOKEN_PATTERN = re.compile(r"[^\W_]+", flags=re.UNICODE)
+_TOKEN_PATTERN = re.compile(r"[^\W_]+(?:-[^\W_]+)*", flags=re.UNICODE)
+
+ENGLISH_STOPWORDS: frozenset[str] = frozenset(
+    {
+        "a",
+        "about",
+        "above",
+        "after",
+        "again",
+        "against",
+        "all",
+        "am",
+        "an",
+        "and",
+        "any",
+        "are",
+        "aren",
+        "as",
+        "at",
+        "be",
+        "because",
+        "been",
+        "before",
+        "being",
+        "below",
+        "between",
+        "both",
+        "but",
+        "by",
+        "can",
+        "cannot",
+        "could",
+        "did",
+        "do",
+        "does",
+        "doing",
+        "during",
+        "each",
+        "few",
+        "for",
+        "from",
+        "further",
+        "had",
+        "has",
+        "have",
+        "having",
+        "he",
+        "her",
+        "here",
+        "hers",
+        "herself",
+        "him",
+        "himself",
+        "his",
+        "how",
+        "i",
+        "if",
+        "in",
+        "into",
+        "is",
+        "it",
+        "its",
+        "itself",
+        "me",
+        "more",
+        "most",
+        "my",
+        "myself",
+        "no",
+        "nor",
+        "not",
+        "of",
+        "off",
+        "on",
+        "once",
+        "only",
+        "or",
+        "other",
+        "ought",
+        "our",
+        "ours",
+        "ourselves",
+        "out",
+        "over",
+        "own",
+        "same",
+        "she",
+        "should",
+        "so",
+        "some",
+        "such",
+        "than",
+        "that",
+        "the",
+        "their",
+        "theirs",
+        "them",
+        "themselves",
+        "then",
+        "there",
+        "these",
+        "they",
+        "this",
+        "those",
+        "through",
+        "to",
+        "too",
+        "under",
+        "until",
+        "up",
+        "very",
+        "was",
+        "we",
+        "were",
+        "what",
+        "when",
+        "where",
+        "which",
+        "while",
+        "who",
+        "whom",
+        "why",
+        "with",
+        "would",
+        "you",
+        "your",
+        "yours",
+        "yourself",
+        "yourselves",
+    }
+)
 
 
 def extract_search_tokens(query: str) -> list[str]:
-    """Extract alphanumeric word tokens for keyword matching."""
-    return [t.lower() for t in _TOKEN_PATTERN.findall(query) if t.strip()]
+    """Extract word tokens for keyword matching, filtering stopwords while preserving domain entities.
+
+    Preserves numbers, property IDs, dates, rates, and currency values.
+    """
+    raw_tokens = [t.lower() for t in _TOKEN_PATTERN.findall(query) if t.strip()]
+    if not raw_tokens:
+        return []
+
+    tokens: list[str] = []
+    for t in raw_tokens:
+        if "-" in t:
+            tokens.append(t)
+            for sub in t.split("-"):
+                sub_clean = sub.strip()
+                if sub_clean and sub_clean not in ENGLISH_STOPWORDS:
+                    tokens.append(sub_clean)
+            continue
+
+        if any(c.isdigit() for c in t) or t not in ENGLISH_STOPWORDS:
+            tokens.append(t)
+
+    active_tokens = tokens if tokens else raw_tokens
+    seen: set[str] = set()
+    deduped: list[str] = []
+    for t in active_tokens:
+        if t not in seen:
+            seen.add(t)
+            deduped.append(t)
+    return deduped
 
 
 def build_or_tsquery_expression(tokens: list[str]) -> str | None:
