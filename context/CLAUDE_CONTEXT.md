@@ -41,14 +41,13 @@ Multi-company RAG chatbot dashboard for the DevSynt AI Internship (Task 5). Comp
 - Evidence: Fresh GitHub clone: 305 passed, 1 skipped, 89.18% cov. DB suite 27 passed through direct runtime rag_app login (A-11). Real ingestion: 5/5 indexed, 34 pages, 126 chunks, 588.56 s (ceiling 900 s). Main CI passed: https://github.com/farazAhmed987/ai_document_rag_chatot/actions/runs/42796649207. Smoke preview: informational any-expected-source Hit@5: 5/6; Q023 retrieved 1 of 2 expected documents.
 
 ## Phase 7 Status & Retrieval Contract (A-12)
-- Current step: Phase 7 non-reranked hybrid retrieval gates passed; awaiting Claude decision on final acceptance. The optional real reranker was evaluated but is NOT adopted: MRR regressed from 0.893 to 0.799 and p95 was 97.07 s, exceeding the 8 s criterion. Its run also exceeded the authorized 30-minute wall-clock ceiling and Antigravity improperly bypassed the timeout by patching the running process memory; completed reranker metrics are informational only. RERANKER_BACKEND remains none. Phase 7 is NOT passed, merged or tagged.
+- Current step: Phase 7 status: implemented on branch phase-7-retrieval (tested code cb8f4a4); required eval gates met (doc Hit@5 1.00; MRR 0.893 vs dense 0.778; multi-doc all-docs-hit 50% vs 12.5%; ordered HNSW/exact mismatches 0/54). Final-gate evidence incomplete: Claude verdict on HOLD pending evidence list (2026-11-11). NOT passed, NOT merged, NOT tagged. Phase 8 NOT authorized.
 - Baseline: Phase 6 Passed (user ratification “phase 6 passed” 2026-11-10; Claude PASS 2026-11-10; process deviation N8 remains historical). Main base `9dfa8f89006556f8310380d5d1537aa99952f7bc`; branch `phase-7-retrieval`. Tested code commit: `cb8f4a47ae84bc31bf94119d690a6e3441bf11ad`.
-- Decisions/known issues (2026-11-11):
-  * Query length validation uses the injectable tokenizer and EMBEDDING_MAX_LENGTH tokens, not a fixed character limit.
-  * Reranker evaluation has an enforced 1800-second wall-clock stop.
-  * Process-memory or runtime timeout patching is prohibited.
-  * Non-reranked hybrid gate evidence remains: document Hit@5 100%, MRR 0.893, multi-doc all-docs-hit 50%, and ordered HNSW/exact match 54/54.
-  * NEEDS CLAUDE DECISION: whether Phase 7 passes with the optional reranker disabled and not adopted.
+- Decisions log (2026-11-11):
+  * Reranker (bge-reranker-v2-m3, rev 953dc6f6...) NOT adopted: MRR 0.893 -> 0.799, p95 97 s (limit 8 s). RERANKER_BACKEND=none.
+  * Process deviation N11: reranker eval exceeded its 30-minute ceiling and was continued by patching the running process; results informational only. Rule: on any exceeded limit/timeout, stop and report; never patch a process, clock or limit at runtime; never rerun for a passing number.
+  * N9: stored section metadata is title-level; golden-set section labels never match (0% section Hit@5). Phase 8 prep decision pending a read-only diagnosis.
+  * N10: keyword-only outperforms hybrid on multi-doc recall; hybrid+cap equals hybrid-no-cap; no tuning on the 54-question set.
 - Gate Evidence:
   - Static: Ruff check, Ruff format, and Mypy clean (`Success: no issues found in 54 source files`).
   - Core unit suite: 336 passed, 1 skipped, 35 deselected in 63.61s; total coverage 89.98% (threshold >= 88.0%).
